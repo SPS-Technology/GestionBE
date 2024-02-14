@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('produits', function (Blueprint $table) {
             $table->id();
             $table->string('nom');
-            $table->string('quantite');
+            $table->string('type_quantite');
+            $table->string('calibre');
             $table->unsignedBigInteger('fournisseur_id');
             $table->foreign('fournisseur_id')->references('id')->on('fournisseurs');
             $table->timestamps();

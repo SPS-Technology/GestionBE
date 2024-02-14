@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Produit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ProduitController extends Controller
 {
@@ -12,7 +13,8 @@ class ProduitController extends Controller
      */
     public function index()
     {
-        //
+        $produit = Produit::all();
+        return response()->json(['produit'=> $produit]);
     }
 
     /**
@@ -28,15 +30,29 @@ class ProduitController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // validation 
+        $validator = Validator::make($request->all(),
+        [
+            'nom' =>'required',
+            'description' =>'required',
+            'prix' =>'required',
+        ]);
+        if ($validator->fails()){
+            return response()->json(['error'=> $validator->errors()],400);
+        }else
+        {
+            $produit = Produit::create($request->all());
+            return response()->json(['produit'=> $produit], 200);
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Produit $produit)
+    public function show($id)
     {
-        //
+        $produit = Produit::findOrFail($id);
+        return response()->json(['produit' => $produit]);
     }
 
     /**
@@ -50,16 +66,32 @@ class ProduitController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Produit $produit)
+    public function update(Request $request, $id)
     {
-        //
+        $produit = Produit::findOrFail($id);
+         // validation 
+         $validator = Validator::make($request->all(),
+         [
+             'nom' =>'required',
+             'description' =>'required',
+             'prix' =>'required',
+         ]);
+         if ($validator->fails()){
+             return response()->json(['error'=> $validator->errors()],400);
+         }else
+         {
+             $produit = Produit::create($request->all());
+             return response()->json(['produit'=> $produit], 200);
+         }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Produit $produit)
+    public function destroy($id)
     {
-        //
+        $produit = Produit::findOrFail($id);
+        $produit->delete();
+        return response()->json(['message' => 'Produit supprimé avec succès'], 204);
     }
 }

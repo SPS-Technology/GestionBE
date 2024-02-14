@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('adresse');
             $table->string('tele');
             $table->string('ville');
-            $table->string('abrevation');
+            $table->string('abreviation');
             $table->string('zone');
             $table->timestamps();
         });
