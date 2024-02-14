@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('status_commandes', function (Blueprint $table) {
             $table->id();
             $table->string('status');
-            $table->timestamp('');
+            $table->timestamp('date_status');
             $table->unsignedBigInteger('commande_id');
             $table->foreign('commande_id')->references('id')->on('commandes');
             $table->timestamps();
