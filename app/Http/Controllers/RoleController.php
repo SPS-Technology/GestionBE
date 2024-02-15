@@ -40,7 +40,7 @@ class RoleController extends Controller
         }else
         {
             $role = Role::create($request->all());
-            return response()->json(['role'=> $role], 200);
+            return response()->json(['message' => 'Role ajouteé avec succès','role'=> $role], 200);
         }
     }
 
@@ -77,7 +77,7 @@ class RoleController extends Controller
          }else
          {
              $role = Role::create($request->all());
-             return response()->json(['role'=> $role], 200);
+             return response()->json(['message' => 'Role modifié avec succès','role'=> $role], 200);
          }
     }
 

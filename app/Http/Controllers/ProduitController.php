@@ -14,7 +14,7 @@ class ProduitController extends Controller
     public function index()
     {
         $produit = Produit::all();
-        return response()->json(['produit'=> $produit]);
+        return response()->json(['produit' => $produit]);
     }
 
     /**
@@ -31,18 +31,21 @@ class ProduitController extends Controller
     public function store(Request $request)
     {
         // validation 
-        $validator = Validator::make($request->all(),
-        [
-            'nom' =>'required',
-            'description' =>'required',
-            'prix' =>'required',
-        ]);
-        if ($validator->fails()){
-            return response()->json(['error'=> $validator->errors()],400);
-        }else
-        {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'nom' => 'required',
+                'type_quantite' => 'required',
+                'calibre' => 'required',
+                'fournisseur_id' => 'nullable',
+
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        } else {
             $produit = Produit::create($request->all());
-            return response()->json(['produit'=> $produit], 200);
+            return response()->json(['message' => 'Produit ajouteé avec succès', 'produit' => $produit], 200);
         }
     }
 
@@ -69,20 +72,22 @@ class ProduitController extends Controller
     public function update(Request $request, $id)
     {
         $produit = Produit::findOrFail($id);
-         // validation 
-         $validator = Validator::make($request->all(),
-         [
-             'nom' =>'required',
-             'description' =>'required',
-             'prix' =>'required',
-         ]);
-         if ($validator->fails()){
-             return response()->json(['error'=> $validator->errors()],400);
-         }else
-         {
-             $produit = Produit::create($request->all());
-             return response()->json(['produit'=> $produit], 200);
-         }
+        // validation 
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'nom' => 'required',
+                'type_quantite' => 'required',
+                'calibre' => 'required',
+                'fournisseur_id' => 'nullable',
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        } else {
+            $produit = Produit::create($request->all());
+            return response()->json(['message' => 'Produit modifie avec succes', 'produit' => $produit], 200);
+        }
     }
 
     /**
@@ -92,6 +97,6 @@ class ProduitController extends Controller
     {
         $produit = Produit::findOrFail($id);
         $produit->delete();
-        return response()->json(['message' => 'Produit supprimé avec succès'], 204);
+        return response()->json(['message' => 'Produit supprime avec succes'], 204);
     }
 }

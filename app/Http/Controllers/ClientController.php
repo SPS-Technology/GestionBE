@@ -45,7 +45,7 @@ class ClientController extends Controller
         }else
         {
             $client = Client::create($request->all());
-            return response()->json(['client'=> $client], 200);
+            return response()->json(['message' => 'Client ajouteé avec succès','client'=> $client], 200);
         }
             
 
@@ -89,7 +89,7 @@ class ClientController extends Controller
         }else
         {
             $client->update($request->all());
-            return response()->json(['client'=> $client], 200);
+            return response()->json(['message' => 'Client modifié avec succès','client'=> $client], 200);
         }
     }
 

@@ -34,6 +34,9 @@ class CommandeController extends Controller
         $validator = Validator::make($request->all(),
         [
             'dateCommande' =>'required',
+            'client_id' =>'required',
+            'user_id' =>'required',
+            'status' =>'required',
             'fournisseur_id' =>'nullable',
         ]);
         if ($validator->fails()){
@@ -41,7 +44,7 @@ class CommandeController extends Controller
         }else
         {
             $commande = Commande::create($request->all());
-            return response()->json(['commande'=> $commande], 200);
+            return response()->json(['message' => 'Commande ajouteé avec succès','commande'=> $commande], 200);
         }
     }
 
@@ -72,14 +75,18 @@ class CommandeController extends Controller
         $validator = Validator::make($request->all(),
         [
             'dateCommande' =>'required',
+            'client_id' =>'required',
+            'user_id' =>'required',
+            'status' =>'required',
             'fournisseur_id' =>'nullable',
+
         ]);
         if ($validator->fails()){
             return response()->json(['error'=> $validator->errors()],400);
         }else
         {
             $commande = Commande::create($request->all());
-            return response()->json(['commande'=> $commande], 200);
+            return response()->json(['message' => 'commande modifié avec succès','commande'=> $commande], 200);
         }
     }
 

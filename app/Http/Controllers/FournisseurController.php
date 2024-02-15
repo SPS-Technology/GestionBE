@@ -45,7 +45,7 @@ class FournisseurController extends Controller
         }else
         {
             $fournisseur = Fournisseur::create($request->all());
-            return response()->json(['fournisseur'=> $fournisseur], 200);
+            return response()->json(['message' => 'Fournisseur ajouteé avec succès','fournisseur'=> $fournisseur], 200);
         }
     }
 
@@ -72,6 +72,7 @@ class FournisseurController extends Controller
     public function update(Request $request, $id)
     {
         $fournisseur = Fournisseur::findOrFail($id);
+
         $validator = Validator::make($request->all(),
         [
             'raison_sociale' =>'required',
@@ -86,7 +87,7 @@ class FournisseurController extends Controller
         }else
         {
             $fournisseur->update($request->all());
-            return response()->json(['fournisseur'=> $fournisseur], 200);
+            return response()->json(['message' => 'Fournisseur modifié avec succès','fournisseur'=> $fournisseur], 200);
         }
     }
 

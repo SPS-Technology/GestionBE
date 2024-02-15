@@ -33,14 +33,17 @@ class StatusCommandeController extends Controller
         // validation 
         $validator = Validator::make($request->all(),
         [
-            'libelle' =>'required',
+            'status' =>'required',
+            'date_status' =>'required',
+            'commande_id' =>'required',
+
         ]);
         if ($validator->fails()){
             return response()->json(['error'=> $validator->errors()],400);
         }else
         {
             $StatusCommande = StatusCommande::create($request->all());
-            return response()->json(['StatusCommande'=> $StatusCommande], 200);
+            return response()->json(['message' => 'Status Commande ajouteé avec succès','StatusCommande'=> $StatusCommande], 200);
         }
     }
 
@@ -69,7 +72,9 @@ class StatusCommandeController extends Controller
         // validation
         $validator = Validator::make($request->all(),
         [
-            'libelle' =>'required',
+            'status' =>'required',
+            'date_status' =>'required',
+            'commande_id' =>'required',
         ]);
         if ($validator->fails()){
             return response()->json(['error'=> $validator->errors()],400);
@@ -77,7 +82,7 @@ class StatusCommandeController extends Controller
         {
             $StatusCommande = StatusCommande::findOrFail($id);
             $StatusCommande->update($request->all());
-            return response()->json(['StatusCommande'=> $StatusCommande], 200);
+            return response()->json(['message' => 'StatusCommande modifié avec succès','StatusCommande'=> $StatusCommande], 200);
         }
     }
 

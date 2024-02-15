@@ -36,13 +36,14 @@ class LigneCommandeController extends Controller
            'quantite' =>'required',
            'produit_id' =>'required',
            'commande_id' =>'required',
+           'prix_unitaire' =>'required',
        ]);
        if ($validator->fails()){
            return response()->json(['error'=> $validator->errors()],400);
        }else
        {
            $ligneCommande = ligneCommande::create($request->all());
-           return response()->json(['ligneCommande'=> $ligneCommande], 200);
+           return response()->json(['message' => 'ligneCommande ajouteé avec succès','ligneCommande'=> $ligneCommande], 200);
        }
     }
 
@@ -74,13 +75,14 @@ class LigneCommandeController extends Controller
            'quantite' =>'required',
            'produit_id' =>'required',
            'commande_id' =>'required',
+           'prix_unitaire' =>'required',
        ]);
        if ($validator->fails()){
            return response()->json(['error'=> $validator->errors()],400);
        }else
        {
            $ligneCommande = ligneCommande::create($request->all());
-           return response()->json(['ligneCommande'=> $ligneCommande], 200);
+           return response()->json(['message' => 'ligneCommande modifié avec succès','ligneCommande'=> $ligneCommande], 200);
        }    
     }
 

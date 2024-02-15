@@ -35,6 +35,7 @@ class UserController extends Controller
             'name' =>'required',
             'email' =>'required',
             'password' =>'required',
+            'photo' =>'nullable',
         ]);
         if ($validator->fails()){
             return response()->json(['error'=> $validator->errors()],400);
@@ -72,6 +73,7 @@ class UserController extends Controller
             'name' =>'required',
             'email' =>'required',
             'password' =>'required',
+            'photo' =>'nullable',
         ]);
         if ($validator->fails()){
             return response()->json(['error'=> $validator->errors()],400);
