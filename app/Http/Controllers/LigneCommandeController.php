@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ligneCommande;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
 
 class LigneCommandeController extends Controller
@@ -14,7 +15,7 @@ class LigneCommandeController extends Controller
     public function index()
     {
         $ligneCommande = ligneCommande::all();
-        return response()->json(['ligneCommande'=> $ligneCommande]);
+        return response()->json(['ligneCommande' => $ligneCommande]);
     }
 
     /**
@@ -22,7 +23,6 @@ class LigneCommandeController extends Controller
      */
     public function create()
     {
-        
     }
 
     /**
@@ -30,21 +30,22 @@ class LigneCommandeController extends Controller
      */
     public function store(Request $request)
     {
-       // validation 
-       $validator = Validator::make($request->all(),
-       [
-           'quantite' =>'required',
-           'produit_id' =>'required',
-           'commande_id' =>'required',
-           'prix_unitaire' =>'required',
-       ]);
-       if ($validator->fails()){
-           return response()->json(['error'=> $validator->errors()],400);
-       }else
-       {
-           $ligneCommande = ligneCommande::create($request->all());
-           return response()->json(['message' => 'ligneCommande ajouteé avec succès','ligneCommande'=> $ligneCommande], 200);
-       }
+        // validation 
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'quantite' => 'required',
+                'produit_id' => 'required',
+                'commande_id' => 'required',
+                'prix_unitaire' => 'required',
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        } else {
+            $ligneCommande = ligneCommande::create($request->all());
+            return response()->json(['message' => 'ligneCommande ajouteé avec succès', 'ligneCommande' => $ligneCommande], 200);
+        }
     }
 
     /**
@@ -70,20 +71,21 @@ class LigneCommandeController extends Controller
     public function update(Request $request, $id)
     {
         $ligneCommande = ligneCommande::findOrFail($id);
-        $validator = Validator::make($request->all(),
-       [
-           'quantite' =>'required',
-           'produit_id' =>'required',
-           'commande_id' =>'required',
-           'prix_unitaire' =>'required',
-       ]);
-       if ($validator->fails()){
-           return response()->json(['error'=> $validator->errors()],400);
-       }else
-       {
-           $ligneCommande = ligneCommande::create($request->all());
-           return response()->json(['message' => 'ligneCommande modifié avec succès','ligneCommande'=> $ligneCommande], 200);
-       }    
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'quantite' => 'required',
+                'produit_id' => 'required',
+                'commande_id' => 'required',
+                'prix_unitaire' => 'required',
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        } else {
+            $ligneCommande = ligneCommande::create($request->all());
+            return response()->json(['message' => 'ligneCommande modifié avec succès', 'ligneCommande' => $ligneCommande], 200);
+        }
     }
 
     /**
@@ -91,9 +93,14 @@ class LigneCommandeController extends Controller
      */
     public function destroy($id)
     {
-        $ligneCommande = ligneCommande::findOrFail($id);
-        $ligneCommande->delete();
+        try {
+            $ligneCommande = ligneCommande::findOrFail($id);
+            $ligneCommande->delete();
 
-        return response()->json(['message' => 'ligneCommande supprimé avec succès'], 204);
+            return response()->json(['message' => 'Le ligneCommande a été supprimé avec succès.'], 200);
+        } catch (QueryException $e) {
+            // Si une exception est déclenchée, cela signifie que le ligneCommande a des commandes associées
+            return response()->json(['error' => 'Impossible de supprimer ce ligneCommande car il a des commandes associées.'], 400);
+        }
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -89,9 +90,14 @@ class UserController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy($id)
-    {
-        $user = User::findOrFail($id);
-        $user->delete();
-        return response()->json(['message' => 'StatusCommande supprimé avec succès'], 204);
+    { 
+        try {
+            $user = User::findOrFail($id);
+            $user->delete();
+            return response()->json(['message' => ' user a été supprimé avec succès.'], 200);
+        } catch (QueryException $e) {
+            // Si une exception est déclenchée, cela signifie que le user a des table associées
+            return response()->json(['error' => 'Impossible de supprimer ce user car il a des tables associées.'], 400);
+        }
     }
 }

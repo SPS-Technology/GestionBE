@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Commande;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
 
 class CommandeController extends Controller
@@ -95,8 +96,13 @@ class CommandeController extends Controller
      */
     public function destroy($id)
     {
-        $commande = Commande::findOrFail($id);
-        $commande->delete();
-        return response()->json(['message' => 'Commande supprimé avec succès'], 204);
+        try {
+            $commande = Commande::findOrFail($id);
+            $commande->delete();
+            return response()->json(['message' => 'Le commande a été supprimé avec succès.'], 200);
+        } catch (QueryException $e) {
+            // Si une exception est déclenchée, cela signifie que le client a des commandes associées
+            return response()->json(['error' => 'Impossible de supprimer ce commande car il a des status ou lignes associées.'], 400);
+        }
     }
 }

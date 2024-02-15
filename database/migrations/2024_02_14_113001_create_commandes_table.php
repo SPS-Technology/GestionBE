@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->timestamp('dateCommande');
             $table->unsignedBigInteger('client_id');
-            $table->foreign('client_id')->references('id')->on('clients');
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('restrict');
             $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
             $table->string('status');
             $table->timestamps();
             $table->softDeletes();

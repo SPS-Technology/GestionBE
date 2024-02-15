@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('ligne_commandes', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('commande_id');
-            $table->foreign('commande_id')->references('id')->on('commandes');
+            $table->foreign('commande_id')->references('id')->on('commandes')->onDelete('restrict');
             $table->unsignedBigInteger('produit_id');
-            $table->foreign('produit_id')->references('id')->on('produits');
+            $table->foreign('produit_id')->references('id')->on('produits')->onDelete('restrict');
             $table->unsignedBigInteger('quantite');
             $table->unsignedBigInteger('prix_unitaire');
             $table->timestamps();

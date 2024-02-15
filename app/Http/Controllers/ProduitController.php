@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Produit;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
 
 class ProduitController extends Controller
@@ -95,8 +96,14 @@ class ProduitController extends Controller
      */
     public function destroy($id)
     {
-        $produit = Produit::findOrFail($id);
-        $produit->delete();
-        return response()->json(['message' => 'Produit supprime avec succes'], 204);
+        try {
+            $produit = Produit::findOrFail($id);
+            $produit->delete();
+
+            return response()->json(['message' => 'Le produit a été supprimé avec succès.'], 200);
+        } catch (QueryException $e) {
+            // Si une exception est déclenchée, cela signifie que le fournisseur a des commandes associées
+            return response()->json(['error' => 'Impossible de supprimer ce produit car il a des tables associées.'], 400);
+        }
     }
 }

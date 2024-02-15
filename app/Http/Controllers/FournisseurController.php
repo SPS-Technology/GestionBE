@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Fournisseur;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
 
 class FournisseurController extends Controller
@@ -14,7 +15,7 @@ class FournisseurController extends Controller
     public function index()
     {
         $fournisseur = Fournisseur::all();
-        return response()->json(['fournisseur'=> $fournisseur]);
+        return response()->json(['fournisseur' => $fournisseur]);
     }
 
     /**
@@ -31,21 +32,22 @@ class FournisseurController extends Controller
     public function store(Request $request)
     {
         // validation 
-        $validator = Validator::make($request->all(),
-        [
-            'raison_sociale' =>'required',
-            'adresse' =>'required',
-            'tele' =>'required',
-            'ville' =>'required',
-            'abreviation' =>'required',
-            'zone' =>'required',
-        ]);
-        if ($validator->fails()){
-            return response()->json(['error'=> $validator->errors()],400);
-        }else
-        {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'raison_sociale' => 'required',
+                'adresse' => 'required',
+                'tele' => 'required',
+                'ville' => 'required',
+                'abreviation' => 'required',
+                'zone' => 'required',
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        } else {
             $fournisseur = Fournisseur::create($request->all());
-            return response()->json(['message' => 'Fournisseur ajouteé avec succès','fournisseur'=> $fournisseur], 200);
+            return response()->json(['message' => 'Fournisseur ajouteé avec succès', 'fournisseur' => $fournisseur], 200);
         }
     }
 
@@ -73,21 +75,22 @@ class FournisseurController extends Controller
     {
         $fournisseur = Fournisseur::findOrFail($id);
 
-        $validator = Validator::make($request->all(),
-        [
-            'raison_sociale' =>'required',
-            'adresse' =>'required',
-            'tele' =>'required',
-            'ville' =>'required',
-            'abreviation' =>'required',
-            'zone' =>'required',
-        ]);
-        if ($validator->fails()){
-            return response()->json(['error'=> $validator->errors()],400);
-        }else
-        {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'raison_sociale' => 'required',
+                'adresse' => 'required',
+                'tele' => 'required',
+                'ville' => 'required',
+                'abreviation' => 'required',
+                'zone' => 'required',
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        } else {
             $fournisseur->update($request->all());
-            return response()->json(['message' => 'Fournisseur modifié avec succès','fournisseur'=> $fournisseur], 200);
+            return response()->json(['message' => 'Fournisseur modifié avec succès', 'fournisseur' => $fournisseur], 200);
         }
     }
 
@@ -96,8 +99,14 @@ class FournisseurController extends Controller
      */
     public function destroy($id)
     {
-        $fournisseur = Fournisseur::findOrFail($id);
-        $fournisseur->delete();
-        return response()->json(['message' => 'Fournisseur supprimé avec succès'], 204);
+        try {
+
+            $fournisseur = Fournisseur::findOrFail($id);
+            $fournisseur->delete();
+            return response()->json(['message' => 'Le fournisseur a été supprimé avec succès.'], 200);
+        } catch (QueryException $e) {
+            // Si une exception est déclenchée, cela signifie que le fournisseur a des commandes associées
+            return response()->json(['error' => 'Impossible de supprimer ce fournisseur car il a des produits associées.'], 400);
+        }
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\StatusCommande;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
 
 class StatusCommandeController extends Controller
@@ -91,8 +92,14 @@ class StatusCommandeController extends Controller
      */
     public function destroy($id)
     {   
-        $StatusCommande = StatusCommande::findOrFail($id);
-        $StatusCommande->delete();
-        return response()->json(['message' => 'StatusCommande supprimé avec succès'], 204);
+       
+        try {
+            $StatusCommande = StatusCommande::findOrFail($id);
+            $StatusCommande->delete();
+            return response()->json(['message' => 'Le StatusCommande a été supprimé avec succès.'], 200);
+        } catch (QueryException $e) {
+            // Si une exception est déclenchée, cela signifie que le StatusCommande a des commandes associées
+            return response()->json(['error' => 'Impossible de supprimer ce StatusCommande car il a des commande associées.'], 400);
+        }
     }
 }
