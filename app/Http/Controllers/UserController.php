@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
-use App\Models\StatusCommande;
 use Illuminate\Support\Facades\Validator;
 
-class StatusCommandeController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $StatusCommande = StatusCommande::all();
-        return response()->json(['StatusCommande'=> $StatusCommande]);
+        $user = User::all();
+        return response()->json(['user'=> $user]);
     }
 
     /**
@@ -30,17 +30,18 @@ class StatusCommandeController extends Controller
      */
     public function store(Request $request)
     {
-        // validation 
         $validator = Validator::make($request->all(),
         [
-            'libelle' =>'required',
+            'name' =>'required',
+            'email' =>'required',
+            'password' =>'required',
         ]);
         if ($validator->fails()){
             return response()->json(['error'=> $validator->errors()],400);
         }else
         {
-            $StatusCommande = StatusCommande::create($request->all());
-            return response()->json(['StatusCommande'=> $StatusCommande], 200);
+            $user = User::create($request->all());
+            return response()->json(['user'=> $user], 200);
         }
     }
 
@@ -49,14 +50,14 @@ class StatusCommandeController extends Controller
      */
     public function show($id)
     {
-        $StatusCommande = StatusCommande::findOrFail($id);
-        return response()->json(['StatusCommande' => $StatusCommande]);
+        $user = User::findOrFail($id);
+        return response()->json(['user' => $user]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(StatusCommande $statusCommande)
+    public function edit(string $id)
     {
         //
     }
@@ -66,18 +67,19 @@ class StatusCommandeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // validation
         $validator = Validator::make($request->all(),
         [
-            'libelle' =>'required',
+            'name' =>'required',
+            'email' =>'required',
+            'password' =>'required',
         ]);
         if ($validator->fails()){
             return response()->json(['error'=> $validator->errors()],400);
         }else
         {
-            $StatusCommande = StatusCommande::findOrFail($id);
-            $StatusCommande->update($request->all());
-            return response()->json(['StatusCommande'=> $StatusCommande], 200);
+            $user = User::findOrFail($id);
+            $user->update($request->all());
+            return response()->json(['user'=> $user], 200);
         }
     }
 
@@ -85,9 +87,9 @@ class StatusCommandeController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy($id)
-    {   
-        $StatusCommande = StatusCommande::findOrFail($id);
-        $StatusCommande->delete();
+    {
+        $user = User::findOrFail($id);
+        $user->delete();
         return response()->json(['message' => 'StatusCommande supprimé avec succès'], 204);
     }
 }
