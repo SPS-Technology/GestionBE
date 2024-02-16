@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('calibre');
             $table->unsignedBigInteger('fournisseur_id');
             $table->foreign('fournisseur_id')->references('id')->on('fournisseurs')->onDelete('restrict');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
             $table->timestamps();
             $table->softDeletes();
         });

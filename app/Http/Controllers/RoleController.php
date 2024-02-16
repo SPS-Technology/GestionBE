@@ -14,7 +14,7 @@ class RoleController extends Controller
     public function index()
     {
         $role = Role::all();
-        return response()->json(['role'=> $role]);
+        return response()->json(['role' => $role]);
     }
 
     /**
@@ -31,16 +31,21 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         // validation 
-        $validator = Validator::make($request->all(),
-        [
-            'nom' =>'required',
-        ]);
-        if ($validator->fails()){
-            return response()->json(['error'=> $validator->errors()],400);
-        }else
-        {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'nom' => 'required',
+                'create' => 'required',
+                'read' => 'required',
+                'update' => 'required',
+                'delete' => 'required',
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        } else {
             $role = Role::create($request->all());
-            return response()->json(['message' => 'Role ajouteé avec succès','role'=> $role], 200);
+            return response()->json(['message' => 'Role ajouteé avec succès', 'role' => $role], 200);
         }
     }
 
@@ -67,18 +72,23 @@ class RoleController extends Controller
     public function update(Request $request, $id)
     {
         $role = Role::findOrFail($id);
-         // validation
-         $validator = Validator::make($request->all(),
-         [
-             'nom' =>'required',
-         ]);
-         if ($validator->fails()){
-             return response()->json(['error'=> $validator->errors()],400);
-         }else
-         {
-             $role = Role::create($request->all());
-             return response()->json(['message' => 'Role modifié avec succès','role'=> $role], 200);
-         }
+        // validation
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'nom' => 'required',
+                'create' => 'required',
+                'read' => 'required',
+                'update' => 'required',
+                'delete' => 'required',
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        } else {
+            $role = Role::create($request->all());
+            return response()->json(['message' => 'Role modifié avec succès', 'role' => $role], 200);
+        }
     }
 
     /**

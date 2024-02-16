@@ -13,7 +13,10 @@ return new class extends Migration
     {
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
-            $table->string('designation');
+            $table->boolean('ajout');
+            $table->boolean('suppression');
+            $table->boolean('modification');
+            $table->boolean('delete');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();

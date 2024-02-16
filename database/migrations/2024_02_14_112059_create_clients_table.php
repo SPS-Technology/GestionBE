@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('ville');
             $table->string('abreviation');
             $table->string('zone');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
             $table->timestamps();
         });
     }
