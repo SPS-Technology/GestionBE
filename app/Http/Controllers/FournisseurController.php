@@ -18,7 +18,7 @@ class FournisseurController extends Controller
         try {
             $this->authorize('view', Fournisseur::class);
             $fournisseur = Fournisseur::all();
-            return response()->json(['message' => 'Liste des client récupérée avec succès', 'fournisseur' =>  $fournisseur], 200);
+            return response()->json(['message' => 'Liste des fournisseur récupérée avec succès', 'fournisseur' =>  $fournisseur], 200);
         } catch (AuthorizationException $e) {
             return response()->json(['error' => 'Vous n\'avez pas l\'autorisation de voir la liste des fournisseur.'], 403);
         } catch (\Exception $e) {
