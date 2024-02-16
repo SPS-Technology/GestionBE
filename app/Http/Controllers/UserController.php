@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
 
@@ -14,8 +16,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        $user = User::all();
-        return response()->json(['user'=> $user]);
+        $users = User::where('role', '<>', 'admin')->get();
+        return response()->json($users, 200);
     }
 
     /**
@@ -26,25 +28,71 @@ class UserController extends Controller
         //
     }
 
+    public function logout()
+    {
+        if (Auth::check()) {
+            $cookie = Cookie::forget('jwt');
+
+            $user_id = Auth::user()->id;
+            $user = User::where('id', $user_id)->first();
+
+            if ($user) {
+                $user->tokens()->delete();
+            }
+
+            return response()->json([
+                'status'    => 1,
+                'message'   => "User Logged out",
+            ])->withCookie($cookie);
+        }
+
+        return response()->json([
+            'status'    => 0,
+            'message'   => "User not authenticated",
+        ]);
+    }
+
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function register(Request $request)
     {
-        $validator = Validator::make($request->all(),
-        [
-            'name' =>'required',
-            'email' =>'required',
-            'password' =>'required',
-            'photo' =>'nullable',
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|unique:users|max:255',
+            'role' => 'required|string',
+            'photo' => 'nullable|string',
+            'password' => 'required|string|min:8',
+        ], [
+            'name.required' => 'Veuillez entrer un nom valide.',
+            'role.required' => 'Veuillez entrer un rôle.',
+            'email.required' => 'Veuillez entrer une adresse e-mail valide.',
+            'email.unique' => 'Cette adresse e-mail est déjà utilisée.',
+            'password.required' => 'Veuillez entrer un mot de passe valide (au moins 8 caractères).',
         ]);
-        if ($validator->fails()){
-            return response()->json(['error'=> $validator->errors()],400);
-        }else
-        {
-            $user = User::create($request->all());
-            return response()->json(['user'=> $user], 200);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Erreur de validation',
+                'errors' => $validator->errors(),
+            ], 422);
         }
+
+        $user = new User([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => $request->password, // Stocke le mot de passe de manière non cryptée
+            'role' => $request->role,
+            'photo' => $request->photo,
+        ]);
+
+        $user->save();
+
+        return response()->json([
+            'message' => 'User registered',
+            'user' => $user,
+        ], 201);
     }
 
     /**
@@ -69,29 +117,48 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(),
-        [
-            'name' =>'required',
-            'email' =>'required',
-            'password' =>'required',
-            'photo' =>'nullable',
-            'role'=>'required'
+        $user = User::findOrFail($id);
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'string|max:255',
+            'email' => 'string|email|max:255',
+            'role' => 'string|max:255',
+            'photo' => 'string',
+            'password' => 'string|min:8',
+        ], [
+            'password.min' => 'Le mot de passe doit contenir au moins 8 caractères.',
         ]);
-        if ($validator->fails()){
-            return response()->json(['error'=> $validator->errors()],400);
-        }else
-        {
-            $user = User::findOrFail($id);
-            $user->update($request->all());
-            return response()->json(['user'=> $user], 200);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Erreur de validation',
+                'errors' => $validator->errors(),
+            ], 422);
         }
+
+        $user->name = $request->input('name', $user->name);
+        $user->email = $request->input('email', $user->email);
+        $user->role = $request->input('role', $user->role);
+        $user->photo = $request->input('photo', $user->photo);
+
+        if ($request->has('password')) {
+            $user->password = $request->input('password');
+        }
+
+        $user->save();
+        return response()->json([
+            'status' => 1,
+            'message' => 'Utilisateur mis à jour avec succès',
+            'user' => $user,
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy($id)
-    { 
+    {
         try {
             $user = User::findOrFail($id);
             $user->delete();

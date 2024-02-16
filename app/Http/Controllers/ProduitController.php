@@ -6,6 +6,7 @@ use App\Models\Produit;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class ProduitController extends Controller
 {
@@ -14,8 +15,15 @@ class ProduitController extends Controller
      */
     public function index()
     {
-        $produit = Produit::all();
-        return response()->json(['produit' => $produit]);
+        try {
+            $this->authorize('view', Produit::class);
+            $produit = Produit::all();
+            return response()->json(['message' => 'Liste des produit récupérée avec succès', 'produit' =>  $produit], 200);
+        } catch (AuthorizationException $e) {
+            return response()->json(['error' => 'Vous n\'avez pas l\'autorisation de voir la liste des produit.'], 403);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -31,22 +39,26 @@ class ProduitController extends Controller
      */
     public function store(Request $request)
     {
-        // validation 
-        $validator = Validator::make(
-            $request->all(),
-            [
+        try {
+            $this->authorize('add', Produit::class);
+            // Validation 
+            $validator = Validator::make($request->all(), [
                 'nom' => 'required',
                 'type_quantite' => 'required',
                 'calibre' => 'required',
                 'fournisseur_id' => 'nullable',
+            ]);
 
-            ]
-        );
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 400);
-        } else {
+            if ($validator->fails()) {
+                return response()->json(['error' => $validator->errors()], 400);
+            }
+
             $produit = Produit::create($request->all());
-            return response()->json(['message' => 'Produit ajouteé avec succès', 'produit' => $produit], 200);
+            return response()->json(['message' => 'produit ajoutée avec succès', 'produit' => $produit], 200);
+        } catch (AuthorizationException $e) {
+            return response()->json(['error' => 'Vous n\'avez pas l\'autorisation de modifier cette produit.'], 403);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -72,22 +84,27 @@ class ProduitController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $produit = Produit::findOrFail($id);
-        // validation 
-        $validator = Validator::make(
-            $request->all(),
-            [
+        try {
+            $this->authorize('modify', Produit::class);
+            $produit = Produit::findOrFail($id);
+
+            $validator = Validator::make($request->all(), [
                 'nom' => 'required',
                 'type_quantite' => 'required',
                 'calibre' => 'required',
                 'fournisseur_id' => 'nullable',
-            ]
-        );
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 400);
-        } else {
-            $produit = Produit::create($request->all());
-            return response()->json(['message' => 'Produit modifie avec succes', 'produit' => $produit], 200);
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['error' => $validator->errors()], 400);
+            }
+
+            $produit->update($request->all());
+            return response()->json(['message' => 'produit modifié avec succès', 'produit' => $produit], 200);
+        } catch (AuthorizationException $e) {
+            return response()->json(['error' => 'Vous n\'avez pas l\'autorisation de modifier cette produit.'], 403);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -97,13 +114,18 @@ class ProduitController extends Controller
     public function destroy($id)
     {
         try {
+            $this->authorize('delete', Produit::class);
             $produit = Produit::findOrFail($id);
             $produit->delete();
 
-            return response()->json(['message' => 'Le produit a été supprimé avec succès.'], 200);
+            return response()->json(['message' => 'produit supprimée avec succès'], 200);
+        } catch (AuthorizationException $e) {
+            return response()->json(['error' => 'Vous n\'avez pas l\'autorisation de supprimer cette produit.'], 403);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         } catch (QueryException $e) {
-            // Si une exception est déclenchée, cela signifie que le fournisseur a des commandes associées
-            return response()->json(['error' => 'Impossible de supprimer ce produit car il a des tables associées.'], 400);
+            // Si une exception est déclenchée,
+            return response()->json(['error' => 'Impossible de supprimer ce produit car il a des fournisseurs associées.'], 400);
         }
     }
 }

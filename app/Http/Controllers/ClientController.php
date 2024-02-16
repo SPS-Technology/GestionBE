@@ -6,6 +6,7 @@ use App\Models\Client;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class ClientController extends Controller
 {
@@ -14,8 +15,15 @@ class ClientController extends Controller
      */
     public function index()
     {
-        $client = Client::all();
-        return response()->json(['client' => $client]);
+        try {
+            $this->authorize('view', Client::class);
+            $client = Client::all();
+            return response()->json(['message' => 'Liste des client récupérée avec succès', 'client' =>  $client], 200);
+        } catch (AuthorizationException $e) {
+            return response()->json(['error' => 'Vous n\'avez pas l\'autorisation de voir la liste des client.'], 403);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -30,23 +38,29 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
-        // validation 
-        $validator = Validator::make(
-            $request->all(),
-            [
+        try {
+            $this->authorize('add', Client::class);
+
+            // Validation 
+            $validator = Validator::make($request->all(), [
                 'raison_sociale' => 'required',
                 'adresse' => 'required',
                 'tele' => 'required',
                 'ville' => 'required',
                 'abreviation' => 'required',
                 'zone' => 'required',
-            ]
-        );
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 400);
-        } else {
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['error' => $validator->errors()], 400);
+            }
+
             $client = Client::create($request->all());
-            return response()->json(['message' => 'Client ajouteé avec succès', 'client' => $client], 200);
+            return response()->json(['message' => 'client ajoutée avec succès', 'client' => $client], 200);
+        } catch (AuthorizationException $e) {
+            return response()->json(['error' => 'Vous n\'avez pas l\'autorisation de modifier cette client.'], 403);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -72,23 +86,29 @@ class ClientController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $client = Client::findOrFail($id);
-        $validator = Validator::make(
-            $request->all(),
-            [
+        try {
+            $this->authorize('modify', Client::class);
+            $client = Client::findOrFail($id);
+
+            $validator = Validator::make($request->all(), [
                 'raison_sociale' => 'required',
                 'adresse' => 'required',
                 'tele' => 'required',
                 'ville' => 'required',
                 'abreviation' => 'required',
                 'zone' => 'required',
-            ]
-        );
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 400);
-        } else {
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['error' => $validator->errors()], 400);
+            }
+
             $client->update($request->all());
             return response()->json(['message' => 'Client modifié avec succès', 'client' => $client], 200);
+        } catch (AuthorizationException $e) {
+            return response()->json(['error' => 'Vous n\'avez pas l\'autorisation de modifier cette client.'], 403);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -98,9 +118,15 @@ class ClientController extends Controller
     public function destroy($id)
     {
         try {
+            $this->authorize('delete', Client::class);
             $client = Client::findOrFail($id);
             $client->delete();
-            return response()->json(['message' => 'Le client a été supprimé avec succès.'], 200);
+
+            return response()->json(['message' => 'Client supprimée avec succès'], 200);
+        } catch (AuthorizationException $e) {
+            return response()->json(['error' => 'Vous n\'avez pas l\'autorisation de supprimer cette Client.'], 403);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         } catch (QueryException $e) {
             // Si une exception est déclenchée, cela signifie que le client a des commandes associées
             return response()->json(['error' => 'Impossible de supprimer ce client car il a des commandes associées.'], 400);
