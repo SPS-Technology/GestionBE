@@ -25,9 +25,25 @@ Route::post("/login", [AuthController::class, 'login']);
 Route::post("/register", [AuthController::class, 'register']);
 
 Route::middleware('auth:sanctum')->group(function () {  
-Route::resource('fournisseurs', FournisseurController::class);
-Route::resource('produits', ProduitController::class);
+
 });
-Route::resource('clients', ClientController::class);
 
+Route::get('clients', [ClientController::class, 'index'])->middleware('can:view,App\Models\Client');
+Route::post('clients', [ClientController::class, 'store'])->middleware('can:add,App\Models\Client');
+Route::get('clients/{client}', [ClientController::class, 'show'])->middleware('can:view,client');
+Route::put('clients/{client}', [ClientController::class, 'update'])->middleware('can:modify,client');
+Route::delete('clients/{client}', [ClientController::class, 'destroy'])->middleware('can:delete,client');
 
+// Fournisseurs
+Route::get('fournisseurs', [FournisseurController::class, 'index'])->middleware('can:view,App\Models\Fournisseur');
+Route::post('fournisseurs', [FournisseurController::class, 'store'])->middleware('can:add,App\Models\Fournisseur');
+Route::get('fournisseurs/{fournisseur}', [FournisseurController::class, 'show'])->middleware('can:view,fournisseur');
+Route::put('fournisseurs/{fournisseur}', [FournisseurController::class, 'update'])->middleware('can:modify,fournisseur');
+Route::delete('fournisseurs/{fournisseur}', [FournisseurController::class, 'destroy'])->middleware('can:delete,fournisseur');
+
+// Produits
+Route::get('produits', [ProduitController::class, 'index'])->middleware('can:view,App\Models\Produit');
+Route::post('produits', [ProduitController::class, 'store'])->middleware('can:add,App\Models\Produit');
+Route::get('produits/{produit}', [ProduitController::class, 'show'])->middleware('can:view,produit');
+Route::put('produits/{produit}', [ProduitController::class, 'update'])->middleware('can:modify,produit');
+Route::delete('produits/{produit}', [ProduitController::class, 'destroy'])->middleware('can:delete,produit');
