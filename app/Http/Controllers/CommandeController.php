@@ -16,7 +16,7 @@ class CommandeController extends Controller
     public function index()
     {
         try {
-            $this->authorize('view', Commande::class);
+            //$this->authorize('view', Commande::class);
             $commandes = Commande::all();
             return response()->json(['message' => 'Liste des commandes récupérée avec succès', 'commandes' =>  $commandes], 200);
         } catch (AuthorizationException $e) {
@@ -40,7 +40,7 @@ class CommandeController extends Controller
     public function store(Request $request)
     {
         try {
-            $this->authorize('add', Commande::class);
+           // $this->authorize('add', Commande::class);
 
             // Validation 
             $validator = Validator::make($request->all(), [

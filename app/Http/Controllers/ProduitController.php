@@ -16,7 +16,7 @@ class ProduitController extends Controller
     public function index()
     {
         try {
-            $this->authorize('view', Produit::class);
+            //$this->authorize('view', Produit::class);
             $produit = Produit::all();
             return response()->json(['message' => 'Liste des produit récupérée avec succès', 'produit' =>  $produit], 200);
         } catch (AuthorizationException $e) {
@@ -40,7 +40,7 @@ class ProduitController extends Controller
     public function store(Request $request)
     {
         try {
-            $this->authorize('add', Produit::class);
+           // $this->authorize('add', Produit::class);
             // Validation 
             $validator = Validator::make($request->all(), [
                 'nom' => 'required',
@@ -85,7 +85,7 @@ class ProduitController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $this->authorize('modify', Produit::class);
+         //   $this->authorize('modify', Produit::class);
             $produit = Produit::findOrFail($id);
 
             $validator = Validator::make($request->all(), [
@@ -114,7 +114,7 @@ class ProduitController extends Controller
     public function destroy($id)
     {
         try {
-            $this->authorize('delete', Produit::class);
+         //   $this->authorize('delete', Produit::class);
             $produit = Produit::findOrFail($id);
             $produit->delete();
 

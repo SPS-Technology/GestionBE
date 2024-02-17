@@ -40,7 +40,7 @@ class FournisseurController extends Controller
     public function store(Request $request)
     {
         try {
-            $this->authorize('add', Fournisseur::class);
+           // $this->authorize('add', Fournisseur::class);
 
             // Validation 
             $validator = Validator::make($request->all(), [
@@ -89,7 +89,7 @@ class FournisseurController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $this->authorize('modify', Fournisseur::class);
+           // $this->authorize('modify', Fournisseur::class);
             $fournisseur = Fournisseur::findOrFail($id);
 
             $validator = Validator::make($request->all(), [
