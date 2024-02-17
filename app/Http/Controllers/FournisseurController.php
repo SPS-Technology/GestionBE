@@ -16,7 +16,7 @@ class FournisseurController extends Controller
     public function index()
     {
         try {
-            $this->authorize('view', Fournisseur::class);
+            // $this->authorize('view', Fournisseur::class);
             $fournisseur = Fournisseur::all();
             return response()->json(['message' => 'Liste des fournisseur récupérée avec succès', 'fournisseur' =>  $fournisseur], 200);
         } catch (AuthorizationException $e) {
@@ -50,6 +50,7 @@ class FournisseurController extends Controller
                 'ville' => 'required',
                 'abreviation' => 'required',
                 'zone' => 'required',
+                'user_id' =>'required'
             ]);
 
             if ($validator->fails()) {
@@ -119,7 +120,7 @@ class FournisseurController extends Controller
     public function destroy($id)
     {
         try {
-            $this->authorize('delete', Fournisseur::class);
+           // $this->authorize('delete', Fournisseur::class);
             $fournisseur = Fournisseur::findOrFail($id);
             $fournisseur->delete();
 

@@ -89,7 +89,7 @@ class CommandeController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $this->authorize('modify', Commande::class);
+           // $this->authorize('modify', Commande::class);
             $commande = Commande::findOrFail($id);
 
             $validator = Validator::make($request->all(), [
@@ -118,7 +118,7 @@ class CommandeController extends Controller
     public function destroy($id)
     {
         try {
-            $this->authorize('delete', Commande::class);
+           // $this->authorize('delete', Commande::class);
             $commande = Commande::findOrFail($id);
             $commande->delete();
 

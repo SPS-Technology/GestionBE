@@ -94,6 +94,37 @@ class UserController extends Controller
             'user' => $user,
         ], 201);
     }
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email'    => 'required|email',
+            'password' => 'required|string',
+        ]);
+    
+        $user = User::where('email', $request->email)->first();
+    
+        if (!$user || $user->password !== $request->password) {
+            return response()->json([
+                'status'  => 0,
+                'message' => 'Email or password incorrect',
+            ], 400);
+        }
+    
+        Auth::login($user);
+    
+        $token = $user->createToken('API_TOKEN')->plainTextToken;
+    
+        $cookie = Cookie::make('jwt', $token, 60, null, null, false, true);
+    
+        return response()->json([
+            'status'    => 1,
+            'message'   => 'Utilisateur connecté',
+            'user' => $user,
+            'role' => $user->role,
+            'photo' => $user->photo,
+            'token'     => $token,
+        ], 200)->withCookie($cookie);
+    }
 
     /**
      * Display the specified resource.

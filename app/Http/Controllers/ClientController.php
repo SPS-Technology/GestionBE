@@ -16,7 +16,7 @@ class ClientController extends Controller
     public function index()
     {
         try {
-            $this->authorize('view', Client::class);
+           // $this->authorize('view', Client::class);
             $client = Client::all();
             return response()->json(['message' => 'Liste des client récupérée avec succès', 'client' =>  $client], 200);
         } catch (AuthorizationException $e) {
@@ -39,7 +39,7 @@ class ClientController extends Controller
     public function store(Request $request)
     {
         try {
-            $this->authorize('add', Client::class);
+            //$this->authorize('add', Client::class);
 
             // Validation 
             $validator = Validator::make($request->all(), [
@@ -87,7 +87,7 @@ class ClientController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $this->authorize('modify', Client::class);
+            //$this->authorize('modify', Client::class);
             $client = Client::findOrFail($id);
 
             $validator = Validator::make($request->all(), [
@@ -118,7 +118,7 @@ class ClientController extends Controller
     public function destroy($id)
     {
         try {
-            $this->authorize('delete', Client::class);
+           // $this->authorize('delete', Client::class);
             $client = Client::findOrFail($id);
             $client->delete();
 

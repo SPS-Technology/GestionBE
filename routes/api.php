@@ -22,10 +22,7 @@ use App\Http\Controllers\StatusCommandeController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-/*
+
 Route::apiResource('/users', UserController::class);
 Route::apiResource('/clients', ClientController::class);
 Route::apiResource('/fournisseurs', FournisseurController::class);
@@ -34,23 +31,29 @@ Route::apiResource('/commandes', CommandeController::class);
 Route::apiResource('/roles', RoleController::class);
 Route::apiResource('/ligneCommandes', LigneCommandeController::class);
 Route::apiResource('/statusCommande', StatusCommandeController::class);
- */
+ 
+Route::middleware('auth:sanctum')->get('/user',function(Request $request){
+    return $request->user();
+});
+
 Route::post("/login", [UserController::class, 'login']);
 Route::post("/register", [UserController::class, 'register']);
 
-
-Route::get('clients', [ClientController::class, 'index'])->middleware('can:view,App\Models\Client');
-Route::post('clients', [ClientController::class, 'store'])->middleware('can:add,App\Models\Client');
-Route::get('clients/{client}', [ClientController::class, 'show'])->middleware('can:view,client');
-Route::put('clients/{client}', [ClientController::class, 'update'])->middleware('can:modify,client');
-Route::delete('clients/{client}', [ClientController::class, 'destroy'])->middleware('can:delete,client');
+/*
+Route::get('clients', [ClientController::class, 'index']);//->middleware('can:view,App\Models\Client');
+Route::post('clients', [ClientController::class, 'store']);//->middleware('can:add,App\Models\Client');
+Route::get('clients/{client}', [ClientController::class, 'show']);//->middleware('can:view,client');
+Route::put('clients/{client}', [ClientController::class, 'update']);//->middleware('can:modify,client');
+Route::delete('clients/{client}', [ClientController::class, 'destroy']);//->middleware('can:delete,client');
 
 // Fournisseurs
-Route::get('fournisseurs', [FournisseurController::class, 'index'])->middleware('can:view,App\Models\Fournisseur');
-Route::post('fournisseurs', [FournisseurController::class, 'store'])->middleware('can:add,App\Models\Fournisseur');
-Route::get('fournisseurs/{fournisseur}', [FournisseurController::class, 'show'])->middleware('can:view,fournisseur');
-Route::put('fournisseurs/{fournisseur}', [FournisseurController::class, 'update'])->middleware('can:modify,fournisseur');
-Route::delete('fournisseurs/{fournisseur}', [FournisseurController::class, 'destroy'])->middleware('can:delete,fournisseur');
+Route::get('fournisseurs', [FournisseurController::class, 'index']);
+//->middleware('can:view,App\Models\Fournisseur')
+Route::post('fournisseurs', [FournisseurController::class, 'store']);//->middleware('can:add,App\Models\Fournisseur');
+Route::get('fournisseurs/{fournisseur}', [FournisseurController::class, 'show']);//->middleware('can:view,fournisseur');
+Route::put('fournisseurs/{fournisseur}', [FournisseurController::class, 'update']);//->middleware('can:modify,fournisseur');
+Route::delete('fournisseurs/{fournisseur}', [FournisseurController::class, 'destroy']);
+//->middleware('can:delete,fournisseur');
 
 // Produits
 Route::get('produits', [ProduitController::class, 'index'])->middleware('can:view,App\Models\Produit');
@@ -67,7 +70,7 @@ Route::put('commandes/{commande}', [CommandeController::class, 'update'])->middl
 Route::delete('commandes/{commande}', [CommandeController::class, 'destroy'])->middleware('can:delete,commande');
 
 
-
+*/
 
 
 
