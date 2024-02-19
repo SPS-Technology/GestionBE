@@ -9,5 +9,7 @@ class Produit extends Model
 {
     use HasFactory;
     protected $guarded=[]; 
-
+    public function fournisseur() {
+        return $this->belongsTo(Fournisseur::class, 'idFournisseur');
+    }
 }

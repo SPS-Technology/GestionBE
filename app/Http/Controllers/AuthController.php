@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Storage;
 
 class AuthController extends Controller
 {
@@ -54,7 +55,7 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|unique:users|max:255',
             'role' => 'required|string',
-            'photo' => 'nullable|string',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Assurez-vous d'ajuster les types et la taille autorisés
             'password' => 'required|string|min:8',
         ], [
             'name.required' => 'Veuillez entrer un nom valide.',
@@ -75,10 +76,14 @@ class AuthController extends Controller
         $user = new User([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => $request->password, // Stocke le mot de passe de manière non cryptée
+            'password' => $request->password,
             'role' => $request->role,
-            'photo' => $request->photo,
         ]);
+    
+        if ($request->hasFile('photo')) {
+            $photoPath = $request->file('photo')->store('public/photos'); // Le fichier sera stocké dans le dossier storage/app/public/photos
+            $user->photo = Storage::url($photoPath);
+        }
     
         $user->save();
     
@@ -117,10 +122,10 @@ class AuthController extends Controller
             'user' => $user,
             'role' => $user->role,
             'photo' => $user->photo,
-            'token'     => $token,
+            'password'=>$user->password,
+            'token'=> $token,
         ], 200)->withCookie($cookie);
     }
-    
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
@@ -129,7 +134,7 @@ class AuthController extends Controller
             'name' => 'string|max:255',
             'email' => 'string|email|max:255',
             'role' => 'string|max:255',
-            'photo' => 'string',
+            'photo' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Adjust the allowed file types and size
             'password' => 'string|min:8',
         ], [
             'password.min' => 'Le mot de passe doit contenir au moins 8 caractères.',
@@ -146,13 +151,19 @@ class AuthController extends Controller
         $user->name = $request->input('name', $user->name);
         $user->email = $request->input('email', $user->email);
         $user->role = $request->input('role', $user->role);
-        $user->photo = $request->input('photo', $user->photo);
+    
+        if ($request->hasFile('photo')) {
+            // Handle photo upload
+            $photoPath = $request->file('photo')->store('public/photos');
+            $user->photo = Storage::url($photoPath);
+        }
     
         if ($request->has('password')) {
-            $user->password = $request->input('password'); 
+            $user->password = $request->input('password'); // Store the password as plain text
         }
     
         $user->save();
+    
         return response()->json([
             'status' => 1,
             'message' => 'Utilisateur mis à jour avec succès',

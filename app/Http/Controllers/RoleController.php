@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class RoleController extends Controller
 {
@@ -12,7 +13,8 @@ class RoleController extends Controller
      */
     public function index()
     {
-        //
+        $role = Role::all();
+        return response()->json(['role' => $role]);
     }
 
     /**
@@ -28,15 +30,32 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // validation 
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'nom' => 'required',
+                'create' => 'required',
+                'read' => 'required',
+                'update' => 'required',
+                'delete' => 'required',
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        } else {
+            $role = Role::create($request->all());
+            return response()->json(['message' => 'Role ajouteé avec succès', 'role' => $role], 200);
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Role $role)
+    public function show($id)
     {
-        //
+        $role = Role::findOrFail($id);
+        return response()->json(['role' => $role]);
     }
 
     /**
@@ -50,16 +69,35 @@ class RoleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Role $role)
+    public function update(Request $request, $id)
     {
-        //
+        $role = Role::findOrFail($id);
+        // validation
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'nom' => 'required',
+                'create' => 'required',
+                'read' => 'required',
+                'update' => 'required',
+                'delete' => 'required',
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        } else {
+            $role = Role::create($request->all());
+            return response()->json(['message' => 'Role modifié avec succès', 'role' => $role], 200);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Role $role)
+    public function destroy($id)
     {
-        //
+        $role = Role::findOrFail($id);
+        $role->delete();
+        return response()->json(['message' => 'Role supprimé avec succès'], 204);
     }
 }

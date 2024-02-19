@@ -14,14 +14,16 @@ return new class extends Migration
         Schema::create('produits', function (Blueprint $table) {
             $table->id();
             $table->string('nom');
-            $table->string('Quantite');
-            $table->string('typeQuantite');
+            $table->string('type_quantite');
             $table->string('calibre');
-            $table->foreignId('idFournisseur')->constrained('fournisseurs')->onDelete('cascade');
+            $table->unsignedBigInteger('fournisseur_id')->nullable();
+            $table->foreign('fournisseur_id')->references('id')->on('fournisseurs')->onDelete('restrict');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
-
     /**
      * Reverse the migrations.
      */

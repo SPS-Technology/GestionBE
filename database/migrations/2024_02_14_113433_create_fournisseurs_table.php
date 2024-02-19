@@ -15,9 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('raison_sociale');
             $table->string('adresse');
-            $table->string('tel');
+            $table->string('tele');
             $table->string('ville');
             $table->string('abreviation');
+            $table->string('zone');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
             $table->timestamps();
         });
     }

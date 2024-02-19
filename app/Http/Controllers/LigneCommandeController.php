@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\LigneCommande;
 use Illuminate\Http\Request;
+use App\Models\ligneCommande;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Validator;
 
 class LigneCommandeController extends Controller
 {
@@ -12,7 +14,8 @@ class LigneCommandeController extends Controller
      */
     public function index()
     {
-        //
+        $ligneCommande = ligneCommande::all();
+        return response()->json(['ligneCommande' => $ligneCommande]);
     }
 
     /**
@@ -20,7 +23,6 @@ class LigneCommandeController extends Controller
      */
     public function create()
     {
-        //
     }
 
     /**
@@ -28,21 +30,37 @@ class LigneCommandeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // validation 
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'quantite' => 'required',
+                'produit_id' => 'required',
+                'commande_id' => 'required',
+                'prix_unitaire' => 'required',
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        } else {
+            $ligneCommande = ligneCommande::create($request->all());
+            return response()->json(['message' => 'ligneCommande ajouteé avec succès', 'ligneCommande' => $ligneCommande], 200);
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(LigneCommande $ligneCommande)
+    public function show($id)
     {
-        //
+        $ligneCommande = ligneCommande::findOrFail($id);
+        return response()->json(['ligneCommande' => $ligneCommande]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(LigneCommande $ligneCommande)
+    public function edit(ligneCommande $ligneCommande)
     {
         //
     }
@@ -50,16 +68,39 @@ class LigneCommandeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, LigneCommande $ligneCommande)
+    public function update(Request $request, $id)
     {
-        //
+        $ligneCommande = ligneCommande::findOrFail($id);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'quantite' => 'required',
+                'produit_id' => 'required',
+                'commande_id' => 'required',
+                'prix_unitaire' => 'required',
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        } else {
+            $ligneCommande = ligneCommande::create($request->all());
+            return response()->json(['message' => 'ligneCommande modifié avec succès', 'ligneCommande' => $ligneCommande], 200);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(LigneCommande $ligneCommande)
+    public function destroy($id)
     {
-        //
+        try {
+            $ligneCommande = ligneCommande::findOrFail($id);
+            $ligneCommande->delete();
+
+            return response()->json(['message' => 'Le ligneCommande a été supprimé avec succès.'], 200);
+        } catch (QueryException $e) {
+            // Si une exception est déclenchée, cela signifie que le ligneCommande a des commandes associées
+            return response()->json(['error' => 'Impossible de supprimer ce ligneCommande car il a des commandes associées.'], 400);
+        }
     }
 }

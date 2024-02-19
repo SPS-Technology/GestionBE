@@ -10,4 +10,13 @@ class LigneCommande extends Model
     use HasFactory;
     protected $guarded=[]; 
 
+    public function commande()
+    {
+        return $this->belongsTo(Commande::class, 'commande_id');
+    }
+
+    public function produit()
+    {
+        return $this->belongsTo(Produit::class, 'produit_id');
+    }
 }

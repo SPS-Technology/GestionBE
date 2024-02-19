@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('status_commandes', function (Blueprint $table) {
             $table->id();
-            $table->timestamp('dateStatus');
             $table->string('status');
-            $table->foreignId('id_commande')->constrained('commandes');
+            $table->timestamp('date_status');
+            $table->unsignedBigInteger('commande_id');
+            $table->foreign('commande_id')->references('id')->on('commandes')->onDelete('restrict');
             $table->timestamps();
         });
 

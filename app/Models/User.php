@@ -21,15 +21,17 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'photo',
+        'role',
     ];
 
+    
     /**
      * The attributes that should be hidden for serialization.
      *
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
         'remember_token',
     ];
 
@@ -42,4 +44,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = $value;
+    } 
 }
