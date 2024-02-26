@@ -6,31 +6,29 @@ use App\Models\User;
 
 class UserPolicy
 {
-    /**
-     * Create a new policy instance.
-     */
-    public function __construct()
+     public function viewAllUsers(User $user)
     {
-        //
+        return $user->hasPermission('view_all_users');
     }
-    public function modify(User $user)
-{
-    return $user->modification == 1;
-}
-
-public function delete(User $user)
-{
-    return $user->suppression == 1;
-}
-
-public function add(User $user)
-{
-    return $user->ajout == 1;
-}
-
-public function view(User $user)
-{
-    return $user->affichage == 1;
-}
+    
+    public function createUser(User $user)
+    {
+        return $user->hasPermission('create_user');
+    }
+    
+    public function viewUser(User $user)
+    {
+        return $user->hasPermission('view_user');
+    }
+    
+    public function editUser(User $user)
+    {
+        return $user->hasPermission('edit_user');
+    }
+    
+    public function deleteUser(User $user)
+    {
+        return $user->hasPermission('delete_user');
+    }
 
 }

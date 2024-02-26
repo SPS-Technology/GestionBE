@@ -4,128 +4,121 @@ namespace App\Http\Controllers;
 
 use App\Models\Produit;
 use Illuminate\Http\Request;
-use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\QueryException;
 
 class ProduitController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        try {
-            // $this->authorize('view', Produit::class);
-            $produit = Produit::with('fournisseur')->get();
-            return response()->json(['message' => 'Liste des produit récupérée avec succès', 'produit' =>  $produit], 200);
-        } catch (AuthorizationException $e) {
-            return response()->json(['error' => 'Vous n\'avez pas l\'autorisation de voir la liste des produit.'], 403);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+        // Vérifier si l'utilisateur a la permission de voir la liste des produits
+        if (Gate::allows('view_all_products')) {
+            try {
+                $produit = Produit::all();
+                $count = Produit::count();
+
+                return response()->json([
+                    'message' => 'Liste des produits récupérée avec succès', 'produit' => $produit,
+                    'count' => $count
+                ], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => $e->getMessage()], 500);
+            }
+        } else {
+            abort(403, 'Vous n\'avez pas l\'autorisation de voir la liste des produits.');
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        try {
-            // $this->authorize('add', Produit::class);
-            // Validation 
-            $validator = Validator::make($request->all(), [
-                'nom' => 'required',
-                'type_quantite' => 'required',
-                'calibre' => 'required',
-                'fournisseur_id' => 'nullable',
-            ]);
+        // Vérifier si l'utilisateur a la permission de créer un produit
+        if (Gate::allows('create_product')) {
+            try {
+                // Validation des données du formulaire
+                $validator = Validator::make($request->all(), [
+                    'nom' => 'required',
+                    'type_quantite' => 'required',
+                    'calibre' => 'required',
+                    'user_id' => 'required',
+                ]);
 
-            if ($validator->fails()) {
-                return response()->json(['error' => $validator->errors()], 400);
+                if ($validator->fails()) {
+                    return response()->json(['error' => $validator->errors()], 400);
+                }
+
+                $produit = Produit::create($request->all());
+
+                return response()->json(['message' => 'Produit ajouté avec succès', 'produit' => $produit], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => $e->getMessage()], 500);
             }
-
-            $produit = Produit::create($request->all());
-            return response()->json(['message' => 'produit ajoutée avec succès', 'produit' => $produit], 200);
-        } catch (AuthorizationException $e) {
-            return response()->json(['error' => 'Vous n\'avez pas l\'autorisation de modifier cette produit.'], 403);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+        } else {
+            abort(403, 'Vous n\'avez pas l\'autorisation de créer un produit.');
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
-    {
-        $produit = Produit::findOrFail($id);
-        return response()->json(['produit' => $produit]);
-    }
+    // public function show($id)
+    // {
+    //     // Vérifier si l'utilisateur a la permission de voir un produit spécifique
+    //     if (Gate::allows('view_product')) {
+    //         try {
+    //             $produit = Produit::findOrFail($id);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Produit $produit)
-    {
-        //
-    }
+    //             return response()->json(['produit' => $produit]);
+    //         } catch (\Exception $e) {
+    //             return response()->json(['error' => $e->getMessage()], 500);
+    //         }
+    //     } else {
+    //         abort(403, 'Vous n\'avez pas l\'autorisation de voir ce produit.');
+    //     }
+    // }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, $id)
     {
-        try {
-            // $this->authorize('modify', Produit::class);
-            $produit = Produit::findOrFail($id);
+        // Vérifier si l'utilisateur a la permission de mettre à jour un produit
+        if (Gate::allows('edit_product')) {
+            try {
+                // Validation des données du formulaire
+                $validator = Validator::make($request->all(), [
+                    'nom' => 'required',
+                    'type_quantite' => 'required',
+                    'calibre' => 'required',
+                    'user_id' => 'required',
+                ]);
 
-            $validator = Validator::make($request->all(), [
-                'nom' => 'required',
-                'type_quantite' => 'required',
-                'calibre' => 'required',
-                'fournisseur_id' => 'nullable',
-            ]);
+                if ($validator->fails()) {
+                    return response()->json(['error' => $validator->errors()], 400);
+                }
 
-            if ($validator->fails()) {
-                return response()->json(['error' => $validator->errors()], 400);
+                $produit = Produit::findOrFail($id);
+                $produit->update($request->all());
+
+                return response()->json(['message' => 'Produit modifié avec succès', 'produit' => $produit], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => $e->getMessage()], 500);
             }
-
-            $produit->update($request->all());
-            return response()->json(['message' => 'produit modifié avec succès', 'produit' => $produit], 200);
-        } catch (AuthorizationException $e) {
-            return response()->json(['error' => 'Vous n\'avez pas l\'autorisation de modifier cette produit.'], 403);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+        } else {
+            abort(403, 'Vous n\'avez pas l\'autorisation de modifier ce produit.');
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($id)
     {
-        try {
-            // $this->authorize('delete', Produit::class);
-            $produit = Produit::findOrFail($id);
-            $produit->delete();
+        // Vérifier si l'utilisateur a la permission de supprimer un produit
+        if (Gate::allows('delete_product')) {
+            try {
+                $produit = Produit::findOrFail($id);
+                $produit->delete();
 
-            return response()->json(['message' => 'produit supprimée avec succès'], 200);
-        } catch (AuthorizationException $e) {
-            return response()->json(['error' => 'Vous n\'avez pas l\'autorisation de supprimer cette produit.'], 403);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        } catch (QueryException $e) {
-            // Si une exception est déclenchée,
-            return response()->json(['error' => 'Impossible de supprimer ce produit car il a des fournisseurs associées.'], 400);
+                return response()->json(['message' => 'Produit supprimé avec succès'], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => $e->getMessage()], 500);
+            } catch (QueryException $e) {
+                return response()->json(['error' => 'Impossible de supprimer ce produit car il a des fournisseurs associés.'], 400);
+            }
+        } else {
+            abort(403, 'Vous n\'avez pas l\'autorisation de supprimer ce produit.');
         }
     }
 }
