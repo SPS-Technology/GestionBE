@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Auth\Access\AuthorizationException;
+use Carbon\carbon;
 
 class CommandeController extends Controller
 {
@@ -16,8 +17,8 @@ class CommandeController extends Controller
     public function index()
     {
         try {
-            // $this->authorize('view', Commande::class);
-            $commandes = Commande::with('client', 'user', 'lignesCommandes', 'statusCommande')->get();
+            //$this->authorize('view', Commande::class);
+            $commandes = Commande::with('ligneCommandes', 'statusCommandes')->get();
             return response()->json(['message' => 'Liste des commandes récupérée avec succès', 'commandes' =>  $commandes], 200);
         } catch (AuthorizationException $e) {
             return response()->json(['error' => 'Vous n\'avez pas l\'autorisation de voir la liste des commandes.'], 403);
@@ -40,21 +41,29 @@ class CommandeController extends Controller
     public function store(Request $request)
     {
         try {
-            // $this->authorize('add', Commande::class);
+           // $this->authorize('add', Commande::class);
 
             // Validation 
             $validator = Validator::make($request->all(), [
-                'dateCommande' => 'required',
+               
                 'client_id' => 'required',
-                'user_id' => 'required',
-                'status' => 'required',
+                'user_id' => 'nullable',
+                'fournisseur_id' => 'nullable',
+               
             ]);
 
             if ($validator->fails()) {
                 return response()->json(['error' => $validator->errors()], 400);
             }
 
-            $commande = Commande::create($request->all());
+            $reference = 'CMD' . now()->timestamp;
+            $dateCommande = Carbon::now()->format('Y-m-d H:i:s');
+
+            $requestData = $request->all();
+            $requestData['status'] = 'En Cours';
+            $requestData['reference'] = $reference;
+            $requstData['dateCommande'] = $dateCommande;
+            $commande = Commande::create($requestData);
             return response()->json(['message' => 'Commande ajoutée avec succès', 'commande' => $commande], 200);
         } catch (AuthorizationException $e) {
             return response()->json(['error' => 'Vous n\'avez pas l\'autorisation de modifier cette commande.'], 403);
@@ -69,8 +78,7 @@ class CommandeController extends Controller
      */
     public function show($id)
     {
-        $commande = Commande::findOrFail($id);
-
+        $commande = Commande::with('ligneCommandes','statusCommandes')->findOrFail($id);
         return response()->json(['commande' => $commande]);
     }
 
@@ -88,11 +96,11 @@ class CommandeController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            // $this->authorize('modify', Commande::class);
+           // $this->authorize('modify', Commande::class);
             $commande = Commande::findOrFail($id);
 
             $validator = Validator::make($request->all(), [
-                'dateCommande' => 'required',
+                'dateCommande' => 'nullable',
                 'client_id' => 'required',
                 'user_id' => 'required',
                 'status' => 'required',
@@ -117,7 +125,7 @@ class CommandeController extends Controller
     public function destroy($id)
     {
         try {
-            // $this->authorize('delete', Commande::class);
+           // $this->authorize('delete', Commande::class);
             $commande = Commande::findOrFail($id);
             $commande->delete();
 
