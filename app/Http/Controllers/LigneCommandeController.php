@@ -51,10 +51,10 @@ class LigneCommandeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show($commandeId)
     {
-        $ligneCommande = ligneCommande::findOrFail($id);
-        return response()->json(['ligneCommande' => $ligneCommande]);
+        $ligneCommandes = LigneCommande::where('commande_id', $commandeId)->get();
+        return response()->json(['ligneCommandes' => $ligneCommandes]);
     }
 
     /**

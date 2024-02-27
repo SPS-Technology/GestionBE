@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('commandes', function (Blueprint $table) {
             $table->id();
             $table->timestamp('dateCommande');
+            $table->string('reference');
             $table->unsignedBigInteger('client_id');
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('restrict');
             $table->unsignedBigInteger('user_id');

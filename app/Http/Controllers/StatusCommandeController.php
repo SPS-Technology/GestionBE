@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\StatusCommande;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
-
+use Carbon\carbon;
 class StatusCommandeController extends Controller
 {
     /**
@@ -34,8 +34,8 @@ class StatusCommandeController extends Controller
         // validation 
         $validator = Validator::make($request->all(),
         [
-            'status' =>'required',
-            'date_status' =>'required',
+            
+            'date_status' =>'nullable',
             'commande_id' =>'required',
 
         ]);
@@ -43,7 +43,12 @@ class StatusCommandeController extends Controller
             return response()->json(['error'=> $validator->errors()],400);
         }else
         {
-            $StatusCommande = StatusCommande::create($request->all());
+            $dateStatus = Carbon::now()->format('Y-m-d H:i:s');
+
+            $requestData = $request->all();
+            $requstData['date_status'] = $dateStatus;
+            //$requestData['status'] = 'En Cours';
+            $StatusCommande = StatusCommande::create($requestData);
             return response()->json(['message' => 'Status Commande ajouteé avec succès','StatusCommande'=> $StatusCommande], 200);
         }
     }
@@ -74,7 +79,7 @@ class StatusCommandeController extends Controller
         $validator = Validator::make($request->all(),
         [
             'status' =>'required',
-            'date_status' =>'required',
+            'date_status' =>'nullable',
             'commande_id' =>'required',
         ]);
         if ($validator->fails()){

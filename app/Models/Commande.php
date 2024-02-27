@@ -8,25 +8,29 @@ use Illuminate\Database\Eloquent\Model;
 class Commande extends Model
 {
     use HasFactory;
-    protected $guarded=[]; 
-
-    public function client()
-    {
-        return $this->belongsTo(Client::class, 'client_id');
+    protected $guarded=[];
+    public function ligneCommandes() {
+        return $this->hasMany(LigneCommande::class, 'commande_id', 'id');
     }
 
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id');
+    public function statusCommandes() {
+        return $this->hasMany(StatusCommande::class, 'commande_id', 'id');
     }
-
-    public function lignesCommandes()
+    protected $fillable = [
+        'reference', 
+        'dateCommande',
+        'status',
+        'client_id',
+        'user_id',
+    ];
+    protected static function boot()
     {
-        return $this->hasMany(LigneCommande::class, 'commande_id');
-    }
+        parent::boot();
 
-    public function statusCommande()
-    {
-        return $this->hasOne(StatusCommande::class, 'commande_id');
+        // Define a deleting event to delete related records
+        static::deleting(function ($commande) {
+            $commande->ligneCommandes()->delete();
+            $commande->statusCommandes()->delete();
+        });
     }
 }
