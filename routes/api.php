@@ -55,10 +55,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('clients/{client}', [ClientController::class, 'update']);
     Route::delete('clients/{client}', [ClientController::class, 'destroy']);
     //user
-    Route::get('/users/{id}/edit', [AuthController::class, 'edit']);
-    Route::put('/users/{id}',  [AuthController::class, 'update']);
-    Route::delete('/users/{id}',   [AuthController::class, 'destroy']);
-    Route::get('/users', [AuthController::class, 'index']);
+  
+    
     //Commandes
     Route::get('commandes', [CommandeController::class, 'index']);
     Route::post('commandes', [CommandeController::class, 'store']);
@@ -68,7 +66,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('/ligneCommandes', LigneCommandeController::class);
     Route::apiResource('/statusCommande', StatusCommandeController::class);
+
+    //logout
+    Route::post("/logout", [AuthController::class, 'logout']);
+    Route::apiResource('/roles', RoleController::class);
 });
-
-
-Route::apiResource('/roles', RoleController::class);
+Route::get('/users/{id}/edit', [AuthController::class, 'edit']);
+Route::put('/users/{id}',  [AuthController::class, 'update']);
+Route::delete('/users/{id}',   [AuthController::class, 'destroy']);
+Route::get('/users', [AuthController::class, 'index']);

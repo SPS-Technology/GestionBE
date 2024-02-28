@@ -163,20 +163,20 @@ class AuthController extends Controller
 
     public function update(Request $request, $id)
     {
-        if (Gate::allows('edit_user')) {
+        // if (Gate::allows('edit_user')) {
             $user = User::findOrFail($id);
-
+    
             $validator = Validator::make($request->all(), [
                 'name' => 'string|max:255',
                 'email' => 'string|email|max:255',
-                'role' => 'string', // Validation rule for role (you can customize this)
+                'role' => 'string',
                 'photo' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
                 'password' => 'string|min:8',
                 'permissions' => 'array',
             ], [
                 'password.min' => 'Le mot de passe doit contenir au moins 8 caractères.',
             ]);
-
+    
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 0,
@@ -184,43 +184,41 @@ class AuthController extends Controller
                     'errors' => $validator->errors(),
                 ], 422);
             }
-
+    
             $user->name = $request->input('name', $user->name);
             $user->email = $request->input('email', $user->email);
-
-            // Create a new role each time, even if it already exists
-            $role = Role::CreateorFirst(['name' => $request->role]);
-
-            // Assign the role to the user
-            $user->roles()->sync([$role->id]);
-
+    
+            if ($request->has('password')) {
+                $user->password = ($request->input('password'));
+            }
+    
             if ($request->hasFile('photo')) {
                 $photoPath = $request->file('photo')->store('public/photos');
                 $user->photo = Storage::url($photoPath);
             }
-
-            if ($request->has('password')) {
-                $user->password = $request->input('password');
-            }
-
+    
             $user->save();
-
+    
+            // Update the user's role directly
+            $role = Role::firstOrCreate(['name' => $request->role]);
+            $user->roles()->sync([$role->id]);
+    
             // Sync user permissions if necessary
             if ($request->has('permissions')) {
                 $permissions = Permission::whereIn('name', $request->permissions)->get();
                 $role->permissions()->sync($permissions);
             }
-
+    
             return response()->json([
                 'status' => 1,
                 'message' => 'Utilisateur mis à jour avec succès',
                 'user' => $user,
             ]);
-        } else {
-            abort(403, 'Vous n\'avez pas l\'autorisation de modifier un utilisateur.');
-        }
+        // } else {
+        //     abort(403, 'Vous n\'avez pas l\'autorisation de modifier un utilisateur.');
+        // }
     }
-
+    
 
     public function destroy($id)
     {
@@ -239,15 +237,15 @@ class AuthController extends Controller
     }
     public function index()
     {
-        if (Gate::allows('view_all_users')) {
+        // if (Gate::allows('view_all_users')) {
             $users = User::whereHas('roles', function ($query) {
                 $query->where('name', '<>', 'admin');
             })->with('roles.permissions')->get();
 
             return response()->json($users, 200);
-        } else {
-            abort(403, 'Vous n\'avez pas l\'autorisation de voir la liste des utilisateurs.');
-        }
+        // } else {
+        //     abort(403, 'Vous n\'avez pas l\'autorisation de voir la liste des utilisateurs.');
+        // }
     }
     public function edit($id)
     {
