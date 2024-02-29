@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategorieController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CommandeController;
 use App\Http\Controllers\FournisseurController;
@@ -35,11 +36,7 @@ Route::post("/register", [AuthController::class, 'register']);
 
 Route::middleware('auth:sanctum')->group(function () {
     //produits
-    Route::get('produits', [ProduitController::class, 'index']);
-    Route::post('produits', [ProduitController::class, 'store']);
-    Route::get('produits/{produit}', [ProduitController::class, 'show']);
-    Route::put('produits/{produit}', [ProduitController::class, 'update']);
-    Route::delete('produits/{produit}', [ProduitController::class, 'destroy']);
+    
 
     // Fournisseurs
     Route::get('fournisseurs', [FournisseurController::class, 'index']);
@@ -75,3 +72,10 @@ Route::get('/users/{id}/edit', [AuthController::class, 'edit']);
 Route::put('/users/{id}',  [AuthController::class, 'update']);
 Route::delete('/users/{id}',   [AuthController::class, 'destroy']);
 Route::get('/users', [AuthController::class, 'index']);
+
+Route::apiResource('/categories', CategorieController::class);
+Route::get('produits', [ProduitController::class, 'index']);
+    Route::post('produits', [ProduitController::class, 'store']);
+    Route::get('produits/{produit}', [ProduitController::class, 'show']);
+    Route::put('produits/{produit}', [ProduitController::class, 'update']);
+    Route::delete('produits/{produit}', [ProduitController::class, 'destroy']);
