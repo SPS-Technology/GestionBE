@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('Code_produit');
             $table->string('designation');
+            $table->string('calibre');
             $table->string('type_quantite');
             $table->decimal('prix_vente')->nullable();
             $table->unsignedBigInteger('user_id');

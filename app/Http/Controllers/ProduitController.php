@@ -37,9 +37,9 @@ class ProduitController extends Controller
             try {
                 // Validation des données du formulaire
                 $validator = Validator::make($request->all(), [
-                    'nom' => 'required',
+                    'Code_produit'=>'required',
+                    'designation' => 'required',
                     'type_quantite' => 'required',
-                    'calibre' => 'required',
                     'user_id' => 'required',
                 ]);
 
