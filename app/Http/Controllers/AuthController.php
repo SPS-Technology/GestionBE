@@ -163,7 +163,7 @@ class AuthController extends Controller
 
     public function update(Request $request, $id)
     {
-        // if (Gate::allows('edit_user')) {
+        if (Gate::allows('edit_user')) {
             $user = User::findOrFail($id);
     
             $validator = Validator::make($request->all(), [
@@ -214,9 +214,9 @@ class AuthController extends Controller
                 'message' => 'Utilisateur mis à jour avec succès',
                 'user' => $user,
             ]);
-        // } else {
-        //     abort(403, 'Vous n\'avez pas l\'autorisation de modifier un utilisateur.');
-        // }
+        } else {
+            abort(403, 'Vous n\'avez pas l\'autorisation de modifier un utilisateur.');
+        }
     }
     
 

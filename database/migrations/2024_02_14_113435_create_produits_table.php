@@ -13,13 +13,15 @@ return new class extends Migration
     {
         Schema::create('produits', function (Blueprint $table) {
             $table->id();
-            $table->string('nom');
+            $table->string('Code_produit');
+            $table->string('designation');
             $table->string('type_quantite');
-            $table->string('calibre');
+            $table->decimal('prix_vente')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
+            $table->unsignedBigInteger('categorie_id');
+            $table->foreign('categorie_id')->references('id')->on('categories')->onDelete('restrict');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
     /**

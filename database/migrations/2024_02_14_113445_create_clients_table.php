@@ -18,9 +18,12 @@ return new class extends Migration
             $table->string('tele');
             $table->string('ville');
             $table->string('abreviation');
-            $table->string('zone');
+            $table->string('code_postal');
+            $table->integer('ice');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
+            $table->unsignedBigInteger('zone_id');
+            $table->foreign('zone_id')->references('id')->on('zones')->onDelete('restrict');
             $table->timestamps();
         });
     }
