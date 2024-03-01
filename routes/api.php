@@ -36,7 +36,7 @@ Route::post("/register", [AuthController::class, 'register']);
 
 Route::middleware('auth:sanctum')->group(function () {
     //produits
-    
+
 
     // Fournisseurs
     Route::get('fournisseurs', [FournisseurController::class, 'index']);
@@ -52,8 +52,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('clients/{client}', [ClientController::class, 'update']);
     Route::delete('clients/{client}', [ClientController::class, 'destroy']);
     //user
-  
-    
+
+
     //Commandes
     Route::get('commandes', [CommandeController::class, 'index']);
     Route::post('commandes', [CommandeController::class, 'store']);
@@ -67,15 +67,21 @@ Route::middleware('auth:sanctum')->group(function () {
     //logout
     Route::post("/logout", [AuthController::class, 'logout']);
     Route::apiResource('/roles', RoleController::class);
-});
-Route::get('/users/{id}/edit', [AuthController::class, 'edit']);
-Route::put('/users/{id}',  [AuthController::class, 'update']);
-Route::delete('/users/{id}',   [AuthController::class, 'destroy']);
-Route::get('/users', [AuthController::class, 'index']);
 
-Route::apiResource('/categories', CategorieController::class);
-Route::get('produits', [ProduitController::class, 'index']);
+    Route::get('/users/{id}/edit', [AuthController::class, 'edit']);
+    Route::put('/users/{id}',  [AuthController::class, 'update']);
+    Route::delete('/users/{id}',   [AuthController::class, 'destroy']);
+    Route::get('/users', [AuthController::class, 'index']);
+
+    Route::apiResource('/categories', CategorieController::class);
+    Route::get('produits', [ProduitController::class, 'index']);
     Route::post('produits', [ProduitController::class, 'store']);
     Route::get('produits/{produit}', [ProduitController::class, 'show']);
     Route::put('produits/{produit}', [ProduitController::class, 'update']);
     Route::delete('produits/{produit}', [ProduitController::class, 'destroy']);
+});
+
+Route::get('/users/{id}/edit', [AuthController::class, 'edit']);
+Route::put('/users/{id}',  [AuthController::class, 'update']);
+Route::delete('/users/{id}',   [AuthController::class, 'destroy']);
+Route::get('/users', [AuthController::class, 'index']);

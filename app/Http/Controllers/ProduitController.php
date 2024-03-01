@@ -37,12 +37,12 @@ class ProduitController extends Controller
             try {
                 // Validation des données du formulaire
                 $validator = Validator::make($request->all(), [
-                    'Code_produit'=>'required',
+                    'Code_produit' => 'required',
                     'designation' => 'required',
                     'calibre' => 'required',
                     'type_quantite' => 'required',
-                    'categorie_id' => 'required',
                     'user_id' => 'required',
+                    'categorie_id' => 'nullable', 
                 ]);
 
                 if ($validator->fails()) {
@@ -82,12 +82,12 @@ class ProduitController extends Controller
             try {
                 // Validation des données du formulaire
                 $validator = Validator::make($request->all(), [
-                    'Code_produit'=>'required',
+                    'Code_produit' => 'required',
                     'designation' => 'required',
                     'calibre' => 'required',
                     'type_quantite' => 'required',
-                    'categorie_id' => 'required',
                     'user_id' => 'required',
+                    'categorie_id' => 'nullable', 
                 ]);
 
                 if ($validator->fails()) {
@@ -112,6 +112,8 @@ class ProduitController extends Controller
         // if (Gate::allows('delete_product')) {
             try {
                 $produit = Produit::findOrFail($id);
+                $produit->categorie_id = null;
+                $produit->save();
                 $produit->delete();
 
                 return response()->json(['message' => 'Produit supprimé avec succès'], 200);

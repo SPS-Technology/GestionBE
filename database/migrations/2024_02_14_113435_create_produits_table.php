@@ -20,8 +20,12 @@ return new class extends Migration
             $table->decimal('prix_vente')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
-            $table->unsignedBigInteger('categorie_id');
-            $table->foreign('categorie_id')->references('id')->on('categories')->onDelete('restrict');
+            $table->unsignedBigInteger('categorie_id')->nullable();
+            $table->foreign('categorie_id')
+                ->references('id')
+                ->on('categories')
+                ->onDelete('set null');
+
             $table->timestamps();
         });
     }
