@@ -17,9 +17,9 @@ class ClientController extends Controller
      */
     public function index()
     {
-        if (Gate::allows('view_all_clients')) {
+        // if (Gate::allows('view_all_clients')) {
         try {
-            $client = Client::with('user')->get();
+            $client = Client::with('user','zone')->get();
             $count = Client::count();
             return response()->json([
                 'message' => 'Liste des client récupérée avec succès', 'client' =>  $client,
@@ -28,9 +28,9 @@ class ClientController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
-    }else {
-        abort(403, 'Vous n\'avez pas l\'autorisation de voir la liste des Clients.');
-    }
+    // }else {
+    //     abort(403, 'Vous n\'avez pas l\'autorisation de voir la liste des Clients.');
+    // }
     }
     /**
      * Show the form for creating a new resource.
@@ -44,7 +44,7 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
-        if (Gate::allows('create_clients')) {
+        // if (Gate::allows('create_clients')) {
         try {
             $validator = Validator::make($request->all(), [
                 'raison_sociale' => 'required',
@@ -52,7 +52,9 @@ class ClientController extends Controller
                 'tele' => 'required',
                 'ville' => 'required',
                 'abreviation' => 'required',
-                'zone' => 'required',
+                'ice'=>'required',
+                'code_postal'=>'required',
+                'zone_id' => 'required',
             ]);
 
             if ($validator->fails()) {
@@ -64,9 +66,9 @@ class ClientController extends Controller
         }  catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
-    }else {
-        abort(403, 'Vous n\'avez pas l\'autorisation de creer  un client.');
-    }
+    // }else {
+    //     abort(403, 'Vous n\'avez pas l\'autorisation de creer  un client.');
+    // }
 }
 
     /**
@@ -76,6 +78,7 @@ class ClientController extends Controller
     {
         $client = Client::findOrFail($id);
         return response()->json(['client' => $client]);
+    
     }
 
     /**
@@ -100,7 +103,9 @@ class ClientController extends Controller
                 'tele' => 'required',
                 'ville' => 'required',
                 'abreviation' => 'required',
-                'zone' => 'required',
+                'ice'=>'required',
+                'code_postal'=>'required',
+                'zone_id' => 'required',
             ]);
 
             if ($validator->fails()) {

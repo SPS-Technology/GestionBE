@@ -1,17 +1,21 @@
 <?php
 
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ClientController;
-use App\Http\Controllers\CommandeController;
-use App\Http\Controllers\FournisseurController;
-use App\Http\Controllers\LigneCommandeController;
-use App\Http\Controllers\PermissionController;
-use App\Http\Controllers\ProduitController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\StatusCommandeController;
 use App\Models\Role;
+use App\Models\SiteClient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\ZoneController;
+use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ProduitController;
+use App\Http\Controllers\CommandeController;
+use App\Http\Controllers\CategorieController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\SiteClientController;
+use App\Http\Controllers\FournisseurController;
+use App\Http\Controllers\LigneCommandeController;
+use App\Http\Controllers\StatusCommandeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,12 +38,6 @@ Route::post("/register", [AuthController::class, 'register']);
 // Route::apiResource('permissions', PermissionController::class);
 
 Route::middleware('auth:sanctum')->group(function () {
-    //produits
-    Route::get('produits', [ProduitController::class, 'index']);
-    Route::post('produits', [ProduitController::class, 'store']);
-    Route::get('produits/{produit}', [ProduitController::class, 'show']);
-    Route::put('produits/{produit}', [ProduitController::class, 'update']);
-    Route::delete('produits/{produit}', [ProduitController::class, 'destroy']);
 
     // Fournisseurs
     Route::get('fournisseurs', [FournisseurController::class, 'index']);
@@ -48,15 +46,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('fournisseurs/{fournisseur}', [FournisseurController::class, 'update']);
     Route::delete('fournisseurs/{fournisseur}', [FournisseurController::class, 'destroy']);
 
-    //clients
-    Route::get('clients', [ClientController::class, 'index']);
-    Route::post('clients', [ClientController::class, 'store']);
-    Route::get('clients/{client}', [ClientController::class, 'show']);
-    Route::put('clients/{client}', [ClientController::class, 'update']);
-    Route::delete('clients/{client}', [ClientController::class, 'destroy']);
-    //user
-  
-    
+
+    //zone
+    Route::get('zones', [ZoneController::class, 'index']);
+    Route::post('zones', [ZoneController::class, 'store']);
+    Route::get('zones/{zone}', [ZoneController::class, 'show']);
+    Route::put('zones/{zone}', [ZoneController::class, 'update']);
+    Route::delete('zones/{zone}', [ZoneController::class, 'destroy']);
+
     //Commandes
     Route::get('commandes', [CommandeController::class, 'index']);
     Route::post('commandes', [CommandeController::class, 'store']);
@@ -64,15 +61,32 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('commandes/{commande}', [CommandeController::class, 'update']);
     Route::delete('commandes/{commande}', [CommandeController::class, 'destroy']);
 
-    Route::apiResource('/ligneCommandes', LigneCommandeController::class);
-    Route::apiResource('/statusCommande', StatusCommandeController::class);
+    Route::get('ligne_commandes', [LigneCommandeController::class, 'index']);
+    Route::post('ligne_commandes', [LigneCommandeController::class, 'store']);
 
-    //logout
-    Route::post("/logout", [AuthController::class, 'logout']);
-    Route::apiResource('/roles', RoleController::class);
+    Route::get('status_commandes', [LigneCommandeController::class, 'index']);
+    Route::post('status_commandes', [LigneCommandeController::class, 'store']);
+
+    //clients
+    Route::get('clients', [ClientController::class, 'index']);
+    Route::post('clients', [ClientController::class, 'store']);
+    Route::get('clients/{client}', [ClientController::class, 'show']);
+    Route::put('clients/{client}', [ClientController::class, 'update']);
+    Route::delete('clients/{client}', [ClientController::class, 'destroy']);
+
+    Route::apiResource('/categories', CategorieController::class);
+
+    //produits
+    Route::get('produits', [ProduitController::class, 'index']);
+    Route::post('produits', [ProduitController::class, 'store']);
+    Route::get('produits/{produit}', [ProduitController::class, 'show']);
+    Route::put('produits/{produit}', [ProduitController::class, 'update']);
+    Route::delete('produits/{produit}', [ProduitController::class, 'destroy']);
+
+    Route::get('/users/{id}/edit', [AuthController::class, 'edit']);
+    Route::put('/users/{id}',  [AuthController::class, 'update']);
+    Route::delete('/users/{id}',   [AuthController::class, 'destroy']);
+    Route::get('/users', [AuthController::class, 'index']);
 });
-Route::get('/users/{id}/edit', [AuthController::class, 'edit']);
-Route::put('/users/{id}',  [AuthController::class, 'update']);
-Route::delete('/users/{id}',   [AuthController::class, 'destroy']);
-Route::get('/users', [AuthController::class, 'index']);
-Route::get('users/{id}', [AuthController::class, 'show']);
+
+Route::apiResource('/siteclients', SiteClientController::class);

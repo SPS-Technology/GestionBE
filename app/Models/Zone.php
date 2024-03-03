@@ -5,22 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Client extends Model
+class Zone extends Model
 {
     use HasFactory;
+
     protected $guarded=[]; 
 
-    
-    public function user() {
-        return $this->belongsTo(User::class, 'user_id');
-    }
-
-    public function zone() {
-        return $this->belongsTo(Zone::class, 'zone_id');
+    public function Clients() {
+        return $this->hasMany(Client::class);
     }
 
     public function siteClients() {
         return $this->hasMany(SiteClient::class);
     }
-
 }

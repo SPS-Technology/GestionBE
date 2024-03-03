@@ -40,7 +40,8 @@ class FournisseurController extends Controller
                     'tele' => 'required',
                     'ville' => 'required',
                     'abreviation' => 'required',
-                    'zone' => 'required',
+                    'ice'=>'required',
+                    'code_postal'=>'required',
                     'user_id' => 'required',
                 ]);
 
