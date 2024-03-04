@@ -67,12 +67,24 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('status_commandes', [LigneCommandeController::class, 'index']);
     Route::post('status_commandes', [LigneCommandeController::class, 'store']);
 
-    //clients
+    // Définition des routes pour les clients
     Route::get('clients', [ClientController::class, 'index']);
     Route::post('clients', [ClientController::class, 'store']);
     Route::get('clients/{client}', [ClientController::class, 'show']);
     Route::put('clients/{client}', [ClientController::class, 'update']);
     Route::delete('clients/{client}', [ClientController::class, 'destroy']);
+
+    // Définition des routes pour les site clients
+    Route::get('siteclients', [SiteClientController::class, 'index']); // Route pour obtenir tous les site clients
+    Route::post('siteclients', [SiteClientController::class, 'store']);
+    Route::get('siteclients/{siteclient}', [SiteClientController::class, 'show']);
+    Route::put('siteclients/{siteclient}', [SiteClientController::class, 'update']);
+    Route::delete('siteclients/{siteclient}', [SiteClientController::class, 'destroy']);
+
+    // Route pour obtenir les site clients associés à un client spécifique
+    Route::get('clients/{clientId}/siteclients', [ClientController::class, 'siteclients']);
+    
+    //categories
 
     Route::apiResource('/categories', CategorieController::class);
 
@@ -88,5 +100,3 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/users/{id}',   [AuthController::class, 'destroy']);
     Route::get('/users', [AuthController::class, 'index']);
 });
-
-Route::apiResource('/siteclients', SiteClientController::class);

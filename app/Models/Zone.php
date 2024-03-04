@@ -15,7 +15,7 @@ class Zone extends Model
         return $this->hasMany(Client::class);
     }
 
-    public function siteClients() {
+    public function siteclients() {
         return $this->hasMany(SiteClient::class);
     }
 }
