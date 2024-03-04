@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Auth;
 
 class FournisseurController extends Controller
 {
@@ -41,12 +42,13 @@ class FournisseurController extends Controller
                     'ville' => 'required',
                     'abreviation' => 'required',
                     'zone' => 'required',
-                    'user_id' => 'required',
                 ]);
 
                 if ($validator->fails()) {
                     return response()->json(['error' => $validator->errors()], 400);
                 }
+                $request['user_id'] = Auth::id(); // Ajoutez ceci
+
 
                 $fournisseur = Fournisseur::create($request->all());
 
@@ -70,12 +72,12 @@ class FournisseurController extends Controller
                     'ville' => 'required',
                     'abreviation' => 'required',
                     'zone' => 'required',
-                    'user_id' => 'required',
                 ]);
 
                 if ($validator->fails()) {
                     return response()->json(['error' => $validator->errors()], 400);
                 }
+                $request['user_id'] = Auth::id(); // Ajoutez ceci
 
                 $fournisseur = Fournisseur::findOrFail($id);
                 $fournisseur->update($request->all());

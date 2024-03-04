@@ -74,14 +74,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users', [AuthController::class, 'index']);
 
     Route::apiResource('/categories', CategorieController::class);
+    Route::apiResource('/zones', CategorieController::class);
     Route::get('produits', [ProduitController::class, 'index']);
     Route::post('produits', [ProduitController::class, 'store']);
     Route::get('produits/{produit}', [ProduitController::class, 'show']);
     Route::put('produits/{produit}', [ProduitController::class, 'update']);
     Route::delete('produits/{produit}', [ProduitController::class, 'destroy']);
-});
 
-Route::get('/users/{id}/edit', [AuthController::class, 'edit']);
+    Route::get('/users/{id}/edit', [AuthController::class, 'edit']);
+    Route::delete('/users/{id}',   [AuthController::class, 'destroy']);
+    Route::get('/users', [AuthController::class, 'index']);
 Route::put('/users/{id}',  [AuthController::class, 'update']);
-Route::delete('/users/{id}',   [AuthController::class, 'destroy']);
-Route::get('/users', [AuthController::class, 'index']);
+
+});
