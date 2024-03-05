@@ -31,6 +31,7 @@ class User extends Authenticatable
     }
 
     protected $dontHashPassword = true;
+    
     public function hasRole($role)
     {
         return $this->roles->contains('name', $role);
@@ -52,7 +53,8 @@ class User extends Authenticatable
             $role = Role::where('name', $role)->firstOrFail();
         }
 
-        $this->roles()->sync([$role->id], false);
+        $this->roles()->sync([$role->id]);
+
     }
 
     public function hasPermission($permission)
