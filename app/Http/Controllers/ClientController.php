@@ -17,7 +17,7 @@ class ClientController extends Controller
      */
     public function index()
     {
-        if (Gate::allows('view_all_clients')) {
+        // if (Gate::allows('view_all_clients')) {
         try {
             $client = Client::with('user')->get();
             $count = Client::count();
@@ -28,9 +28,9 @@ class ClientController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
-    }else {
-        abort(403, 'Vous n\'avez pas l\'autorisation de voir la liste des Clients.');
-    }
+    // }else {
+    //     abort(403, 'Vous n\'avez pas l\'autorisation de voir la liste des Clients.');
+    // }
     }
     /**
      * Show the form for creating a new resource.

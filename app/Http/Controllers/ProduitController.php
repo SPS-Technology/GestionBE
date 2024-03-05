@@ -13,7 +13,7 @@ class ProduitController extends Controller
     public function index()
     {
         // Vérifier si l'utilisateur a la permission de voir la liste des produits
-        if (Gate::allows('view_all_products')) {
+        // if (Gate::allows('view_all_products')) {
             try {
                 $produit = Produit::all();
                 $count = Produit::count();
@@ -25,9 +25,9 @@ class ProduitController extends Controller
             } catch (\Exception $e) {
                 return response()->json(['error' => $e->getMessage()], 500);
             }
-        } else {
-            abort(403, 'Vous n\'avez pas l\'autorisation de voir la liste des produits.');
-        }
+        // } else {
+        //     abort(403, 'Vous n\'avez pas l\'autorisation de voir la liste des produits.');
+        // }
     }
 
     public function store(Request $request)

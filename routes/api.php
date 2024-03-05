@@ -60,15 +60,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/users/{id}',   [AuthController::class, 'destroy']);
     Route::get('/users', [AuthController::class, 'index']);
     //Commandes
-    Route::get('commandes', [CommandeController::class, 'index']);
-    Route::post('commandes', [CommandeController::class, 'store']);
-    Route::get('commandes/{commande}', [CommandeController::class, 'show']);
-    Route::put('commandes/{commande}', [CommandeController::class, 'update']);
-    Route::delete('commandes/{commande}', [CommandeController::class, 'destroy']);
-
-    Route::apiResource('/ligneCommandes', LigneCommandeController::class);
-    Route::apiResource('/statusCommande', StatusCommandeController::class);
+   
 });
 
+Route::get('commandes', [CommandeController::class, 'index']);
+Route::post('commandes', [CommandeController::class, 'store']);
+Route::get('commandes/{commande}', [CommandeController::class, 'show']);
+Route::put('commandes/{commande}', [CommandeController::class, 'update']);
+Route::delete('commandes/{commande}', [CommandeController::class, 'destroy']);
 
+Route::apiResource('/ligneCommandes', LigneCommandeController::class);
+Route::apiResource('/statusCommande', StatusCommandeController::class);
 Route::apiResource('/roles', RoleController::class);
+//Route::apiResource('/permissions', PermissionController::class);

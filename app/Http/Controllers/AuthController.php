@@ -18,7 +18,7 @@ class AuthController extends Controller
 
     public function user()
     {
-        if (Gate::allows('view_all_users')) {
+        // if (Gate::allows('view_all_users')) {
             $user = Auth::user();
             $user = User::with('roles.permissions')->find($user->id)->get();
             return response()->json([
@@ -34,9 +34,9 @@ class AuthController extends Controller
                     }), // Liste des noms de permissions
                 ],
             ]);
-        } else {
-            abort(403, 'Vous n\'avez pas l\'autorisation de voir la liste des utilisateurs.');
-        }
+        // } else {
+        //     abort(403, 'Vous n\'avez pas l\'autorisation de voir la liste des utilisateurs.');
+        // }
     }
 
 
@@ -239,15 +239,15 @@ class AuthController extends Controller
     }
     public function index()
     {
-        if (Gate::allows('view_all_users')) {
+        // if (Gate::allows('view_all_users')) {
             $users = User::whereHas('roles', function ($query) {
                 $query->where('name', '<>', 'admin');
             })->with('roles.permissions')->get();
 
             return response()->json($users, 200);
-        } else {
-            abort(403, 'Vous n\'avez pas l\'autorisation de voir la liste des utilisateurs.');
-        }
+        // } else {
+        //     abort(403, 'Vous n\'avez pas l\'autorisation de voir la liste des utilisateurs.');
+        // }
     }
     public function edit($id)
     {
