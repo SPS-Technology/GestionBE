@@ -83,7 +83,7 @@ class LigneCommandeController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
         } else {
-            $ligneCommande = ligneCommande::create($request->all());
+            $ligneCommande->update($request->all());
             return response()->json(['message' => 'ligneCommande modifié avec succès', 'ligneCommande' => $ligneCommande], 200);
         }
     }

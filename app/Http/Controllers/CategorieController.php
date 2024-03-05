@@ -12,54 +12,32 @@ class CategorieController extends Controller
      */
     public function index()
     {
-        //
+        $categories = Categorie::all();
+        return response()->json($categories);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function show($id)
     {
-        //
+        $categorie = Categorie::find($id);
+        return response()->json($categorie);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $categorie = Categorie::create($request->all());
+        return response()->json($categorie, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Categorie $categorie)
+    public function update(Request $request, $id)
     {
-        //
+        $categorie = Categorie::findOrFail($id);
+        $categorie->update($request->all());
+        return response()->json($categorie, 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Categorie $categorie)
+    public function destroy($id)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Categorie $categorie)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Categorie $categorie)
-    {
-        //
+        Categorie::findOrFail($id)->delete();
+        return response()->json(null, 204);
     }
 }

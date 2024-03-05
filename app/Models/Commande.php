@@ -16,13 +16,13 @@ class Commande extends Model
     public function statusCommandes() {
         return $this->hasMany(StatusCommande::class, 'commande_id', 'id');
     }
-    protected $fillable = [
-        'reference', 
-        'dateCommande',
-        'status',
-        'client_id',
-        'user_id',
-    ];
+    // protected $fillable = [
+    //     'reference', 
+    //     'dateCommande',
+    //     'status',
+    //     'client_id',
+    //     'user_id',
+    // ];
     protected static function boot()
     {
         parent::boot();
