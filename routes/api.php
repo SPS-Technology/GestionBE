@@ -7,10 +7,12 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ZoneController;
+use App\Http\Controllers\DevisController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\CommandeController;
 use App\Http\Controllers\CategorieController;
+use App\Http\Controllers\LigneDevisController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\SiteClientController;
 use App\Http\Controllers\FournisseurController;
@@ -99,4 +101,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/users/{id}',  [AuthController::class, 'update']);
     Route::delete('/users/{id}',   [AuthController::class, 'destroy']);
     Route::get('/users', [AuthController::class, 'index']);
-});
+
+
+
+
+});    // Devises 
+    Route::apiResource('/devises', DevisController::class);
+    
+    Route::apiResource('/lignedevis', LigneDevisController::class);

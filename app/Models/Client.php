@@ -22,5 +22,8 @@ class Client extends Model
     public function siteclients() {
         return $this->hasMany(SiteClient::class, 'client_id');
     }
+    public function devis() {
+        return $this->hasMany(Devis::class, 'client_id');
+    }
 
 }
