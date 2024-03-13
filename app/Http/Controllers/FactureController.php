@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Devis;
-use App\Models\LigneDevis;
+use App\Models\Facture;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Auth\Access\AuthorizationException;
 
-class DevisController extends Controller
+class FactureController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,9 +17,9 @@ class DevisController extends Controller
     public function index()
     {
         try {
-            $devis = Devis::with('lignedevis', 'client')->get();
-            $count = Devis::count();
-            return response()->json(['message' => 'Liste des devis récupérée avec succès', 'devis' =>  $devis, 'count' => $count], 200);
+            $facture = Facture::with('devis.lignedevis','clients')->get();
+            $count = Facture::count();
+            return response()->json(['message' => 'Liste des facture récupérée avec succès', 'facture' =>  $facture, 'count' => $count], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
@@ -41,50 +40,47 @@ class DevisController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'reference' => 'required',
-                'date' => 'required',
-                'validation_offer' => 'required',
-                'modePaiement' => 'required',
-                'status' => 'required',
+                'reference' => 'nullable',
+                'date' => 'nullable',
+                'ref_BL' => 'nullable',
+                'ref_BC' => 'nullable',
+                'modePaiement' => 'nullable',
                 'client_id' => 'required',
                 'user_id' => 'required',
+                'id_devis' => 'required',
             ]);
 
             if ($validator->fails()) {
                 return response()->json(['error' => $validator->errors()], 400);
             }
+            $reference = 'FTR' . now()->timestamp;
+            $date = Carbon::now()->format('Y-m-d H:i:s');
 
-            $devis = Devis::create($request->all());
-            return response()->json(['message' => 'Devis ajoutée avec succès', 'devis' => $devis], 200);
+            $requestData = $request->all();
+            $requestData['reference'] = $reference;
+            $requestData['date'] = $date;
+
+            $facture = Facture::create($requestData);
+            
+            return response()->json(['message' => 'Facture ajoutée avec succès', 'facture' => $facture], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-    public function lignedevis($devisId)
-    {
-        try {
-            // Récupérer les  ligne devises associés au devis spécifié par son ID
-            $lignedevis = LigneDevis::where('id_devis', $devisId)->get();
-            
-            return response()->json(['message' => 'ligne devises récupérés avec succès', 'lignedevis' => $lignedevis], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Une erreur s\'est devis lors de la récupération des  ligne devises'], 500);
-        }
-    }
+
     /**
      * Display the specified resource.
      */
     public function show($id)
     {
-        $devis = Devis::with('client','lignedevis')->findOrFail($id);
-        return response()->json(['devis' => $devis]);
-
+        $facture = Facture::with('clients', 'devis','lignedevis')->findOrFail($id);
+        return response()->json(['facture' => $facture]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Devis $devis)
+    public function edit(Facture $facture)
     {
         //
     }
@@ -96,30 +92,30 @@ class DevisController extends Controller
     {
         try {
             // $this->authorize('modify', Devis::class);
-            $devis = Devis::findOrFail($id);
-    
+            $facture = Facture::findOrFail($id);
+
             $validator = Validator::make($request->all(), [
                 'reference' => 'required',
-                'date' => 'required',
-                'validation_offer' => 'required',
-                'modePaiement' => 'required',
-                'status' => 'required',
+                'date' => 'nullable',
+                'ref_BL' => 'nullable',
+                'ref_BC' => 'nullable',
+                'modePaiement' => 'nullable',
                 'client_id' => 'required',
                 'user_id' => 'required',
+                'id_devis' => 'required',
             ]);
-    
+
             if ($validator->fails()) {
                 return response()->json(['error' => $validator->errors()], 400);
             }
-    
-            $devis->update($request->all());
+
+            $facture->update($request->all());
         } catch (AuthorizationException $e) {
-            return response()->json(['error' => 'Vous n\'avez pas l\'autorisation de modifier cette devis.'], 403);
+            return response()->json(['error' => 'Vous n\'avez pas l\'autorisation de modifier cette facture.'], 403);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-    
 
     /**
      * Remove the specified resource from storage.
@@ -128,17 +124,17 @@ class DevisController extends Controller
     {
         try {
             // $this->authorize('delete', Devis::class);
-            $devis = Devis::findOrFail($id);
+            $devis = Facture::findOrFail($id);
             $devis->delete();
 
-            return response()->json(['message' => 'Devis supprimée avec succès'], 200);
+            return response()->json(['message' => 'Facture supprimée avec succès'], 200);
         } catch (AuthorizationException $e) {
-            return response()->json(['error' => 'Vous n\'avez pas l\'autorisation de supprimer cette devis.'], 403);
+            return response()->json(['error' => 'Vous n\'avez pas l\'autorisation de supprimer cette Facture.'], 403);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         } catch (QueryException $e) {
-            // Si une exception est déclenchée, cela signifie que le client a des commandes associées
-            return response()->json(['error' => 'Impossible de supprimer ce devis car il a des BLs &  ou Factures associées.'], 400);
+            // Si une exception est déclenchée, cela signifie que le Facture a des Devises associées
+            return response()->json(['error' => 'Impossible de supprimer ce Facture car il a des BLs & ou Devises associées.'], 400);
         }
     }
 }

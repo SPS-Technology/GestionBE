@@ -5,23 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Devis extends Model
+class Facture extends Model
 {
     use HasFactory;
     protected $guarded=[];
 
-    public function client()
+    public function devis()
     {
-        return $this->belongsTo(Client::class, 'client_id');
+        return $this->belongsTo(Devis::class, 'id_devis');
     }
-
     public function lignedevis()
     {
         return $this->hasMany(LigneDevis::class, 'id_devis', 'id');
     }
-
-    public function facture()
+    public function clients()
     {
-        return $this->belongsTo(Facture::class, 'id_facture');
+        return $this->belongsTo(Client::class, 'client_id');
     }
+
 }

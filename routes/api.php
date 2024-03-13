@@ -9,6 +9,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ZoneController;
 use App\Http\Controllers\DevisController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\FactureController;
 use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\CommandeController;
 use App\Http\Controllers\CategorieController;
@@ -107,5 +108,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
 });    // Devises 
     Route::apiResource('/devises', DevisController::class);
-    
     Route::apiResource('/lignedevis', LigneDevisController::class);
+    // Route pour obtenir les lignedevis associés à un devis spécifique
+    Route::get('devises/{devisId}/lignedevis', [DevisController::class, 'lignedevis']);
+    //Factures
+    Route::apiResource('/factures', FactureController::class);

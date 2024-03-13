@@ -63,7 +63,7 @@ class CommandeController extends Controller
             $requestData = $request->all();
             $requestData['status'] = 'En Cours';
             $requestData['reference'] = $reference;
-            $requstData['dateCommande'] = $dateCommande;
+            $requestData['dateCommande'] = $dateCommande;
             $commande = Commande::create($requestData);
             return response()->json(['message' => 'Commande ajoutée avec succès', 'commande' => $commande], 200);
         } catch (AuthorizationException $e) {

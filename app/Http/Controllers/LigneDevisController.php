@@ -56,8 +56,9 @@ class LigneDevisController extends Controller
      */
     public function show($id)
     {
-        $lignedevises = LigneDevis::where('id_devis', $id)->get();
-        return response()->json(['lignedevises' => $lignedevises]);
+        $lignedevis = LigneDevis::findOrFail($id);
+        return response()->json(['lignedevis' => $lignedevis]);
+        
     }
 
     /**
