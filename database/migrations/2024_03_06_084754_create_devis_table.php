@@ -17,6 +17,9 @@ return new class extends Migration
             $table->date('date');
             $table->string('validation_offer');
             $table->string('modePaiement')->nullable();
+            $table->string('total_ht');
+            $table->string('tva');
+            $table->string('total_ttc');
             $table->string('status')->nullable();
             $table->unsignedBigInteger('client_id');
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('restrict');
