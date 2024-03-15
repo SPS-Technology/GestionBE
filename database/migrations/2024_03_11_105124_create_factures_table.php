@@ -18,12 +18,9 @@ return new class extends Migration
             $table->string('ref_BL')->nullable();
             $table->string('ref_BC')->nullable();
             $table->string('modePaiement')->nullable();
-            $table->string('total_ht');
-            $table->string('tva');
-            $table->string('total_ttc');
             $table->unsignedBigInteger('client_id');
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('restrict');
-            $table->unsignedBigInteger('id_devis');
+            $table->unsignedBigInteger('id_devis')->nullable();
             $table->foreign('id_devis')->references('id')->on('devis')->onDelete('restrict');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');

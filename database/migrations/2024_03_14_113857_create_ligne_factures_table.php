@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ligne_devis', function (Blueprint $table) {
+        Schema::create('ligne_factures', function (Blueprint $table) {
             $table->id();
             $table->string('Code_produit');
             $table->string('designation');
             $table->string('quantite');
             $table->decimal('prix_vente')->nullable();
-            $table->unsignedBigInteger('id_devis');
-            $table->foreign('id_devis')->references('id')->on('devis')->onDelete('restrict');
+            $table->unsignedBigInteger('id_facture');
+            $table->foreign('id_facture')->references('id')->on('factures')->onDelete('restrict');
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('linge_devis');
+        Schema::dropIfExists('ligne_factures');
     }
 };

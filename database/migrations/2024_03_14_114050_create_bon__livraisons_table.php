@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('devis', function (Blueprint $table) {
+        Schema::create('bon__livraisons', function (Blueprint $table) {
             $table->id();
             $table->string('reference');
             $table->date('date');
-            $table->string('validation_offer');
-            $table->string('modePaiement')->nullable();
-            $table->string('status')->nullable();
+            $table->string('ref_BC');
             $table->unsignedBigInteger('client_id');
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('restrict');
             $table->unsignedBigInteger('user_id');
@@ -31,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('devis');
+        Schema::dropIfExists('bon__livraisons');
     }
 };

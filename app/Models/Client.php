@@ -25,5 +25,9 @@ class Client extends Model
     public function devis() {
         return $this->hasMany(Devis::class, 'client_id');
     }
+    public function facture() {
+        return $this->hasMany(Devis::class, 'client_id');
+    }
+
 
 }

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('ville');
             $table->string('abreviation');
             $table->string('code_postal');
-            $table->integer('ice');
+            $table->bigInteger('ice');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
             $table->unsignedBigInteger('zone_id');

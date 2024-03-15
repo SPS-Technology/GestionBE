@@ -17,6 +17,8 @@ use App\Http\Controllers\LigneDevisController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\SiteClientController;
 use App\Http\Controllers\FournisseurController;
+use App\Http\Controllers\BonLivraisonController;
+use App\Http\Controllers\LigneFactureController;
 use App\Http\Controllers\LigneCommandeController;
 use App\Http\Controllers\StatusCommandeController;
 
@@ -92,11 +94,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('/categories', CategorieController::class);
 
     //produits
-    Route::get('produits', [ProduitController::class, 'index']);
-    Route::post('produits', [ProduitController::class, 'store']);
-    Route::get('produits/{produit}', [ProduitController::class, 'show']);
-    Route::put('produits/{produit}', [ProduitController::class, 'update']);
-    Route::delete('produits/{produit}', [ProduitController::class, 'destroy']);
+
 
     Route::get('/users/{id}/edit', [AuthController::class, 'edit']);
     Route::put('/users/{id}',  [AuthController::class, 'update']);
@@ -113,3 +111,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('devises/{devisId}/lignedevis', [DevisController::class, 'lignedevis']);
     //Factures
     Route::apiResource('/factures', FactureController::class);
+    Route::apiResource('/lignefactures', LigneFactureController::class);
+    
+    Route::get('produits', [ProduitController::class, 'index']);
+    Route::post('produits', [ProduitController::class, 'store']);
+    Route::get('produits/{produit}', [ProduitController::class, 'show']);
+    Route::put('produits/{produit}', [ProduitController::class, 'update']);
+    Route::delete('produits/{produit}', [ProduitController::class, 'destroy']);
+
+
+    Route::apiResource('/livraisons', BonLivraisonController::class);

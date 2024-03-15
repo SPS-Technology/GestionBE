@@ -45,12 +45,9 @@ class FactureController extends Controller
                 'ref_BL' => 'nullable',
                 'ref_BC' => 'nullable',
                 'modePaiement' => 'nullable',
-                'total_ht'=>'required',
-                'tva'=>'required',
-                'total_ttc'=>'required',
                 'client_id' => 'required',
                 'user_id' => 'required',
-                'id_devis' => 'required',
+                'id_devis' => 'nullable',
             ]);
 
             if ($validator->fails()) {
@@ -76,7 +73,7 @@ class FactureController extends Controller
      */
     public function show($id)
     {
-        $facture = Facture::with('clients', 'devis','lignedevis')->findOrFail($id);
+        $facture = Facture::with('clients', 'devis','lignedevis','ligneFacture')->findOrFail($id);
         return response()->json(['facture' => $facture]);
     }
 
@@ -103,9 +100,6 @@ class FactureController extends Controller
                 'ref_BL' => 'nullable',
                 'ref_BC' => 'nullable',
                 'modePaiement' => 'nullable',
-                'total_ht'=>'required',
-                'tva'=>'required',
-                'total_ttc'=>'required',
                 'client_id' => 'required',
                 'user_id' => 'required',
                 'id_devis' => 'required',
