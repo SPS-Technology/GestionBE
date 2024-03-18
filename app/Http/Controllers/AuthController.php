@@ -74,8 +74,8 @@ class AuthController extends Controller
                 'role' => 'required|string',
                 'permissions' => 'array',
                 'permissions.*' => 'string|exists:permissions,name',
-                'photo' => 'nullable|string|mimes:jpeg,png,jpg,gif|max:2048',
-            ]);
+                'photo' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:2048',
+                        ]);
 
             if ($validator->fails()) {
                 return response()->json([
@@ -124,31 +124,38 @@ class AuthController extends Controller
             'email'    => 'required|email',
             'password' => 'required|string',
         ]);
-
+    
         $user = User::where('email', $request->email)->first();
-        if (!$user || $user->password !== $request->password) {
+    
+        if (!$user) {
             return response()->json([
                 'status'  => 0,
-                'message' => 'Email or password incorrect',
+                'message' => 'Email not found',
             ], 400);
         }
-
-
+    
+        if ($user && $user->password !== $request->password) {
+            return response()->json([
+                'status'  => 0,
+                'message' => 'Incorrect password',
+            ], 400);
+        }
+    
         Auth::login($user);
-
+    
         $token = $user->createToken('API_TOKEN')->plainTextToken;
-
+    
         $cookie = Cookie::make('jwt', $token, 60, null, null, false, true);
-
+    
         return response()->json([
             'status'    => 1,
             'message'   => 'Utilisateur connecté',
-            'user' => $user,
-            'photo' => $user->photo,
-            'token' => $token,
+            'user'      => $user,
+            'photo'     => $user->photo,
+            'token'     => $token,
         ], 200)->withCookie($cookie);
     }
-
+    
 
     public function update(Request $request, $id)
     {
@@ -159,7 +166,7 @@ class AuthController extends Controller
             $validator = Validator::make($request->all(), [
                 'name' => 'string|max:255',
                 'email' => 'string|email|max:255',
-                'photo' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+                'photo' => 'file|mimes:jpeg,png,jpg,gif|max:2048',
                 'password' => 'string|min:8',
                 'role' => 'string',
                 'permissions' => 'array',
@@ -184,10 +191,18 @@ class AuthController extends Controller
             }
 
             if ($request->hasFile('photo')) {
-                $photoPath = $request->file('photo')->store('public/photos');
-                $user->photo = Storage::url($photoPath);
+                try {
+                    $photoPath = $request->file('photo')->store('public/photos');
+                    $user->photo = Storage::url($photoPath);
+                } catch (\Exception $e) {
+                    return response()->json([
+                        'status' => 0,
+                        'message' => 'Erreur lors du stockage de la photo.',
+                        'error' => $e->getMessage(),
+                    ], 500);
+                }
             }
-
+            
             $user->save();
 
             if ($request->has('role')) {

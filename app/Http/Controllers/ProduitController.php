@@ -14,44 +14,44 @@ class ProduitController extends Controller
     public function index()
     {
         // Vérifier si l'utilisateur a la permission de voir la liste des produits
-        // if (Gate::allows('view_all_products')) {
-            try {
-                $produits = Produit::with('categorie','user')->get();
-                $count = Produit::count();
+        if (Gate::allows('view_all_products')) {
+        try {
+            $produits = Produit::with('categorie', 'user')->get();
+            $count = Produit::count();
 
-                return response()->json([
-                    'message' => 'Liste des produits récupérée avec succès', 'produit' => $produits,
-                    'count' => $count
-                ], 200);
-            } catch (\Exception $e) {
-                return response()->json(['error' => $e->getMessage()], 500);
-            }
-        // } else {
-        //     abort(403, 'Vous n\'avez pas l\'autorisation de voir la liste des produits.');
-        // }
+            return response()->json([
+                'message' => 'Liste des produits récupérée avec succès', 'produit' => $produits,
+                'count' => $count
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+        } else {
+            abort(403, 'Vous n\'avez pas l\'autorisation de voir la liste des produits.');
+        }
     }
 
     public function store(Request $request)
     {
         if (Gate::allows('create_product')) {
-            try {
-                $validator = Validator::make($request->all(), [
-                      'Code_produit' => 'required',
-                    'designation' => 'required',
-                    'calibre' => 'required',
-                    'type_quantite' => 'required',
-                    'categorie_id' => 'nullable', 
-                ]);     
-                if ($validator->fails()) {
-                    return response()->json(['error' => $validator->errors()], 400);
-                }
-        
-                $request['user_id'] = Auth::id(); 
-                $produit = Produit::create($request->all());
-                return response()->json(['message' => 'Produit ajouté avec succès', 'produit' => $produit], 200);
-            } catch (\Exception $e) {
-                return response()->json(['error' => $e->getMessage()], 500);
+        try {
+            $validator = Validator::make($request->all(), [
+                'Code_produit' => 'required|unique:produits,Code_produit',
+                'designation' => 'required',
+                'calibre' => 'required',
+                'type_quantite' => 'required',
+                'categorie_id' => 'nullable',
+            ]);
+            if ($validator->fails()) {
+                return response()->json(['error' => $validator->errors()], 400);
             }
+
+            $request['user_id'] = Auth::id();
+            $produit = Produit::create($request->all());
+            return response()->json(['message' => 'Produit ajouté avec succès', 'produit' => $produit], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
         } else {
             abort(403, 'Vous n\'avez pas l\'autorisation de créer un produit.');
         }
@@ -79,11 +79,11 @@ class ProduitController extends Controller
             try {
                 // Validation des données du formulaire
                 $validator = Validator::make($request->all(), [
-                    'Code_produit' => 'required',
+                    'Code_produit' => 'required|unique:produits,Code_produit,'.$id,
                     'designation' => 'required',
                     'calibre' => 'required',
                     'type_quantite' => 'required',
-                    'categorie_id' => 'nullable', 
+                    'categorie_id' => 'nullable',
                 ]);
 
                 if ($validator->fails()) {

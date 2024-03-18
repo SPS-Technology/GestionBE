@@ -36,12 +36,13 @@ class FournisseurController extends Controller
         if (Gate::allows('create_fournisseurs')) {
             try {
                 $validator = Validator::make($request->all(), [
+                    'CodeFournisseur' => 'required|unique:fournisseurs,CodeFournisseur',
                     'raison_sociale' => 'required',
                     'adresse' => 'required',
                     'tele' => 'required',
                     'ville' => 'required',
                     'abreviation' => 'required',
-                    'zone' => 'required',
+                   
                 ]);
 
                 if ($validator->fails()) {
@@ -66,12 +67,13 @@ class FournisseurController extends Controller
         if (Gate::allows('update_fournisseurs')) {
             try {
                 $validator = Validator::make($request->all(), [
+                    'CodeFournisseur' => 'required|unique:fournisseurs,CodeFournisseur,'.$id,
                     'raison_sociale' => 'required',
                     'adresse' => 'required',
                     'tele' => 'required',
                     'ville' => 'required',
                     'abreviation' => 'required',
-                    'zone' => 'required',
+                   
                 ]);
 
                 if ($validator->fails()) {

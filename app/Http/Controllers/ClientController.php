@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Auth\Access\AuthorizationException;
-
+use Illuminate\Support\Facades\Auth;
 
 class ClientController extends Controller
 {
@@ -18,7 +18,7 @@ class ClientController extends Controller
      */
     public function index()
     {
-        // if (Gate::allows('view_all_clients')) {
+        if (Gate::allows('view_all_clients')) {
         try {
             $client = Client::with('user','zone','siteclients')->get();
             $count = Client::count();
@@ -29,9 +29,9 @@ class ClientController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
-    // }else {
-    //     abort(403, 'Vous n\'avez pas l\'autorisation de voir la liste des Clients.');
-    // }
+    }else {
+        abort(403, 'Vous n\'avez pas l\'autorisation de voir la liste des Clients.');
+    }
     }
     /**
      * Show the form for creating a new resource.
@@ -57,9 +57,10 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
-        // if (Gate::allows('create_clients')) {
+        if (Gate::allows('create_clients')) {
         try {
             $validator = Validator::make($request->all(), [
+                'CodeClient' => 'required|unique:clients,CodeClient,',
                 'raison_sociale' => 'required',
                 'adresse' => 'required',
                 'tele' => 'required',
@@ -69,7 +70,7 @@ class ClientController extends Controller
                 'code_postal'=>'required',
                 'zone_id' => 'required',
             ]);
-
+            $request['user_id'] = Auth::id(); 
             if ($validator->fails()) {
                 return response()->json(['error' => $validator->errors()], 400);
             }
@@ -79,9 +80,9 @@ class ClientController extends Controller
         }  catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
-    // }else {
-    //     abort(403, 'Vous n\'avez pas l\'autorisation de creer  un client.');
-    // }
+    }else {
+        abort(403, 'Vous n\'avez pas l\'autorisation de creer  un client.');
+    }
 }
 
     /**
@@ -111,6 +112,7 @@ class ClientController extends Controller
         try {
             $client = Client::findOrFail($id);
             $validator = Validator::make($request->all(), [
+                'CodeClient' => 'required|unique:clients,CodeClient,'.$id,
                 'raison_sociale' => 'required',
                 'adresse' => 'required',
                 'tele' => 'required',
@@ -120,7 +122,7 @@ class ClientController extends Controller
                 'code_postal'=>'required',
                 'zone_id' => 'required',
             ]);
-
+            $request['user_id'] = Auth::id(); 
             if ($validator->fails()) {
                 return response()->json(['error' => $validator->errors()], 400);
             }

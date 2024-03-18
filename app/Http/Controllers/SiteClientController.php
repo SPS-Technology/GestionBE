@@ -35,6 +35,7 @@ class SiteClientController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'CodeSiteclient' => 'required|unique:site_clients,CodeSiteclient',
             'raison_sociale' => 'required',
             'adresse' => 'required',
             'tele' => 'required',
@@ -78,6 +79,7 @@ class SiteClientController extends Controller
     {
         $siteclient = SiteClient::findOrFail($id);
             $validator = Validator::make($request->all(), [
+                'CodeSiteclient' => 'required|unique:site_clients,CodeSiteclient,'.$id,
                 'raison_sociale' => 'required',
                 'adresse' => 'required',
                 'tele' => 'required',
