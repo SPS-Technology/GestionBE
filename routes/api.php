@@ -1,11 +1,17 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BonLivraisonController;
+use App\Http\Controllers\CalibreController;
 use App\Http\Controllers\CategorieController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CommandeController;
+use App\Http\Controllers\DevisController;
+use App\Http\Controllers\FactureController;
 use App\Http\Controllers\FournisseurController;
 use App\Http\Controllers\LigneCommandeController;
+use App\Http\Controllers\LigneDevisController;
+use App\Http\Controllers\LigneFactureController;
 use App\Http\Controllers\LivreurController;
 use App\Http\Controllers\ObjectifController;
 use App\Http\Controllers\PermisController;
@@ -14,6 +20,7 @@ use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SiteClientController;
 use App\Http\Controllers\StatusCommandeController;
+use App\Http\Controllers\StockController;
 use App\Http\Controllers\VehiculeController;
 use App\Http\Controllers\VehiculeLivreurController;
 use App\Http\Controllers\ZoneController;
@@ -105,11 +112,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/objectifs/{id}', [ObjectifController::class, 'destroy']);
 
 
-    Route::get('/permis', [PermisController::class, 'index']);
-    Route::post('/permis', [PermisController::class, 'store']);
-    Route::get('/permis/{id}', [PermisController::class, 'show']);
-    Route::put('/permis/{id}', [PermisController::class, 'update']);
-    Route::delete('/permis/{id}', [PermisController::class, 'destroy']);
     // Routes pour Livreurs
     Route::get('/livreurs', [LivreurController::class, 'index']);
     Route::post('/livreurs', [LivreurController::class, 'store']);
@@ -130,4 +132,30 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/vehicule-livreurs/{id}', [VehiculeLivreurController::class, 'show']);
     Route::put('/vehicule-livreurs/{id}', [VehiculeLivreurController::class, 'update']);
     Route::delete('/vehicule-livreurs/{id}', [VehiculeLivreurController::class, 'destroy']);
+
+
+    Route::apiResource('/devises', DevisController::class);
+    Route::apiResource('/lignedevis', LigneDevisController::class);
+    // Route pour obtenir les lignedevis associés à un devis spécifique
+    Route::get('devises/{devisId}/lignedevis', [DevisController::class, 'lignedevis']);
+    //Factures
+    Route::apiResource('/factures', FactureController::class);
+    Route::apiResource('/lignefactures', LigneFactureController::class);
+    Route::apiResource('/livraisons', BonLivraisonController::class);
+
+    //stock
+    Route::get('stock', [StockController::class, 'index']);
+    Route::post('stock', [StockController::class, 'store']);
+    Route::get('stock/{stock}', [StockController::class, 'show']);
+    Route::put('stock/{stock}', [StockController::class, 'update']);
+    Route::delete('stock/{stck}', [StockController::class, 'destroy']);
+
+    //Calibre
+    Route::apiResource('/calibres', CalibreController::class);
 });
+
+Route::get('/permis', [PermisController::class, 'index']);
+Route::post('/permis', [PermisController::class, 'store']);
+Route::get('/permis/{id}', [PermisController::class, 'show']);
+Route::put('/permis/{id}', [PermisController::class, 'update']);
+Route::delete('/permis/{id}', [PermisController::class, 'destroy']);

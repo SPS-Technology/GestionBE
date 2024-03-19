@@ -41,28 +41,29 @@ class PermisController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-    public function update(Request $request, $livreurId, $permisId)
+    public function update(Request $request, $id)
     {
         try {
-            $permis = Permis::where('livreur_id', $livreurId)->findOrFail($permisId);
-
+            $permis = Permis::findOrFail($id);
+    
             $validator = Validator::make($request->all(), [
                 'n_permis' => 'required',
                 'type_permis' => 'required',
                 'date_permis' => 'required|date',
             ]);
-
+    
             if ($validator->fails()) {
                 return response()->json(['error' => $validator->errors()], 400);
             }
-
+    
             $permis->update($request->all());
-
+    
             return response()->json(['message' => 'Permis mis à jour avec succès', 'permis' => $permis], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+    
 
     // public function destroy($livreurId, $permisId)
     // {
