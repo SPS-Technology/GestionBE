@@ -5,6 +5,8 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CommandeController;
 use App\Http\Controllers\FournisseurController;
 use App\Http\Controllers\LigneCommandeController;
+use App\Http\Controllers\PreparationLigneCommandeController;
+use App\Http\Controllers\ChargementCommandeController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\RoleController;
@@ -12,6 +14,12 @@ use App\Http\Controllers\StatusCommandeController;
 use App\Http\Controllers\SiteClientController;
 use App\Http\Controllers\CategorieController;
 use App\Http\Controllers\ZoneController;
+use App\Http\Controllers\LivreurController;
+use App\Http\Controllers\VehiculeController;
+use App\Http\Controllers\StockController;
+use App\Http\Controllers\DevisController;
+use App\Http\Controllers\LigneDevisController;
+use App\Http\Controllers\CalibreController;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -35,14 +43,14 @@ Route::post("/register", [AuthController::class, 'register']);
 
 // Route::apiResource('roles', RoleController::class);
 // Route::apiResource('permissions', PermissionController::class);
-
+Route::get('produits', [ProduitController::class, 'index']);
+Route::post('produits', [ProduitController::class, 'store']);
+Route::get('produits/{produit}', [ProduitController::class, 'show']);
+Route::put('produits/{produit}', [ProduitController::class, 'update']);
+Route::delete('produits/{produit}', [ProduitController::class, 'destroy']);
 Route::middleware('auth:sanctum')->group(function () {
     //produits
-    Route::get('produits', [ProduitController::class, 'index']);
-    Route::post('produits', [ProduitController::class, 'store']);
-    Route::get('produits/{produit}', [ProduitController::class, 'show']);
-    Route::put('produits/{produit}', [ProduitController::class, 'update']);
-    Route::delete('produits/{produit}', [ProduitController::class, 'destroy']);
+   
 
     // Fournisseurs
     Route::get('fournisseurs', [FournisseurController::class, 'index']);
@@ -106,3 +114,21 @@ Route::get('commandes', [CommandeController::class, 'index']);
 
     Route::apiResource('/ligneCommandes', LigneCommandeController::class);
     Route::apiResource('/statusCommande', StatusCommandeController::class);
+    Route::apiResource('/lignePreparationCommandes', PreparationLigneCommandeController::class);
+    Route::apiResource('/chargementCommandes', ChargementCommandeController::class);
+    Route::apiResource('/livreurs', LivreurController::class);
+    Route::apiResource('/vehicules', VehiculeController::class);
+     //stock
+ Route::get('stock', [StockController::class, 'index']);
+ Route::post('stock', [StockController::class, 'store']);
+ Route::get('stock/{stock}', [StockController::class, 'show']);
+ Route::put('stock/{stock}', [StockController::class, 'update']);
+ Route::delete('stock/{stck}', [StockController::class, 'destroy']);
+
+
+ //Devis
+ Route::apiResource('/devises', DevisController::class);
+ Route::apiResource('/lignedevis', LigneDevisController::class);
+
+ //Calibre
+ Route::apiResource('/calibres', CalibreController::class);

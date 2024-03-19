@@ -13,6 +13,10 @@ class Produit extends Model
 
     public function categorie()
     {
-        return $this->belongsTo(categorie::class, 'categorie_id');
+        return $this->belongsTo(Categorie::class, 'categorie_id');
+    }
+    public function calibre()
+    {
+        return $this->belongsTo(Calibre::class, 'calibre_id');
     }
 }

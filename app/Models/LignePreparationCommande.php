@@ -5,13 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Calibre extends Model
+class LignePreparationCommande extends Model
 {
     use HasFactory;
     protected $guarded=[]; 
-    protected $table = 'calibre';
-    public function produits()
-    {
-        return $this->hasMany(Produit::class);
+    public function commande() {
+        return $this->belongsTo(Commande::class, 'commande_id', 'id');
     }
+
 }

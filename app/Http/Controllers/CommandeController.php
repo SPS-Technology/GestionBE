@@ -18,7 +18,7 @@ class CommandeController extends Controller
     {
         try {
             //$this->authorize('view', Commande::class);
-            $commandes = Commande::with('ligneCommandes', 'statusCommandes')->get();
+            $commandes = Commande::with('ligneCommandes', 'statusCommandes','lignePreparationCommandes')->get();
             return response()->json(['message' => 'Liste des commandes récupérée avec succès', 'commandes' =>  $commandes], 200);
         } catch (AuthorizationException $e) {
             return response()->json(['error' => 'Vous n\'avez pas l\'autorisation de voir la liste des commandes.'], 403);
@@ -60,7 +60,7 @@ class CommandeController extends Controller
             $dateSaisis = Carbon::now()->format('Y-m-d H:i:s');
 
             $requestData = $request->all();
-            $requestData['status'] = 'EN COURS';
+            $requestData['status'] = 'En cours';
             $requestData['reference'] = $reference;
             $requstData['dateSaisis'] = $dateSaisis;
             $commande = Commande::create($requestData);

@@ -15,7 +15,7 @@ class ProduitController extends Controller
         // Vérifier si l'utilisateur a la permission de voir la liste des produits
         // if (Gate::allows('view_all_products')) {
             try {
-                $produits = Produit::with('categorie')->get();
+                $produits = Produit::with('categorie','calibre')->get();
                 $count = Produit::count();
 
                 return response()->json([
@@ -39,7 +39,7 @@ class ProduitController extends Controller
                 $validator = Validator::make($request->all(), [
                     'Code_produit'=>'required',
                     'designation' => 'required',
-                    'calibre' => 'required',
+                    'calibre_id' => 'required',
                     'type_quantite' => 'required',
                     'categorie_id' => 'required',
                     //'user_id' => 'required',
@@ -84,7 +84,7 @@ class ProduitController extends Controller
                 $validator = Validator::make($request->all(), [
                     'Code_produit'=>'required',
                     'designation' => 'required',
-                    'calibre' => 'required',
+                    'calibre_id' => 'required',
                     'type_quantite' => 'required',
                     'categorie_id' => 'required',
                     'user_id' => 'required',

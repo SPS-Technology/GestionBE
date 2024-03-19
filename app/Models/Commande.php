@@ -16,6 +16,9 @@ class Commande extends Model
     public function statusCommandes() {
         return $this->hasMany(StatusCommande::class, 'commande_id', 'id');
     }
+    public function lignePreparationCommandes() {
+        return $this->hasMany(LignePreparationCommande::class, 'commande_id', 'id');
+    }
     // protected $fillable = [
     //     'reference', 
     //     'dateCommande',
@@ -31,6 +34,7 @@ class Commande extends Model
         static::deleting(function ($commande) {
             $commande->ligneCommandes()->delete();
             $commande->statusCommandes()->delete();
+            $commande->lignePreparationCommandes()->delete();
         });
     }
 }
