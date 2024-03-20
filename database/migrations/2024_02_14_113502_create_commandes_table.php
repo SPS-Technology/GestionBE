@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->timestamp('dateSaisis');
             $table->date('dateCommande');
+            $table->date('datePreparationCommande')->nullable()->default(DB::raw('`dateCommande`'));
+
             $table->string('reference');
             $table->string('mode_payement')->nullable();
             $table->unsignedBigInteger('client_id');
