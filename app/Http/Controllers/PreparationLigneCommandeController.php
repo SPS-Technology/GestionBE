@@ -40,14 +40,20 @@ class PreparationLigneCommandeController extends Controller
         }
     }
 
-    public function show($id)
+    // public function show($id)
+    // {
+    //     try {
+    //         $lignePreparationCommande = LignePreparationCommande::findOrFail($id);
+    //         return response()->json(['lignePreparationCommande' => $lignePreparationCommande], 200);
+    //     } catch (\Exception $e) {
+    //         return response()->json(['error' => $e->getMessage()], 404);
+    //     }
+    // }
+
+    public function show($commandeId)
     {
-        try {
-            $lignePreparationCommande = LignePreparationCommande::findOrFail($id);
-            return response()->json(['lignePreparationCommande' => $lignePreparationCommande], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 404);
-        }
+        $lignePreparationCommandes = LignePreparationCommande::where('commande_id', $commandeId)->get();
+        return response()->json(['lignePreparationCommandes' => $lignePreparationCommandes]);
     }
 
     public function update(Request $request, $id)
