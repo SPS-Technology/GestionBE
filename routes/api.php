@@ -6,6 +6,7 @@ use App\Http\Controllers\DevisController;
 use App\Http\Controllers\EtatRecouvrementController;
 use App\Http\Controllers\FactureController;
 use App\Http\Controllers\LigneDevisController;
+use App\Http\Controllers\LigneentrercompteController;
 use App\Http\Controllers\ReclamationController;
 use App\Models\Role;
 use App\Models\SiteClient;
@@ -23,7 +24,6 @@ use App\Http\Controllers\SiteClientController;
 use App\Http\Controllers\FournisseurController;
 use App\Http\Controllers\LigneCommandeController;
 use App\Http\Controllers\StatusCommandeController;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -118,12 +118,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/reclamations/{id}', [ReclamationController::class, 'update']);
     Route::delete('/reclamations/{id}', [ReclamationController::class, 'destroy']);
 
-//Route for Banque
-    Route::get('/banques', [BanqueController::class, 'index']);
-    Route::post('/banques', [BanqueController::class, 'store']);
-    Route::get('/banques/{id}', [BanqueController::class, 'show']);
-    Route::put('/banques/{id}', [BanqueController::class, 'update']);
-    Route::delete('/banques/{id}', [BanqueController::class, 'destroy']);
+
 
 // Devises
     Route::apiResource('/devises', DevisController::class);
@@ -145,3 +140,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
 });
 
+//Ligneentrercompte
+Route::apiResource('/ligneentrercompte',LigneentrercompteController::class);
+//Route for Banque
+Route::get('/banques', [BanqueController::class, 'index']);
+Route::post('/banques', [BanqueController::class, 'store']);
+Route::get('/banques/{id}', [BanqueController::class, 'show']);
+Route::put('/banques/{id}', [BanqueController::class, 'update']);
+Route::delete('/banques/{id}', [BanqueController::class, 'destroy']);

@@ -25,10 +25,11 @@ return new class extends Migration
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('restrict');
             $table->unsignedBigInteger('id_devis');
             $table->foreign('id_devis')->references('id')->on('devis')->onDelete('restrict');
+            $table->string('status');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
             $table->timestamps();
-        });
+    });
     }
 
     /**
