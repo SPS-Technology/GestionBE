@@ -63,12 +63,13 @@ class VehiculeLivreurController extends Controller
     public function show($id)
     {
         try {
-            $vehiculeLivreur = VehiculeLivreur::findOrFail($id);
-            return response()->json(['vehicule_livreur' => $vehiculeLivreur], 200);
+            $vehiculeLivreur = VehiculeLivreur::where('livreur_id', $id)->get();
+            return response()->json(['vehicule_livreurs' => $vehiculeLivreur], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 404);
         }
     }
+    
 
     public function update(Request $request, $id)
     {

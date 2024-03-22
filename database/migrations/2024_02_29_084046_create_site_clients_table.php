@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('abreviation');
             $table->string('code_postal');
             $table->integer('ice');
+            $table->string('logoSC');
             $table->unsignedBigInteger('zone_id');
             $table->foreign('zone_id')->references('id')->on('zones')->onDelete('restrict');
             $table->unsignedBigInteger('client_id');

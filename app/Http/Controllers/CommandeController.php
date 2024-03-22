@@ -18,7 +18,7 @@ class CommandeController extends Controller
     {
         try {
             //$this->authorize('view', Commande::class);
-            $commandes = Commande::with('ligneCommandes', 'statusCommandes')->get();
+            $commandes = Commande::with('ligneCommandes', 'statusCommandes','lignePreparationCommandes')->get();
             return response()->json(['message' => 'Liste des commandes récupérée avec succès', 'commandes' =>  $commandes], 200);
         } catch (AuthorizationException $e) {
             return response()->json(['error' => 'Vous n\'avez pas l\'autorisation de voir la liste des commandes.'], 403);
@@ -47,8 +47,8 @@ class CommandeController extends Controller
             $validator = Validator::make($request->all(), [
                
                 'client_id' => 'required',
-                'user_id' => 'nullable',
-                'fournisseur_id' => 'nullable',
+                'dateCommande'=>'required',
+                'mode_payement'=> 'nullable',
                
             ]);
 
@@ -57,12 +57,12 @@ class CommandeController extends Controller
             }
 
             $reference = 'CMD' . now()->timestamp;
-            $dateCommande = Carbon::now()->format('Y-m-d H:i:s');
+            $dateSaisis = Carbon::now()->format('Y-m-d H:i:s');
 
             $requestData = $request->all();
-            $requestData['status'] = 'En Cours';
+            $requestData['status'] = 'En cours';
             $requestData['reference'] = $reference;
-            $requstData['dateCommande'] = $dateCommande;
+            $requstData['dateSaisis'] = $dateSaisis;
             $commande = Commande::create($requestData);
             return response()->json(['message' => 'Commande ajoutée avec succès', 'commande' => $commande], 200);
         } catch (AuthorizationException $e) {
@@ -102,9 +102,9 @@ class CommandeController extends Controller
             $validator = Validator::make($request->all(), [
                 'dateCommande' => 'nullable',
                 'client_id' => 'required',
-                'user_id' => 'required',
+                'dateSaisis' => 'nullable',
                 'status' => 'required',
-                'fournisseur_id' => 'nullable'
+               
             ]);
 
             if ($validator->fails()) {
