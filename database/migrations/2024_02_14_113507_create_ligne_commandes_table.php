@@ -20,6 +20,10 @@ return new class extends Migration
             $table->unsignedBigInteger('quantite');
             $table->unsignedBigInteger('prix_unitaire');
             $table->timestamps();
+            
+            // Add indexes for foreign key columns
+            $table->index('commande_id');
+            $table->index('produit_id');
         });
     }
 
