@@ -30,7 +30,7 @@ class LigneentrercompteController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'client_id' => 'required',
+                'banques_id' => 'required',
                 'id_facture' => 'required',
                 'avance' => 'required|string',
             ]);
@@ -51,7 +51,7 @@ class LigneentrercompteController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'client_id' => 'required|exists:clients,id',
+                'banques_id' => 'required|exists:clients,id',
                 'id_facture' => 'required|exists:factures,id',
                 'avance' => 'required|string',
             ]);

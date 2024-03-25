@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Banque;
+use App\Models\Commande;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -11,7 +12,7 @@ class BanqueController extends Controller
     public function index()
     {
         try {
-            $banques = Banque::all();
+            $banques = Banque::with('ligneEntrerCompte')->get();;
             $count = Banque::count();
 
             return response()->json([
@@ -32,7 +33,7 @@ class BanqueController extends Controller
                 'datee' => 'required|date',
                 'numero_cheque' => 'required',
                 'mode_de_paiement' => 'required',
-                'Montant' => 'nullable',
+
                 'Status' => 'nullable',
                 'remarque' => 'nullable|string',
             ]);

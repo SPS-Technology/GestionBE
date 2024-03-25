@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('numero_cheque');
             $table->date('datee');
             $table->string('mode_de_paiement');
-            $table->string('Montant');
+
             $table->string('Status');
             $table->string('remarque');
             $table->timestamps();

@@ -13,7 +13,7 @@ class Banque extends Model
         'numero_cheque',
         'datee',
         'mode_de_paiement',
-        'Montant',
+
         'Status',
         'remarque',
         ];
@@ -22,7 +22,9 @@ class Banque extends Model
     {
         return $this->belongsTo(Client::class);
     }
-
+    public function ligneEntrerCompte() {
+        return $this->hasMany(Ligneentrercompte::class, 'banques_id', 'id');
+    }
 
 
 }
