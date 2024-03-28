@@ -67,7 +67,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('clients/{client}', [ClientController::class, 'destroy']);
     //user
       // Définition des routes pour les clients
-      Route::get('clients', [ClientController::class, 'index']);
+   
       Route::post('clients', [ClientController::class, 'store']);
       Route::get('clients/{client}', [ClientController::class, 'show']);
       Route::put('clients/{client}', [ClientController::class, 'update']);
@@ -132,3 +132,6 @@ Route::get('commandes', [CommandeController::class, 'index']);
 
  //Calibre
  Route::apiResource('/calibres', CalibreController::class);
+
+ 
+ Route::get('clients', [ClientController::class, 'index']);

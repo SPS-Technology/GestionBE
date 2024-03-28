@@ -16,11 +16,12 @@ return new class extends Migration
             $table->timestamp('dateSaisis');
             $table->date('dateCommande');
             $table->date('datePreparationCommande')->nullable()->default(DB::raw('`dateCommande`'));
-
             $table->string('reference');
             $table->string('mode_payement')->nullable();
             $table->unsignedBigInteger('client_id');
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('restrict');
+            $table->unsignedBigInteger('site_id')->nullable();
+            $table->foreign('site_id')->references('id')->on('site_clients')->onDelete('restrict');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
             $table->string('status');
