@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\QueryException;
-
+use Illuminate\Support\Facades\Auth;
 class ProduitController extends Controller
 {
     public function index()
@@ -48,7 +48,8 @@ class ProduitController extends Controller
                 if ($validator->fails()) {
                     return response()->json(['error' => $validator->errors()], 400);
                 }
-
+                //$request['user_id'] = Auth::id();
+                //$request['user_id'] = 1;
                 $produit = Produit::create($request->all());
 
                 return response()->json(['message' => 'Produit ajouté avec succès', 'produit' => $produit], 200);
