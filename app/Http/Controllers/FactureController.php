@@ -17,7 +17,7 @@ class FactureController extends Controller
     public function index()
     {
         try {
-            $facture = Facture::with('devis.lignedevis','clients')->get();
+            $facture = Facture::with('devis.lignedevis','client','ligneEntrerCompte')->get();
             $count = Facture::count();
             return response()->json(['message' => 'Liste des facture récupérée avec succès', 'facture' =>  $facture, 'count' => $count], 200);
         } catch (\Exception $e) {

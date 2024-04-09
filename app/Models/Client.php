@@ -25,9 +25,14 @@ class Client extends Model
     public function invoices() {
         return $this->hasMany(Facture::class, 'client_id');
     }
-    public function banques() {
-        return $this->hasMany(Banque::class, 'client_id');
+    public function entrer_comptes() {
+        return $this->hasMany(EntrerBanque::class, 'client_id');
     }
+
+    public function ligneEntrerCompte() {
+        return $this->hasMany(Ligneentrercompte::class, 'client_id', 'id');
+    }
+
 
 
 }

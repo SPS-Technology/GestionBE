@@ -16,6 +16,8 @@ class Reclamation extends Model
         'status_reclamation',
         'traitement_reclamation',
         'date_traitement',
+        'remarque',
+
     ];
 
     public function client()

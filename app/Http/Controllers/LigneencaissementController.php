@@ -2,23 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Client;
-use App\Models\Facture;
-use App\Models\Ligneentrercompte;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Ligneencaissement;
 
-class LigneentrercompteController extends Controller
+class LigneencaissementController extends Controller
 {
     public function index()
     {
         try {
-            $ligneentrercomptes = Ligneentrercompte::all();
-            $count = Ligneentrercompte::count();
+            $ligneencaissements = Ligneencaissement::all();
+            $count = Ligneencaissement::count();
 
             return response()->json([
-                'message' => 'Liste des lignes d\'entrée de compte récupérée avec succès',
-                'ligneentrercomptes' => $ligneentrercomptes,
+                'message' => 'Liste des lignes d\'encaissement récupérée avec succès',
+                'ligneencaissements' => $ligneencaissements,
                 'count' => $count
             ], 200);
         } catch (\Exception $e) {
@@ -30,20 +28,17 @@ class LigneentrercompteController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'client_id' => 'required',
                 'entrer_comptes_id' => 'required',
-                'id_facture' => 'required',
-                'avance' => 'nullable',
-                'restee'=> 'required',
+                'encaissements_id' => 'required',
             ]);
 
             if ($validator->fails()) {
                 return response()->json(['error' => $validator->errors()], 400);
             }
 
-            $ligneentrercompte = Ligneentrercompte::create($request->all());
+            $ligneencaissement = Ligneencaissement::create($request->all());
 
-            return response()->json(['message' => 'Ligne d\'entrée de compte ajoutée avec succès', 'ligneentrercompte' => $ligneentrercompte], 200);
+            return response()->json(['message' => 'Ligne d\'encaissement ajoutée avec succès', 'ligneencaissement' => $ligneencaissement], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
@@ -53,21 +48,18 @@ class LigneentrercompteController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'client_id' => 'required',
                 'entrer_comptes_id' => 'required',
-                'id_facture' => 'required',
-                'avance' => 'nullable',
-                'restee'=>'required',
+                'encaissements_id' => 'required',
             ]);
 
             if ($validator->fails()) {
                 return response()->json(['error' => $validator->errors()], 400);
             }
 
-            $ligneentrercompte = Ligneentrercompte::findOrFail($id);
-            $ligneentrercompte->update($request->all());
+            $ligneencaissement = Ligneencaissement::findOrFail($id);
+            $ligneencaissement->update($request->all());
 
-            return response()->json(['message' => 'Ligne d\'entrée de compte modifiée avec succès', 'ligneentrercompte' => $ligneentrercompte], 200);
+            return response()->json(['message' => 'Ligne d\'encaissement modifiée avec succès', 'ligneencaissement' => $ligneencaissement], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
@@ -76,10 +68,10 @@ class LigneentrercompteController extends Controller
     public function destroy($id)
     {
         try {
-            $ligneentrercompte = Ligneentrercompte::findOrFail($id);
-            $ligneentrercompte->delete();
+            $ligneencaissement = Ligneencaissement::findOrFail($id);
+            $ligneencaissement->delete();
 
-            return response()->json(['message' => 'Ligne d\'entrée de compte supprimée avec succès'], 200);
+            return response()->json(['message' => 'Ligne d\'encaissement supprimée avec succès'], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }

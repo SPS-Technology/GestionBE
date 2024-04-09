@@ -1,11 +1,14 @@
 <?php
 
-use App\Http\Controllers\BanqueController;
+use App\Http\Controllers\ComptesController;
+use App\Http\Controllers\EncaissementController;
+use App\Http\Controllers\EntrerBanqueController;
 use App\Http\Controllers\ChiffreAffaireController;
 use App\Http\Controllers\DevisController;
 use App\Http\Controllers\EtatRecouvrementController;
 use App\Http\Controllers\FactureController;
 use App\Http\Controllers\LigneDevisController;
+use App\Http\Controllers\LigneencaissementController;
 use App\Http\Controllers\LigneentrercompteController;
 use App\Http\Controllers\ReclamationController;
 use App\Models\Role;
@@ -111,12 +114,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/chiffre-affaire/{id}', [ChiffreAffaireController::class, 'update']);
     Route::delete('/chiffre-affaire/{id}', [ChiffreAffaireController::class, 'destroy']);
 
-// Routes for Reclamation
-    Route::get('/reclamations', [ReclamationController::class, 'index']);
-    Route::post('/reclamations', [ReclamationController::class, 'store']);
-    Route::get('/reclamations/{id}', [ReclamationController::class, 'show']);
-    Route::put('/reclamations/{id}', [ReclamationController::class, 'update']);
-    Route::delete('/reclamations/{id}', [ReclamationController::class, 'destroy']);
+
 
 
 
@@ -127,24 +125,36 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('devises/{devisId}/lignedevis', [DevisController::class, 'lignedevis']);
 //Factures
     Route::apiResource('/factures', FactureController::class);
-    Route::apiResource('/etat-recouvrements', EtatRecouvrementController::class,);
 
-    Route::get('clients', [ClientController::class, 'index']);
-    Route::post('clients', [ClientController::class, 'store']);
-    Route::get('clients/{client}', [ClientController::class, 'show']);
-    Route::put('clients/{client}', [ClientController::class, 'update']);
-    Route::delete('clients/{client}', [ClientController::class, 'destroy']);
+
+
 
 
 
 
 });
-
+Route::get('clients', [ClientController::class, 'index']);
+Route::post('clients', [ClientController::class, 'store']);
+Route::get('clients/{client}', [ClientController::class, 'show']);
+Route::put('clients/{client}', [ClientController::class, 'update']);
+Route::delete('clients/{client}', [ClientController::class, 'destroy']);
 //Ligneentrercompte
 Route::apiResource('/ligneentrercompte',LigneentrercompteController::class);
-//Route for Banque
-Route::get('/banques', [BanqueController::class, 'index']);
-Route::post('/banques', [BanqueController::class, 'store']);
-Route::get('/banques/{id}', [BanqueController::class, 'show']);
-Route::put('/banques/{id}', [BanqueController::class, 'update']);
-Route::delete('/banques/{id}', [BanqueController::class, 'destroy']);
+//Route for EntrerBanque
+Route::get('/banques', [EntrerBanqueController::class, 'index']);
+Route::post('/banques', [EntrerBanqueController::class, 'store']);
+Route::get('/banques/{id}', [EntrerBanqueController::class, 'show']);
+Route::put('/banques/{id}', [EntrerBanqueController::class, 'update']);
+Route::delete('/banques/{id}', [EntrerBanqueController::class, 'destroy']);
+Route::apiResource('/etat-recouvrements', EtatRecouvrementController::class,);
+
+// Routes for Reclamation
+Route::get('/reclamations', [ReclamationController::class, 'index']);
+Route::post('/reclamations', [ReclamationController::class, 'store']);
+Route::get('/reclamations/{id}', [ReclamationController::class, 'show']);
+Route::put('/reclamations/{id}', [ReclamationController::class, 'update']);
+Route::delete('/reclamations/{id}', [ReclamationController::class, 'destroy']);
+
+Route::apiResource('/encaissements', EncaissementController::class,);
+Route::apiResource('/comptes', ComptesController::class,);
+Route::apiResource('/ligneencaissement', LigneencaissementController::class,);

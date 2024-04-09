@@ -21,7 +21,7 @@ class ClientController extends Controller
     {
         // if (Gate::allows('view_all_clients')) {
         try {
-            $client = Client::with('user','zone','siteclients','invoices','banques')->get();
+            $client = Client::with('user','zone','siteclients','invoices','entrer_comptes','ligneEntrerCompte')->get();
             $count = Client::count();
             return response()->json([
                 'message' => 'Liste des client récupérée avec succès', 'client' =>  $client,
@@ -64,6 +64,7 @@ class ClientController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'raison_sociale' => 'required',
+                'CodeClient' => 'required|unique:clients,CodeClient',
                 'adresse' => 'required',
                 'tele' => 'required',
                 'ville' => 'required',
@@ -94,8 +95,8 @@ class ClientController extends Controller
     {
         try {
             $client= Client::findOrFail($id);
-        $client = Client::with('user','zone','siteclients')->findOrFail($id);
-        return response()->json(['client' => $client]);
+            $client = Client::with('user','zone','siteclients')->findOrFail($id);
+            return response()->json(['client' => $client]);
         } catch (\Exception $e) {
             return response()->json(['error'=> $e->getMessage()],500);
         }
@@ -118,6 +119,7 @@ class ClientController extends Controller
             try {
                 $validator = Validator::make($request->all(), [
                     'raison_sociale' => 'required',
+                    'CodeClient' => 'required|unique:clients,CodeClient',
                     'adresse' => 'required',
                     'tele' => 'required',
                     'ville' => 'required',

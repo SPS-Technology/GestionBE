@@ -21,10 +21,14 @@ class CreateReclamationsTable extends Migration
             $table->string('status_reclamation');
             $table->text('traitement_reclamation')->nullable();
             $table->dateTime('date_traitement')->nullable();
+            $table->string('remarque');
+
+
             $table->timestamps();
 
             // Foreign key constraint
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('restrict');
+
         });
     }
 

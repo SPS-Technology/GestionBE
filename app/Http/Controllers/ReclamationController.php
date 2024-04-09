@@ -34,6 +34,7 @@ class ReclamationController extends Controller
                 'status_reclamation' => 'required|string',
                 'traitement_reclamation' => 'required|string',
                 'date_traitement' => 'required|date',
+                'remarque'=> 'required',
             ]);
 
             if ($validator->fails()) {
@@ -58,6 +59,8 @@ class ReclamationController extends Controller
                 'status_reclamation' => 'required|string',
                 'traitement_reclamation' => 'nullable|string',
                 'date_traitement' => 'nullable|date',
+                'remarque'=> 'required',
+
             ]);
 
             if ($validator->fails()) {

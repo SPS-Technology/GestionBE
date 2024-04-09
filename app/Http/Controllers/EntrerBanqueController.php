@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Banque;
+use App\Models\EntrerBanque;
 use App\Models\Commande;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class BanqueController extends Controller
+class EntrerBanqueController extends Controller
 {
     public function index()
     {
         try {
-            $banques = Banque::with('ligneEntrerCompte')->get();;
-            $count = Banque::count();
+            $banques = EntrerBanque::with('ligneEntrerCompte')->get();;
+            $count = EntrerBanque::count();
 
             return response()->json([
                 'message' => 'Liste des banques récupérée avec succès',
@@ -43,10 +43,10 @@ class BanqueController extends Controller
             }
             $requestData = $request->all();
             $requestData['Status'] = 'En Cours';
-            $banque = Banque::create($requestData);
-           // $banque = Banque::create($request->all());
+            $banque = EntrerBanque::create($requestData);
+           // $banque = EntrerBanque::create($request->all());
 
-            return response()->json(['message' => 'Banque ajoutée avec succès', 'banque' => $banque], 200);
+            return response()->json(['message' => 'EntrerBanque ajoutée avec succès', 'banque' => $banque], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
@@ -67,10 +67,10 @@ class BanqueController extends Controller
                 return response()->json(['error' => $validator->errors()], 400);
             }
 
-            $banque = Banque::findOrFail($id);
+            $banque = EntrerBanque::findOrFail($id);
             $banque->update($request->all());
 
-            return response()->json(['message' => 'Banque modifiée avec succès', 'banque' => $banque], 200);
+            return response()->json(['message' => 'EntrerBanque modifiée avec succès', 'banque' => $banque], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
@@ -79,10 +79,10 @@ class BanqueController extends Controller
     public function destroy($id)
     {
         try {
-            $banque = Banque::findOrFail($id);
+            $banque = EntrerBanque::findOrFail($id);
             $banque->delete();
 
-            return response()->json(['message' => 'Banque supprimée avec succès'], 200);
+            return response()->json(['message' => 'EntrerBanque supprimée avec succès'], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }

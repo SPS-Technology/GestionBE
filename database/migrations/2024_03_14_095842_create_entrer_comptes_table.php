@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('etat_recouvrements', function (Blueprint $table) {
+        Schema::create('entrer_comptes', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('client_id');
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('restrict');
-            $table->unsignedBigInteger('id_facture');
-            $table->foreign('id_facture')->references('id')->on('factures')->onDelete('restrict');
-            $table->unsignedBigInteger('entrer_comptes_id');
-            $table->foreign('entrer_comptes_id')->references('id')->on('entrer_comptes')->onDelete('restrict');
-            $table->decimal('reste', 10, 2);
+            $table->string('numero_cheque');
+            $table->date('datee');
+            $table->string('mode_de_paiement');
+            $table->string('Status');
+            $table->string('remarque');
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('etat_recouvrements');
+        Schema::dropIfExists('banques');
     }
 };

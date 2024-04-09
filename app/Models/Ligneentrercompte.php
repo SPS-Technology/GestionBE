@@ -9,9 +9,11 @@ class Ligneentrercompte extends Model
 {
     use HasFactory;
     protected $fillable =[
-        'banques_id',
+        'client_id',
+        'entrer_comptes_id',
         'id_facture',
         'avance',
+        'restee',
     ];
     public function client()
     {
@@ -23,7 +25,8 @@ class Ligneentrercompte extends Model
         return $this->belongsTo(Facture::class);
     }
     public function Banque() {
-        return $this->belongsTo(Banque::class);
+        return $this->belongsTo(EntrerBanque::class);
     }
+
 
 }
