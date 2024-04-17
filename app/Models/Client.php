@@ -26,4 +26,9 @@ class Client extends Model
         return $this->hasMany(Bon_Livraison::class, 'client_id');
     }
 
+    public function commandes()
+    {
+        return $this->hasMany(Commande::class);
+    }
+
 }

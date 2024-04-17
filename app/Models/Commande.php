@@ -8,24 +8,38 @@ use Illuminate\Database\Eloquent\Model;
 class Commande extends Model
 {
     use HasFactory;
-    protected $guarded=[];
-    public function ligneCommandes() {
+    protected $guarded = [];
+    public function ligneCommandes()
+    {
         return $this->hasMany(LigneCommande::class, 'commande_id', 'id');
     }
+    public function bonsLivraison()
+    {
+        return $this->hasMany(Bon_Livraison::class, 'commande_id');
+    }
 
-    public function statusCommandes() {
+    public function statusCommandes()
+    {
         return $this->hasMany(StatusCommande::class, 'commande_id', 'id');
     }
-    public function lignePreparationCommandes() {
+    public function lignePreparationCommandes()
+    {
         return $this->hasMany(LignePreparationCommande::class, 'commande_id', 'id');
     }
-    // protected $fillable = [
-    //     'reference', 
-    //     'dateCommande',
-    //     'status',
-    //     'client_id',
-    //     'user_id',
-    // ];
+
+    public function chargementCommandes()
+    {
+        return $this->hasMany(ChargementCommande::class);
+    }
+    public function client()
+    {
+        return $this->belongsTo(Client::class);
+    }
+    // public function siteclient()
+    // {
+    //     return $this->belongsTo(SiteClient::class);
+    // }
+
     protected static function boot()
     {
         parent::boot();

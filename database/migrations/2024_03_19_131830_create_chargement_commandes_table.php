@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('chargement_commandes', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('veihicule_id');
-            $table->foreign('veihicule_id')->references('id')->on('vehicules');
+            $table->unsignedBigInteger('vehicule_id');
+            $table->foreign('vehicule_id')->references('id')->on('vehicules');
+            $table->string('confort');
+            $table->string('remarque')->nullable();
             $table->unsignedBigInteger('livreur_id');
             $table->foreign('livreur_id')->references('id')->on('livreurs');
             $table->unsignedBigInteger('commande_id');

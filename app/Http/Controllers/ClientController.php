@@ -51,16 +51,17 @@ class ClientController extends Controller
         }
     }
     public function bonsLivraisonClient($clientId)
-{
-    try {
-        // Récupérer les bons de livraison associés au client spécifié par son ID
-        $bonsLivraison = Bon_Livraison::where('client_id', $clientId)->get();
-
-        return response()->json(['message' => 'Bons de livraison récupérés avec succès', 'bonsLivraison' => $bonsLivraison], 200);
-    } catch (\Exception $e) {
-        return response()->json(['error' => 'Une erreur s\'est produite lors de la récupération des bons de livraison'], 500);
+    {
+        try {
+            // Récupérer les bons de livraison associés au client spécifié par son ID
+            $bonsLivraison = Bon_Livraison::with('client', 'commande')->where('client_id', $clientId)->get();
+    
+            return response()->json(['message' => 'Bons de livraison récupérés avec succès', 'bonsLivraison' => $bonsLivraison], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Une erreur s\'est produite lors de la récupération des bons de livraison'], 500);
+        }
     }
-}
+    
 
    
     public function store(Request $request)
@@ -73,6 +74,8 @@ class ClientController extends Controller
                 'tele' => 'required',
                 'ville' => 'required',
                 'abreviation' => 'required',
+                'type_client' => 'required',
+                'categorie' => 'required',
                 'ice' => 'required',
                 'code_postal' => 'required',
                 'zone_id' => 'required',
@@ -90,6 +93,8 @@ class ClientController extends Controller
             $client->tele = $request->input('tele');
             $client->ville = $request->input('ville');
             $client->abreviation = $request->input('abreviation');
+            $client->type_client = $request->input('type_client');
+            $client->categorie = $request->input('categorie');
             $client->ice = $request->input('ice');
             $client->code_postal = $request->input('code_postal');
             $client->zone_id = $request->input('zone_id');
@@ -130,6 +135,8 @@ class ClientController extends Controller
                     'tele' => 'string',
                     'ville' => 'string',
                     'abreviation' => 'string',
+                    'type_client' => 'string',
+                    'categorie' => 'string',
                     'ice' => 'numeric|min:-9223372036854775808|max:9223372036854775807',
                     'code_postal' => 'numeric|min:-9223372036854775808|max:9223372036854775807',
                     'zone_id' => 'integer',

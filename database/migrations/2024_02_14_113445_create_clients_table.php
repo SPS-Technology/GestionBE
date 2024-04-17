@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('CodeClient')->unique();
             $table->string('raison_sociale');
             $table->string('adresse');
+            $table->string('type_client');
+            $table->string('categorie');
             $table->string('tele');
             $table->string('ville');
             $table->string('abreviation');

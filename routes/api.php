@@ -17,6 +17,7 @@ use App\Http\Controllers\LivreurController;
 use App\Http\Controllers\ObjectifController;
 use App\Http\Controllers\PermisController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\PreparationLigneCommandeController;
 use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SiteClientController;
@@ -65,12 +66,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('fournisseurs/{fournisseur}', [FournisseurController::class, 'destroy']);
 
 
-    //Commandes
-    Route::get('commandes', [CommandeController::class, 'index']);
-    Route::post('commandes', [CommandeController::class, 'store']);
-    Route::get('commandes/{commande}', [CommandeController::class, 'show']);
-    Route::put('commandes/{commande}', [CommandeController::class, 'update']);
-    Route::delete('commandes/{commande}', [CommandeController::class, 'destroy']);
+
     //user
     Route::get('/users/{id}/edit', [AuthController::class, 'edit']);
     Route::put('/users/{id}',  [AuthController::class, 'update']);
@@ -81,7 +77,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('/ligneCommandes', LigneCommandeController::class);
     Route::apiResource('/statusCommande', StatusCommandeController::class);
     Route::apiResource('/lignePreparationCommandes', PreparationLigneCommandeController::class);
-    Route::apiResource('/chargementCommandes', ChargementCommandeController::class);
 
 
 
@@ -124,12 +119,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/vehicule-livreurs/{id}', [VehiculeLivreurController::class, 'show']);
     Route::put('/vehicule-livreurs/{id}', [VehiculeLivreurController::class, 'update']);
     Route::delete('/vehicule-livreurs/{id}', [VehiculeLivreurController::class, 'destroy']);
-    //clients
-    Route::get('clients', [ClientController::class, 'index']);
-    Route::post('clients', [ClientController::class, 'store']);
-    Route::get('clients/{client}', [ClientController::class, 'show']);
-    Route::put('clients/{client}', [ClientController::class, 'update']);
-    Route::delete('clients/{client}', [ClientController::class, 'destroy']);
+
 
     // Définition des routes pour les site clients
     Route::get('siteclients', [SiteClientController::class, 'index']); // Route pour obtenir tous les site clients
@@ -164,5 +154,22 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/permis/{id}', [PermisController::class, 'destroy']);
     //Calibre
     Route::apiResource('/calibres', CalibreController::class);
-});
 
+
+
+    //clients
+    Route::get('clients', [ClientController::class, 'index']);
+    Route::post('clients', [ClientController::class, 'store']);
+    Route::get('clients/{client}', [ClientController::class, 'show']);
+    Route::put('clients/{client}', [ClientController::class, 'update']);
+    Route::delete('clients/{client}', [ClientController::class, 'destroy']);
+
+    //Commandes
+    Route::get('commandes', [CommandeController::class, 'index']);
+    Route::post('commandes', [CommandeController::class, 'store']);
+    Route::get('commandes/{commande}', [CommandeController::class, 'show']);
+    Route::put('commandes/{commande}', [CommandeController::class, 'update']);
+    Route::delete('commandes/{commande}', [CommandeController::class, 'destroy']);
+    Route::apiResource('/chargementCommandes', ChargementCommandeController::class);
+    Route::get('chargementCommandes/{commandeId}/commandes', [ChargementCommandeController::class, 'getByCommandeId']);
+});

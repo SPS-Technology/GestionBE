@@ -18,7 +18,7 @@ class CommandeController extends Controller
     {
         try {
             //$this->authorize('view', Commande::class);
-            $commandes = Commande::with('ligneCommandes', 'statusCommandes','lignePreparationCommandes')->get();
+            $commandes = Commande::with('ligneCommandes', 'statusCommandes','lignePreparationCommandes','client','chargementCommandes')->get();
             return response()->json(['message' => 'Liste des commandes récupérée avec succès', 'commandes' =>  $commandes], 200);
         } catch (AuthorizationException $e) {
             return response()->json(['error' => 'Vous n\'avez pas l\'autorisation de voir la liste des commandes.'], 403);

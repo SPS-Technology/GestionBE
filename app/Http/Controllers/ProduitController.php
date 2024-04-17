@@ -60,18 +60,19 @@ class ProduitController extends Controller
     public function show($id)
     {
         // Vérifier si l'utilisateur a la permission de voir un produit spécifique
-        if (Gate::allows('view_product')) {
+        // if (Gate::allows('view_product')) {
             try {
-                $produit = Produit::findOrFail($id);
-
+                $produit = Produit::with('calibre', 'categorie')->findOrFail($id);
+    
                 return response()->json(['produit' => $produit]);
             } catch (\Exception $e) {
                 return response()->json(['error' => $e->getMessage()], 500);
             }
-        } else {
-            abort(403, 'Vous n\'avez pas l\'autorisation de voir ce produit.');
-        }
+        // } else {
+        //     abort(403, 'Vous n\'avez pas l\'autorisation de voir ce produit.');
+        // }
     }
+    
 
     public function update(Request $request, $id)
     {

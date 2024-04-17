@@ -14,4 +14,9 @@ class Livreur extends Model
     {
         return $this->hasMany(Permis::class);
     }
+
+    public function chargementCommandes()
+    {
+        return $this->hasMany(ChargementCommande::class);
+    }
 }
