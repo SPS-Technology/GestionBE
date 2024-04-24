@@ -23,9 +23,9 @@ return new class extends Migration
             $table->foreign('categorie_id')
                 ->references('id')
                 ->on('categories')
-                ->onDelete('restrict');
+                ->onDelete('cascade');
                 $table->unsignedBigInteger('calibre_id');
-                $table->foreign('calibre_id')->references('id')->on('calibre')->onDelete('restrict');
+                $table->foreign('calibre_id')->references('id')->on('calibre')->onDelete('cascade');
             $table->timestamps();
         });
     }

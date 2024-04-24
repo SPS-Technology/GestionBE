@@ -35,6 +35,18 @@ class FournisseurController extends Controller
     {
         if (Gate::allows('create_fournisseurs')) {
             try {
+                $messages = [
+                    'CodeFournisseur.required' => 'Le champ CodeFournisseur est requis.',
+                    'raison_sociale.required' => 'Le champ raison_sociale est requis.',
+                    'adresse.required' => 'Le champ adresse est requis.',
+                    'CodeFournisseur.unique' => 'Le champ CodeFournisseur doit etre unique.',
+                    'tele.required' => 'Le champ tele est requis.',
+                    'ville.required' => 'Le champ ville est requis.',
+                    'abreviation.required' => 'Le champ abreviation est requis.',
+                    'code_postal.required' => 'Le champ code_postal est requis.',
+                    'ice.required' => 'Le champ ice est requis.',
+    
+                ];
                 $validator = Validator::make($request->all(), [
                     'CodeFournisseur' => 'required|unique:fournisseurs,CodeFournisseur',
                     'raison_sociale' => 'required',
@@ -45,7 +57,7 @@ class FournisseurController extends Controller
                     'code_postal' => 'required',
                     'ice' => 'required',
                    
-                ]);
+                ],$messages);
 
                 if ($validator->fails()) {
                     return response()->json(['error' => $validator->errors()], 400);

@@ -40,7 +40,7 @@ class ProduitController extends Controller
                 'designation' => 'required',
                 'calibre_id' => 'required',
                 'type_quantite' => 'required',
-                'categorie_id' => 'nullable',
+                'categorie_id' => 'required',
             ]);
             if ($validator->fails()) {
                 return response()->json(['error' => $validator->errors()], 400);
@@ -84,7 +84,7 @@ class ProduitController extends Controller
                     'designation' => 'required',
                     'calibre_id' => 'required',
                     'type_quantite' => 'required',
-                    'categorie_id' => 'nullable',
+                    'categorie_id' => 'required',
                 ]);
 
                 if ($validator->fails()) {
@@ -111,7 +111,6 @@ class ProduitController extends Controller
         if (Gate::allows('delete_product')) {
             try {
                 $produit = Produit::findOrFail($id);
-                $produit->categorie_id = null;
                 $produit->save();
                 $produit->delete();
 

@@ -53,7 +53,7 @@ class FactureController extends Controller
             if ($validator->fails()) {
                 return response()->json(['error' => $validator->errors()], 400);
             }
-            $reference = 'FTR' . now()->timestamp;
+            $reference = 'FAC' . now()->timestamp;
             $date = Carbon::now()->format('Y-m-d H:i:s');
 
             $requestData = $request->all();

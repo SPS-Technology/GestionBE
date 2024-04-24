@@ -124,16 +124,17 @@ class SiteClientController extends Controller
     {
         $siteclient = SiteClient::findOrFail($id);
         $validator = Validator::make($request->all(), [
-            'CodeSiteclient' => 'required|unique:site_clients,CodeSiteclient,' . $id,
-            'raison_sociale' => 'required',
-            'adresse' => 'required',
-            'tele' => 'required',
-            'ville' => 'required',
-            'abreviation' => 'required',
-            'ice' => 'required',
-            'code_postal' => 'required',
-            'zone_id' => 'required',
-            'client_id' => 'required',
+            'CodeSiteclient' => 'string|unique:site_clients,CodeSiteclient,' . $id,
+            'raison_sociale' => 'string',
+            'adresse' => 'string',
+            'tele' => 'string',
+            'ville' => 'string',
+            'abreviation' => 'string',
+            'ice' => 'numeric|min:-9223372036854775808|max:9223372036854775807',
+            'code_postal' => 'numeric|min:-9223372036854775808|max:9223372036854775807',
+            'zone_id' => 'integer',
+            'client_id' => 'integer',
+            'logoSC' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
@@ -141,7 +142,7 @@ class SiteClientController extends Controller
         $siteclient->update($request->all());
         return response()->json(['message' => 'SiteClient modifié avec succès', 'siteclient' => $siteclient], 200);
     }
-
+   
     /**
      * Remove the specified resource from storage.
      */

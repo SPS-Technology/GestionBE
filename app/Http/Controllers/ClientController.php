@@ -55,15 +55,15 @@ class ClientController extends Controller
         try {
             // Récupérer les bons de livraison associés au client spécifié par son ID
             $bonsLivraison = Bon_Livraison::with('client', 'commande')->where('client_id', $clientId)->get();
-    
+
             return response()->json(['message' => 'Bons de livraison récupérés avec succès', 'bonsLivraison' => $bonsLivraison], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Une erreur s\'est produite lors de la récupération des bons de livraison'], 500);
         }
     }
-    
 
-   
+
+
     public function store(Request $request)
     {
         try {
@@ -122,14 +122,14 @@ class ClientController extends Controller
         return response()->json(['client' => $client]);
     }
 
-   
+
     public function update(Request $request, $id)
     {
         if (Gate::allows('update_clients')) {
             try {
                 $client = Client::findOrFail($id);
                 $validator = Validator::make($request->all(), [
-                    'CodeClient' => 'integer|unique:clients,CodeClient,' . $id,
+                    'CodeClient' => 'string|unique:clients,CodeClient,' . $id,
                     'raison_sociale' => 'string',
                     'adresse' => 'string',
                     'tele' => 'string',
