@@ -45,12 +45,10 @@ class FactureController extends Controller
                 'ref_BL' => 'nullable',
                 'ref_BC' => 'nullable',
                 'modePaiement' => 'nullable',
-                'total_ht'=>'required',
-                'tva'=>'required',
-                'total_ttc'=>'required',
+                'total_ttc'=>'nullable',
                 'client_id' => 'required',
                 'user_id' => 'required',
-                'id_devis' => 'required',
+                'id_devis' => 'nullable',
             ]);
 
             if ($validator->fails()) {
@@ -77,9 +75,9 @@ class FactureController extends Controller
     public function show($clientId)
     {
         $factures = Facture::where('client_id', $clientId)->get();
-        return response()->json(['factures' => $factures]);
+        $facture = Facture::with('client', 'devis','lignedevis','ligneFacture')->findOrFail($clientId);
+        return response()->json(['facture' => $facture]);
     }
-
 
     /**
      * Show the form for editing the specified resource.
@@ -104,9 +102,7 @@ class FactureController extends Controller
                 'ref_BL' => 'nullable',
                 'ref_BC' => 'nullable',
                 'modePaiement' => 'nullable',
-                'total_ht'=>'required',
-                'tva'=>'required',
-                'total_ttc'=>'required',
+                'total_ttc'=>'nullable',
                 'client_id' => 'required',
                 'user_id' => 'required',
                 'id_devis' => 'required',

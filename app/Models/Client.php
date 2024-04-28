@@ -22,6 +22,9 @@ class Client extends Model
     public function siteclients() {
         return $this->hasMany(SiteClient::class, 'client_id');
     }
+    public function bonlivraison() {
+        return $this->hasMany(Bon_Livraison::class, 'client_id');
+    }
     public function invoices() {
         return $this->hasMany(Facture::class, 'client_id');
     }
@@ -33,6 +36,9 @@ class Client extends Model
         return $this->hasMany(Ligneentrercompte::class, 'client_id', 'id');
     }
 
-
+    public function commandes()
+    {
+        return $this->hasMany(Commande::class);
+    }
 
 }

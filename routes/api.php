@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BonLivraisonController;
 use App\Http\Controllers\ComptesController;
 use App\Http\Controllers\EncaissementController;
 use App\Http\Controllers\EntrerBanqueController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\FactureController;
 use App\Http\Controllers\LigneDevisController;
 use App\Http\Controllers\LigneencaissementController;
 use App\Http\Controllers\LigneentrercompteController;
+use App\Http\Controllers\LigneFactureController;
 use App\Http\Controllers\ReclamationController;
 use App\Models\Role;
 use App\Models\SiteClient;
@@ -118,11 +120,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 
-// Devises
-    Route::apiResource('/devises', DevisController::class);
-    Route::apiResource('/lignedevis', LigneDevisController::class);
-// Route pour obtenir les lignedevis associés à un devis spécifique
-    Route::get('devises/{devisId}/lignedevis', [DevisController::class, 'lignedevis']);
+
 //Factures
     Route::apiResource('/factures', FactureController::class);
 
@@ -133,6 +131,16 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 });
+// Devises
+Route::apiResource('/devises', DevisController::class);
+Route::apiResource('/lignedevis', LigneDevisController::class);
+// Route pour obtenir les lignedevis associés à un devis spécifique
+Route::get('devises/{devisId}/lignedevis', [DevisController::class, 'lignedevis']);
+Route::post('devises/{devisId}/lignedevis', [DevisController::class, 'lignedevis']);
+Route::put('devises/{devisId}/lignedevis', [DevisController::class, 'lignedevis']);
+Route::delete('devises/{devisId}/lignedevis', [DevisController::class, 'lignedevis']);
+
+
 Route::get('clients', [ClientController::class, 'index']);
 Route::post('clients', [ClientController::class, 'store']);
 Route::get('clients/{client}', [ClientController::class, 'show']);
@@ -158,3 +166,5 @@ Route::delete('/reclamations/{id}', [ReclamationController::class, 'destroy']);
 Route::apiResource('/encaissements', EncaissementController::class,);
 Route::apiResource('/comptes', ComptesController::class,);
 Route::apiResource('/ligneencaissement', LigneencaissementController::class,);
+Route::apiResource('/lignefactures', LigneFactureController::class);
+Route::apiResource('/livraisons', BonLivraisonController::class);

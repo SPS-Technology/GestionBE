@@ -22,6 +22,10 @@ class Facture extends Model
     {
         return $this->belongsTo(Client::class, 'client_id');
     }
+    public function ligneFacture()
+    {
+        return $this->hasMany(LigneFacture::class, 'id_facture', 'id');
+    }
     public function ligneEntrerCompte() {
         return $this->hasMany(Ligneentrercompte::class, 'id_facture', 'id');
     }
