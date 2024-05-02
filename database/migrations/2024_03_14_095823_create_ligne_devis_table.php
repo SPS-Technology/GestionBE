@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('ligne_devis', function (Blueprint $table) {
             $table->id();
-            $table->string('Code_produit');
-            $table->string('designation');
+            $table->unsignedBigInteger('produit_id');
+            $table->foreign('produit_id')->references('id')->on('produits')->onDelete('restrict');
+
             $table->string('quantite');
             $table->decimal('prix_vente')->nullable();
             $table->unsignedBigInteger('id_devis');

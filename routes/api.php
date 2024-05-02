@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BonLivraisonController;
+use App\Http\Controllers\CalibreController;
 use App\Http\Controllers\ComptesController;
 use App\Http\Controllers\EncaissementController;
 use App\Http\Controllers\EntrerBanqueController;
@@ -98,16 +99,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 
-    //Commandes
-    Route::get('commandes', [CommandeController::class, 'index']);
-    Route::post('commandes', [CommandeController::class, 'store']);
-    Route::get('commandes/{commande}', [CommandeController::class, 'show']);
-    Route::put('commandes/{commande}', [CommandeController::class, 'update']);
-    Route::delete('commandes/{commande}', [CommandeController::class, 'destroy']);
-
-    Route::apiResource('/ligneCommandes', LigneCommandeController::class);
-    Route::apiResource('/statusCommande', StatusCommandeController::class);
-
 
 // Routes for ChiffreAffaire
     Route::get('/chiffre-affaire', [ChiffreAffaireController::class, 'index']);
@@ -116,7 +107,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/chiffre-affaire/{id}', [ChiffreAffaireController::class, 'update']);
     Route::delete('/chiffre-affaire/{id}', [ChiffreAffaireController::class, 'destroy']);
 
-
+//Calibre
+    Route::apiResource('/calibres', CalibreController::class);
 
 
 
@@ -133,12 +125,12 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 // Devises
 Route::apiResource('/devises', DevisController::class);
-Route::apiResource('/lignedevis', LigneDevisController::class);
+Route::apiResource('/ligneDevis', LigneDevisController::class);
 // Route pour obtenir les lignedevis associés à un devis spécifique
-Route::get('devises/{devisId}/lignedevis', [DevisController::class, 'lignedevis']);
-Route::post('devises/{devisId}/lignedevis', [DevisController::class, 'lignedevis']);
-Route::put('devises/{devisId}/lignedevis', [DevisController::class, 'lignedevis']);
-Route::delete('devises/{devisId}/lignedevis', [DevisController::class, 'lignedevis']);
+Route::get('devises/{devisId}/ligneDevis', [DevisController::class, 'lignedevis']);
+Route::post('devises/{devisId}/ligneDevis', [DevisController::class, 'lignedevis']);
+Route::put('devises/{devisId}/ligneDevis', [DevisController::class, 'lignedevis']);
+Route::delete('devises/{devisId}/ligneDevis', [DevisController::class, 'lignedevis']);
 
 
 Route::get('clients', [ClientController::class, 'index']);
@@ -168,3 +160,14 @@ Route::apiResource('/comptes', ComptesController::class,);
 Route::apiResource('/ligneencaissement', LigneencaissementController::class,);
 Route::apiResource('/lignefactures', LigneFactureController::class);
 Route::apiResource('/livraisons', BonLivraisonController::class);
+
+
+//Commandes
+Route::get('commandes', [CommandeController::class, 'index']);
+Route::post('commandes', [CommandeController::class, 'store']);
+Route::get('commandes/{commande}', [CommandeController::class, 'show']);
+Route::put('commandes/{commande}', [CommandeController::class, 'update']);
+Route::delete('commandes/{commande}', [CommandeController::class, 'destroy']);
+
+Route::apiResource('/ligneCommandes', LigneCommandeController::class);
+Route::apiResource('/statusCommande', StatusCommandeController::class);

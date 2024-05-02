@@ -13,19 +13,19 @@ return new class extends Migration
     {
         Schema::create('produits', function (Blueprint $table) {
             $table->id();
-            $table->string('Code_produit');
+            $table->string('Code_produit')->unique();
             $table->string('designation');
-            $table->string('calibre');
             $table->string('type_quantite');
             $table->decimal('prix_vente')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
-            $table->unsignedBigInteger('categorie_id')->nullable();
+            $table->unsignedBigInteger('categorie_id');
             $table->foreign('categorie_id')
                 ->references('id')
                 ->on('categories')
-                ->onDelete('set null');
-
+                ->onDelete('cascade');
+            $table->unsignedBigInteger('calibre_id');
+            $table->foreign('calibre_id')->references('id')->on('calibre')->onDelete('cascade');
             $table->timestamps();
         });
     }

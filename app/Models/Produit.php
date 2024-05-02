@@ -19,4 +19,9 @@ class Produit extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function calibre()
+    {
+        return $this->belongsTo(Calibre::class, 'calibre_id');
+    }
 }

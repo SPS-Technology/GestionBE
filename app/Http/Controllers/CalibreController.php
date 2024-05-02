@@ -12,54 +12,32 @@ class CalibreController extends Controller
      */
     public function index()
     {
-        //
+        $calibres = Calibre::all();
+        return response()->json($calibres);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function show($id)
     {
-        //
+        $calibre = Calibre::find($id);
+        return response()->json($calibre);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $calibre = Calibre::create($request->all());
+        return response()->json($calibre, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Calibre $calibre)
+    public function update(Request $request, $id)
     {
-        //
+        $calibre = Calibre::findOrFail($id);
+        $calibre->update($request->all());
+        return response()->json($calibre, 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Calibre $calibre)
+    public function destroy($id)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Calibre $calibre)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Calibre $calibre)
-    {
-        //
+        Calibre::findOrFail($id)->delete();
+        return response()->json(null, 204);
     }
 }

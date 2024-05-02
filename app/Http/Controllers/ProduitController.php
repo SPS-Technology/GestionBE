@@ -14,21 +14,21 @@ class ProduitController extends Controller
     public function index()
     {
         // Vérifier si l'utilisateur a la permission de voir la liste des produits
-        // if (Gate::allows('view_all_products')) {
-        try {
-            $produits = Produit::with('categorie','user')->get();
-            $count = Produit::count();
+        if (Gate::allows('view_all_products')) {
+            try {
+                $produits = Produit::with('categorie','calibre','user')->get();
+                $count = Produit::count();
 
-            return response()->json([
-                'message' => 'Liste des produits récupérée avec succès', 'produit' => $produits,
-                'count' => $count
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+                return response()->json([
+                    'message' => 'Liste des produits récupérée avec succès', 'produit' => $produits,
+                    'count' => $count
+                ], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => $e->getMessage()], 500);
+            }
+        } else {
+            abort(403, 'Vous n\'avez pas l\'autorisation de voir la liste des produits.');
         }
-        // } else {
-        //     abort(403, 'Vous n\'avez pas l\'autorisation de voir la liste des produits.');
-        // }
     }
 
     public function store(Request $request)
@@ -36,11 +36,11 @@ class ProduitController extends Controller
         if (Gate::allows('create_product')) {
             try {
                 $validator = Validator::make($request->all(), [
-                    'Code_produit' => 'required',
+                    'Code_produit' => 'required|unique:produits,Code_produit',
                     'designation' => 'required',
-                    'calibre' => 'required',
+                    'calibre_id' => 'required',
                     'type_quantite' => 'required',
-                    'categorie_id' => 'nullable',
+                    'categorie_id' => 'required',
                 ]);
                 if ($validator->fails()) {
                     return response()->json(['error' => $validator->errors()], 400);
@@ -60,18 +60,19 @@ class ProduitController extends Controller
     public function show($id)
     {
         // Vérifier si l'utilisateur a la permission de voir un produit spécifique
-        if (Gate::allows('view_product')) {
-            try {
-                $produit = Produit::findOrFail($id);
+        // if (Gate::allows('view_product')) {
+        try {
+            $produit = Produit::with('calibre', 'categorie')->findOrFail($id);
 
-                return response()->json(['produit' => $produit]);
-            } catch (\Exception $e) {
-                return response()->json(['error' => $e->getMessage()], 500);
-            }
-        } else {
-            abort(403, 'Vous n\'avez pas l\'autorisation de voir ce produit.');
+            return response()->json(['produit' => $produit]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
+        // } else {
+        //     abort(403, 'Vous n\'avez pas l\'autorisation de voir ce produit.');
+        // }
     }
+
 
     public function update(Request $request, $id)
     {
@@ -79,11 +80,11 @@ class ProduitController extends Controller
             try {
                 // Validation des données du formulaire
                 $validator = Validator::make($request->all(), [
-                    'Code_produit' => 'required',
+                    'Code_produit' => 'required|unique:produits,Code_produit,'.$id,
                     'designation' => 'required',
-                    'calibre' => 'required',
+                    'calibre_id' => 'required',
                     'type_quantite' => 'required',
-                    'categorie_id' => 'nullable',
+                    'categorie_id' => 'required',
                 ]);
 
                 if ($validator->fails()) {
@@ -110,7 +111,6 @@ class ProduitController extends Controller
         if (Gate::allows('delete_product')) {
             try {
                 $produit = Produit::findOrFail($id);
-                $produit->categorie_id = null;
                 $produit->save();
                 $produit->delete();
 

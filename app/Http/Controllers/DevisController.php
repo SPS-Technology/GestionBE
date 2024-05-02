@@ -47,7 +47,7 @@ class DevisController extends Controller
                 'modePaiement' => 'required',
                 'status' => 'required',
                 'client_id' => 'required',
-                'user_id' => 'required',
+
             ]);
 
             if ($validator->fails()) {
