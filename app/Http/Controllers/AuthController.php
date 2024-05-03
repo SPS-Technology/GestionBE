@@ -18,25 +18,29 @@ class AuthController extends Controller
 
     public function user()
     {
-        if (Gate::allows('view_all_users')) {
-            $user = Auth::user();
-            $user = User::with('roles.permissions')->find($user->id)->get();
-            return response()->json([
-                'status' => 1,
-                'user' => [
-                    'id' => $user->id,
-                    'name' => $user->name,
-                    'email' => $user->email,
-                    'photo' => $user->photo,
-                    'roles' => $user->roles->pluck('name'), 
-                    'permissions' => $user->roles->flatMap(function ($role) {
-                        return $role->permissions->pluck('name');
-                    }), 
-                ],
-            ]);
-        } else {
-            abort(403, 'Vous n\'avez pas l\'autorisation de voir la liste des utilisateurs.');
-        }
+        // if (Gate::allows('view_all_users')) {
+        //     $user = Auth::user();
+        //     $user = User::with('roles.permissions')->find($user->id)->get();
+        //     return response()->json([
+        //         'status' => 1,
+        //         'user' => [
+        //             'id' => $user->id,
+        //             'name' => $user->name,
+        //             'email' => $user->email,
+        //             'photo' => $user->photo,
+        //             'roles' => $user->roles->pluck('name'), 
+        //             'permissions' => $user->roles->flatMap(function ($role) {
+        //                 return $role->permissions->pluck('name');
+        //             }), 
+        //         ],
+        //     ]);
+        // } else {
+        //     abort(403, 'Vous n\'avez pas l\'autorisation de voir la liste des utilisateurs.');
+        // }
+        // Get the currently authenticated user
+        $user = Auth::user();
+        $users = User::where('id', $user->id)->with('roles.permissions')->get();
+        return response()->json($users, 200);
     }
 
 
@@ -243,17 +247,19 @@ class AuthController extends Controller
 
     public function index()
     {
+        // Vérifie si l'utilisateur est autorisé à voir tous les utilisateurs
         if (Gate::allows('view_all_users')) {
-            $users = User::whereHas('roles', function ($query) {
-                $query->where('name', '<>', 'admin');
-            })->with('roles.permissions')->get();
-
+            // Récupère tous les utilisateurs avec leurs rôles et permissions
+            $users = User::with('roles.permissions')->get();
+            
+            // Retourne la réponse JSON avec la liste des utilisateurs
             return response()->json($users, 200);
         } else {
+            // Si l'utilisateur n'est pas autorisé, retourne une erreur 403
             abort(403, 'Vous n\'avez pas l\'autorisation de voir la liste des utilisateurs.');
         }
     }
-
+    
     public function edit($id)
     {
         $user = User::with('roles.permissions')->findOrFail($id);

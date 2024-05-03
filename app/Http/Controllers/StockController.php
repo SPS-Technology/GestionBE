@@ -9,14 +9,15 @@ use Illuminate\Support\Facades\Validator;
 class StockController extends Controller
 {
     public function index()
-    {
-        try {
-            $stocks = Stock::all();
-            return response()->json(['stocks' => $stocks], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
+{
+    try {
+        $stocks = Stock::with('produit.categorie')->get();
+        return response()->json(['stocks' => $stocks], 200);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
     }
+}
+
 
     public function store(Request $request)
     {

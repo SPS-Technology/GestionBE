@@ -14,7 +14,7 @@ class SiteClientController extends Controller
      */
     public function index()
     {
-        $siteclient = SiteClient::with('client', 'zone', 'user')->get();
+        $siteclient = SiteClient::with('client', 'zone', 'user','region')->get();
         $count = SiteClient::count();
         return response()->json([
             'message' => 'Liste des SiteClient récupérée avec succès', 'siteclient' =>  $siteclient,
@@ -68,6 +68,7 @@ class SiteClientController extends Controller
                 'ice' => 'required',
                 'code_postal' => 'required',
                 'zone_id' => 'required',
+                'region_id' => 'required',
                 'logoSC' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
                 'client_id' => 'required'
             ]);
@@ -86,6 +87,7 @@ class SiteClientController extends Controller
             $client->ice = $request->input('ice');
             $client->code_postal = $request->input('code_postal');
             $client->zone_id = $request->input('zone_id');
+            $client->region_id = $request->input('region_id');
             $client->client_id = $request->input('client_id');
         
             if ($request->hasFile('logoSC')) {
@@ -133,6 +135,7 @@ class SiteClientController extends Controller
             'ice' => 'numeric|min:-9223372036854775808|max:9223372036854775807',
             'code_postal' => 'numeric|min:-9223372036854775808|max:9223372036854775807',
             'zone_id' => 'integer',
+            'region_id' => 'integer',
             'client_id' => 'integer',
             'logoSC' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
@@ -147,7 +150,7 @@ class SiteClientController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy($id)
-    {
+    {   
         $siteclient = SiteClient::findOrFail($id);
         $siteclient->delete();
 

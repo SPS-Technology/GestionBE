@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('stock', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('produit_id');
-            $table->foreign('produit_id')->references('id')->on('produits')->onDelete('restrict');
+            $table->foreign('produit_id')->references('id')->on('produits')->onDelete('cascade');
             $table->unsignedBigInteger('quantite');
             $table->unsignedBigInteger('seuil_minimal');
             $table->timestamps();
@@ -24,7 +24,7 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down(): void
+    public function down(): void    
     {
         Schema::dropIfExists('stock');
     }

@@ -13,6 +13,9 @@ class SiteClient extends Model
     public function zone() {
         return $this->belongsTo(Zone::class, 'zone_id');
     }
+    public function region() {
+        return $this->belongsTo(Region::class, 'region_id');
+    }
     public function client() {
         return $this->belongsTo(Client::class, 'client_id' );
     }

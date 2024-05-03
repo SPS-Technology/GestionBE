@@ -24,6 +24,8 @@ return new class extends Migration
             $table->string('logoSC');
             $table->unsignedBigInteger('zone_id');
             $table->foreign('zone_id')->references('id')->on('zones')->onDelete('restrict');
+            $table->unsignedBigInteger('region_id');
+            $table->foreign('region_id')->references('id')->on('regions')->onDelete('restrict');
             $table->unsignedBigInteger('client_id');
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
             $table->timestamps();

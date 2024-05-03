@@ -28,6 +28,8 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
             $table->unsignedBigInteger('zone_id');
             $table->foreign('zone_id')->references('id')->on('zones')->onDelete('restrict');
+            $table->unsignedBigInteger('region_id');
+            $table->foreign('region_id')->references('id')->on('regions')->onDelete('restrict');
             $table->timestamps();
         });
     }

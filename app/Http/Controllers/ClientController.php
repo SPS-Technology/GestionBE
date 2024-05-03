@@ -20,9 +20,9 @@ class ClientController extends Controller
      */
     public function index()
     {
-        // if (Gate::allows('view_all_clients')) {
+        if (Gate::allows('view_all_clients')) {
         try {
-            $client = Client::with('user', 'zone', 'siteclients')->get();
+            $client = Client::with('user', 'zone','siteclients.zone','siteclients.region','region')->get();
             $count = Client::count();
             return response()->json([
                 'message' => 'Liste des client récupérée avec succès', 'client' =>  $client,
@@ -31,9 +31,9 @@ class ClientController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
-        // }else {
-        //     abort(403, 'Vous n\'avez pas l\'autorisation de voir la liste des Clients.');
-        // }
+        }else {
+            abort(403, 'Vous n\'avez pas l\'autorisation de voir la liste des Clients.');
+        }
     }
     /**
      * Show the form for creating a new resource.
@@ -43,7 +43,9 @@ class ClientController extends Controller
     {
         try {
             // Récupérer les site clients associés au client spécifié par son ID
-            $siteClients = SiteClient::where('client_id', $clientId)->get();
+            $siteClients = SiteClient::where('client_id', $clientId)
+            ->with('zone', 'region')
+            ->get();
 
             return response()->json(['message' => 'Site clients récupérés avec succès', 'siteClients' => $siteClients], 200);
         } catch (\Exception $e) {
@@ -66,6 +68,7 @@ class ClientController extends Controller
 
     public function store(Request $request)
     {
+        if (Gate::allows('create_clients')) {
         try {
             $validator = Validator::make($request->all(), [
                 'CodeClient' => 'required|unique:clients,CodeClient',
@@ -79,6 +82,7 @@ class ClientController extends Controller
                 'ice' => 'required',
                 'code_postal' => 'required',
                 'zone_id' => 'required',
+                'region_id' => 'required',
                 'logoC' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             ]);
 
@@ -98,6 +102,7 @@ class ClientController extends Controller
             $client->ice = $request->input('ice');
             $client->code_postal = $request->input('code_postal');
             $client->zone_id = $request->input('zone_id');
+            $client->region_id = $request->input('region_id');
             $client->user_id = $request['user_id'] = Auth::id();
 
             if ($request->hasFile('logoC')) {
@@ -110,6 +115,9 @@ class ClientController extends Controller
             return response()->json(['message' => 'Client ajouté avec succès', 'client' => $client], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
+        }
+     } else {
+            abort(403, 'You are not authorized to add clients.');
         }
     }
     /**
@@ -140,6 +148,7 @@ class ClientController extends Controller
                     'ice' => 'numeric|min:-9223372036854775808|max:9223372036854775807',
                     'code_postal' => 'numeric|min:-9223372036854775808|max:9223372036854775807',
                     'zone_id' => 'integer',
+                    'region_id' => 'integer',
                     'logoC' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // logo validation rules (not necessarily required during update)
                 ]);
 

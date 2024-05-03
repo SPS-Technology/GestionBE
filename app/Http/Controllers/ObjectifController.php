@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Objectif;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Gate;
 
 class ObjectifController extends Controller
 {
     public function index()
     {
+        if (Gate::allows('view_all_objectifs')) {
+
         try {
             $objectifs = Objectif::all();
             $count = Objectif::count();
@@ -18,11 +21,16 @@ class ObjectifController extends Controller
         ], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
+        }  } else {
+            abort(403, 'Vous n\'avez pas l\'autorisation de voir la liste des objectifs.');
         }
+
     }
 
     public function store(Request $request)
     {
+        if (Gate::allows('create_objectifs')) {
+
         try {
             $messages = [
                 'type_objectif.required' => 'Le champ type_objectif est requis.',
@@ -48,6 +56,9 @@ class ObjectifController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
+    } else {
+        abort(403, 'Vous n\'avez pas l\'autorisation de ajouter un objectifs.');
+    }
     }
 
     public function show($id)
@@ -62,6 +73,8 @@ class ObjectifController extends Controller
 
     public function update(Request $request, $id)
     {
+        if (Gate::allows('update_objectifs')) {
+
         try {
             $validator = Validator::make($request->all(), [
                 'type_objectif' => 'required',
@@ -81,10 +94,14 @@ class ObjectifController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
+    } else {
+        abort(403, 'Vous n\'avez pas l\'autorisation de modifier la liste des objectifs.');
+    }
     }
 
     public function destroy($id)
     {
+        if (Gate::allows('delete_objectifs')) {
         try {
             $objectif = Objectif::findOrFail($id);
             $objectif->delete();
@@ -93,5 +110,8 @@ class ObjectifController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
+    } else {
+        abort(403, 'Vous n\'avez pas l\'autorisation de supprimer un objectif .');
+    }
     }
 }

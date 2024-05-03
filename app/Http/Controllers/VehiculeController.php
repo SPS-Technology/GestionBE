@@ -5,47 +5,57 @@ namespace App\Http\Controllers;
 use App\Models\Vehicule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Gate;
 
 class VehiculeController extends Controller
 {
     public function index()
     {
-        try {
-            $vehicules = Vehicule::all();
-            $count = Vehicule::count();
-            return response()->json(['vehicules' => $vehicules, 'count'=>$count], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+        if (Gate::allows('view_all_vehicules')) {
+            try {
+                $vehicules = Vehicule::all();
+                $count = Vehicule::count();
+                return response()->json(['vehicules' => $vehicules, 'count' => $count], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => $e->getMessage()], 500);
+            }
+        } else {
+            abort(403, 'Vous n\'avez pas l\'autorisation de voir la liste des vehicules.');
         }
     }
 
     public function store(Request $request)
     {
-        try {
-            $messages = [
-                'marque.required' => 'Le champ marque est requis.',
-                'matricule.required' => 'Le champ matricule est requis.',
-                'model.required' => 'Le champ model est requis.',
-                'matricule.unique' => 'cette matricule est déja enregistrer.',
-                'capacite.required' => 'Le champ capacite est requis.',
-               
+        if (Gate::allows('create_vehicules')) {
 
-            ];
-            $validator = Validator::make($request->all(), [
-                'marque' => 'required',
-                'matricule' => 'required|unique:vehicules',
-                'model' => 'required',
-                'capacite' => 'required',
-            ],$messages);
+            try {
+                $messages = [
+                    'marque.required' => 'Le champ marque est requis.',
+                    'matricule.required' => 'Le champ matricule est requis.',
+                    'model.required' => 'Le champ model est requis.',
+                    'matricule.unique' => 'cette matricule est déja enregistrer.',
+                    'capacite.required' => 'Le champ capacite est requis.',
 
-            if ($validator->fails()) {
-                return response()->json(['error' => $validator->errors()], 400);
+
+                ];
+                $validator = Validator::make($request->all(), [
+                    'marque' => 'required',
+                    'matricule' => 'required|unique:vehicules',
+                    'model' => 'required',
+                    'capacite' => 'required',
+                ], $messages);
+
+                if ($validator->fails()) {
+                    return response()->json(['error' => $validator->errors()], 400);
+                }
+
+                $vehicule = Vehicule::create($request->all());
+                return response()->json(['message' => 'Vehicule ajouté avec succès', 'vehicule' => $vehicule], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => $e->getMessage()], 500);
             }
-
-            $vehicule = Vehicule::create($request->all());
-            return response()->json(['message' => 'Vehicule ajouté avec succès', 'vehicule' => $vehicule], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+        } else {
+            abort(403, 'Vous n\'avez pas l\'autorisation d\'ajouter Vehicule');
         }
     }
 
@@ -61,37 +71,47 @@ class VehiculeController extends Controller
 
     public function update(Request $request, $id)
     {
-        try {
-            $validator = Validator::make($request->all(), [
-                'marque' => 'required',
-                'matricule' => 'required|unique:vehicules,matricule,' . $id,
-                'model' => 'required',
-                'capacite' => 'required',
-            ]);
-    
-            if ($validator->fails()) {
-                return response()->json(['error' => $validator->errors()], 400);
+        if (Gate::allows('update_vehicules')) {
+
+            try {
+                $validator = Validator::make($request->all(), [
+                    'marque' => 'required',
+                    'matricule' => 'required|unique:vehicules,matricule,' . $id,
+                    'model' => 'required',
+                    'capacite' => 'required',
+                ]);
+
+                if ($validator->fails()) {
+                    return response()->json(['error' => $validator->errors()], 400);
+                }
+
+                $vehicule = Vehicule::findOrFail($id);
+                $vehicule->update($request->all());
+
+                return response()->json(['message' => 'Vehicule modifié avec succès', 'vehicule' => $vehicule], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => $e->getMessage()], 500);
             }
-    
-            $vehicule = Vehicule::findOrFail($id);
-            $vehicule->update($request->all());
-    
-            return response()->json(['message' => 'Vehicule modifié avec succès', 'vehicule' => $vehicule], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+        } else {
+            abort(403, 'Vous n\'avez pas l\'autorisation de modifer un vehicule.');
         }
     }
-    
+
 
     public function destroy($id)
     {
-        try {
-            $vehicule = Vehicule::findOrFail($id);
-            $vehicule->delete();
+        if (Gate::allows('delete_vehicules')) {
 
-            return response()->json(['message' => 'Vehicule supprimé avec succès'], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            try {
+                $vehicule = Vehicule::findOrFail($id);
+                $vehicule->delete();
+
+                return response()->json(['message' => 'Vehicule supprimé avec succès'], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => $e->getMessage()], 500);
+            }
+        } else {
+            abort(403, 'Vous n\'avez pas l\'autorisation de supprimer un vehicule.');
         }
     }
 }

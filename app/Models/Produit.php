@@ -24,4 +24,9 @@ class Produit extends Model
     {
         return $this->belongsTo(Calibre::class, 'calibre_id');
     }
+
+    public function stocks()
+    {
+        return $this->hasMany(Stock::class);
+    }
 }

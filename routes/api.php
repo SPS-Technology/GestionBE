@@ -19,6 +19,7 @@ use App\Http\Controllers\PermisController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PreparationLigneCommandeController;
 use App\Http\Controllers\ProduitController;
+use App\Http\Controllers\RegionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SiteClientController;
 use App\Http\Controllers\StatusCommandeController;
@@ -41,15 +42,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 Route::post("/login", [AuthController::class, 'login']);
 
 
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post("/register", [AuthController::class, 'register']);
+    Route::get("/user", [AuthController::class, 'user']);
 
     //produits
     Route::get('produits', [ProduitController::class, 'index']);
@@ -156,6 +158,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('/calibres', CalibreController::class);
 
 
+    //region
+    Route::get('regions', [RegionController::class, 'index']);
+    Route::post('regions', [RegionController::class, 'store']);
+    Route::get('regions/{region}', [RegionController::class, 'show']);
+    Route::put('regions/{region}', [RegionController::class, 'update']);
+    Route::delete('regions/{region}', [RegionController::class, 'destroy']);
 
     //clients
     Route::get('clients', [ClientController::class, 'index']);

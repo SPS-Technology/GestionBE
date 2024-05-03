@@ -18,6 +18,9 @@ class Client extends Model
     public function zone() {
         return $this->belongsTo(Zone::class, 'zone_id');
     }
+    public function region() {
+        return $this->belongsTo(Region::class, 'region_id');
+    }
 
     public function siteclients() {
         return $this->hasMany(SiteClient::class, 'client_id');

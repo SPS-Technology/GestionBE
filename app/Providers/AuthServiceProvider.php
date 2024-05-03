@@ -7,11 +7,17 @@ namespace App\Providers;
 use App\Models\Client;
 use App\Models\Commande;
 use App\Models\Fournisseur;
+use App\Models\Livreur;
+use App\Models\Vehicule;
 use App\Models\Produit;
+use App\Models\Objectif;
 use App\Models\User;
 use App\Policies\ClientPolicy;
 use App\Policies\CommandePolicy;
+use App\Policies\LivreurPolicy;
+use App\Policies\VehiculePolicy;
 use App\Policies\FournisseurPolicy;
+use App\Policies\ObjectifPolicy;
 use App\Policies\ProductPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -30,6 +36,9 @@ class AuthServiceProvider extends ServiceProvider
         Commande::class => CommandePolicy::class,
         Client::class => ClientPolicy::class,
         Fournisseur::class => FournisseurPolicy::class,
+        Vehicule::class => VehiculePolicy::class,
+        Livreur::class => LivreurPolicy::class,
+        Objectif::class => ObjectifPolicy::class,
     ];
 
     /**
@@ -56,6 +65,25 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('view_fournisseurs', 'App\Policies\FournisseurPolicy@viewFournisseur');
         Gate::define('update_fournisseurs', 'App\Policies\FournisseurPolicy@editFournisseur');
         Gate::define('delete_fournisseurs', 'App\Policies\FournisseurPolicy@deleteFournisseur');
+
+        Gate::define('view_all_livreurs', 'App\Policies\LivreurPolicy@viewAllLivreurs');
+        Gate::define('create_livreurs', 'App\Policies\LivreurPolicy@createLivreur');
+        Gate::define('view_livreurs', 'App\Policies\LivreurPolicy@viewLivreur');
+        Gate::define('update_livreurs', 'App\Policies\LivreurPolicy@editLivreur');
+        Gate::define('delete_livreurs', 'App\Policies\LivreurPolicy@deleteLivreur');
+
+
+        Gate::define('view_all_vehicules', 'App\Policies\VehiculePolicy@viewAllVehicules');
+        Gate::define('create_vehicules', 'App\Policies\VehiculePolicy@createVehicule');
+        Gate::define('view_vehicules', 'App\Policies\VehiculePolicy@viewVehicule');
+        Gate::define('update_vehicules', 'App\Policies\VehiculePolicy@editVehicule');
+        Gate::define('delete_vehicules', 'App\Policies\VehiculePolicy@deleteVehicule');
+
+        Gate::define('view_all_objectifs', 'App\Policies\ObjectifPolicy@viewAllObjectifs');
+        Gate::define('create_objectifs', 'App\Policies\ObjectifPolicy@createObjectif');
+        Gate::define('view_objectifs', 'App\Policies\ObjectifPolicy@viewObjectif');
+        Gate::define('update_objectifs', 'App\Policies\ObjectifPolicy@editObjectif');
+        Gate::define('delete_objectifs', 'App\Policies\ObjectifPolicy@deleteObjectif');
 
 
         Gate::define('view_all_users', 'App\Policies\UserPolicy@viewAllUsers');
