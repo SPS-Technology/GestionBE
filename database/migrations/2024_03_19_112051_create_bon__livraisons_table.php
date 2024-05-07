@@ -17,8 +17,10 @@ return new class extends Migration
             $table->date('date');
             $table->unsignedBigInteger('commande_id');
             $table->foreign('commande_id')->references('id')->on('commandes')->onDelete('restrict');
-            $table->unsignedBigInteger('client_id');
+            $table->unsignedBigInteger('client_id')->nullable();
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('restrict');
+            $table->unsignedBigInteger('fournisseur_id')->nullable();
+            $table->foreign('fournisseur_id')->references('id')->on('fournisseurs')->onDelete('restrict');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
             $table->timestamps();

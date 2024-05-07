@@ -29,4 +29,9 @@ class Produit extends Model
     {
         return $this->hasMany(Stock::class);
     }
+    
+    public function lignesCommande()
+    {
+        return $this->hasMany(LigneCommande::class);
+    }
 }

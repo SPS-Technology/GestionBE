@@ -43,12 +43,20 @@ class StockController extends Controller
     public function show($id)
     {
         try {
-            $stock = Stock::findOrFail($id);
-            return response()->json(['stock' => $stock], 200);
+            // Récupérer les données de stock en fonction de l'ID du produit
+            $stock = Stock::where('produit_id', $id)->first();
+    
+            // Vérifier si des données de stock ont été trouvées
+            if ($stock) {
+                return response()->json(['stock' => $stock], 200);
+            } else {
+                return response()->json(['message' => 'Aucune donnée de stock trouvée pour cet ID de produit.'], 404);
+            }
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 404);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+    
 
     public function update(Request $request, $id)
     {

@@ -112,7 +112,7 @@ class AuthController extends Controller
 
             return response()->json([
                 'status' => 1,
-                'message' => 'Utilisateur enregistré avec rôle et permissions',
+                'message' => 'Utilisateur ajouter avec succès',
                 'user' => $user,
             ], 201);
         } else {

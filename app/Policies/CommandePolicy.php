@@ -6,31 +6,28 @@ use App\Models\User;
 
 class CommandePolicy
 {
-    /**
-     * Create a new policy instance.
-     */
-    public function __construct()
+    public function viewAllCommandes(User $user)
     {
-        //
+        return $user->hasPermission('view_all_commandes');
     }
 
-    // public function view(User $user)
-    // {
-    //     return $user->hasPermissionTo('view_commandes');
-    // }
+    public function createCommande(User $user)
+    {
+        return $user->hasPermission('create_commandes');
+    }
 
-    // public function create(User $user)
-    // {
-    //     return $user->hasPermissionTo('create_commandes');
-    // }
+    public function viewCommande(User $user)
+    {
+        return $user->hasPermission('view_commandes');
+    }
 
-    // public function update(User $user)
-    // {
-    //     return $user->hasPermissionTo('update_commandes');
-    // }
+    public function editCommande(User $user)
+    {
+        return $user->hasPermission('update_commandes');
+    }
 
-    // public function delete(User $user)
-    // {
-    //     return $user->hasPermissionTo('delete_commandes');
-    // }
+    public function deleteCommande(User $user)
+    {
+        return $user->hasPermission('delete_commandes');
+    }
 }

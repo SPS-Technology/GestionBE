@@ -141,7 +141,6 @@ Route::middleware('auth:sanctum')->group(function () {
     //Factures
     Route::apiResource('/factures', FactureController::class);
     Route::apiResource('/lignefactures', LigneFactureController::class);
-    Route::apiResource('/livraisons', BonLivraisonController::class);
     //stock
     Route::get('stock', [StockController::class, 'index']);
     Route::post('stock', [StockController::class, 'store']);
@@ -181,3 +180,4 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('/chargementCommandes', ChargementCommandeController::class);
     Route::get('chargementCommandes/{commandeId}/commandes', [ChargementCommandeController::class, 'getByCommandeId']);
 });
+Route::apiResource('/livraisons', BonLivraisonController::class);

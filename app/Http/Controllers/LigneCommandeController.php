@@ -14,9 +14,10 @@ class LigneCommandeController extends Controller
      */
     public function index()
     {
-        $ligneCommande = ligneCommande::all();
+        $ligneCommande = LigneCommande::with('produit')->get();
         return response()->json(['ligneCommande' => $ligneCommande]);
     }
+    
 
     /**
      * Show the form for creating a new resource.

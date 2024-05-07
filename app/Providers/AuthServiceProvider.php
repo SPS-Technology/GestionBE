@@ -39,6 +39,7 @@ class AuthServiceProvider extends ServiceProvider
         Vehicule::class => VehiculePolicy::class,
         Livreur::class => LivreurPolicy::class,
         Objectif::class => ObjectifPolicy::class,
+        Commande::class => CommandePolicy::class,
     ];
 
     /**
@@ -84,6 +85,12 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('view_objectifs', 'App\Policies\ObjectifPolicy@viewObjectif');
         Gate::define('update_objectifs', 'App\Policies\ObjectifPolicy@editObjectif');
         Gate::define('delete_objectifs', 'App\Policies\ObjectifPolicy@deleteObjectif');
+
+        Gate::define('view_all_commandes', 'App\Policies\CommandePolicy@viewAllCommandes');
+        Gate::define('create_commandes', 'App\Policies\CommandePolicy@createCommande');
+        Gate::define('view_commandes', 'App\Policies\CommandePolicy@viewCommande');
+        Gate::define('update_commandes', 'App\Policies\CommandePolicy@editCommande');
+        Gate::define('delete_commandes', 'App\Policies\CommandePolicy@deleteCommande');
 
 
         Gate::define('view_all_users', 'App\Policies\UserPolicy@viewAllUsers');

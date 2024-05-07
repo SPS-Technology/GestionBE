@@ -48,11 +48,14 @@ class RolesAndPermissionsSeeder extends Seeder
             'update_vehicules',
             'create_vehicules',
             'delete_vehicules',
-            
-            "view_all_objectifs",
-            "create_objectifs",
-            "update_objectifs",
-            "delete_objectifs"
+            'view_all_objectifs',
+            'create_objectifs',
+            'update_objectifs',
+            'delete_objectifs',
+            'view_all_commandes',
+            'create_commandes',
+            'update_commandes',
+            'delete_commandes',
         ];
         foreach ($AdminPermissions as $permission) {
             Permission::create(['name' => $permission]);
