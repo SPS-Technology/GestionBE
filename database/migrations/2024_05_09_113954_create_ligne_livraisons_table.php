@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ligne_factures', function (Blueprint $table) {
+        Schema::create('ligne_livraisons', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('produit_id');
             $table->foreign('produit_id')->references('id')->on('produits')->onDelete('restrict');
 
             $table->string('quantite');
             $table->decimal('prix_vente')->nullable();
-            $table->unsignedBigInteger('id_facture');
-            $table->foreign('id_facture')->references('id')->on('factures')->onDelete('restrict');
+            $table->unsignedBigInteger('id_bon__livraisons');
+            $table->foreign('id_bon__livraisons')->references('id')->on('bon__livraisons')->onDelete('restrict');
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ligne_factures');
+        Schema::dropIfExists('ligne_livraisons');
     }
 };

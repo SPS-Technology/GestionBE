@@ -33,8 +33,7 @@ class LigneFactureController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'Code_produit' => 'required',
-                'designation' => 'required',
+                'produit_id' => 'required',
                 'prix_vente' => 'required',
                 'quantite' => 'required',
                 'id_facture' => 'required',
@@ -77,8 +76,8 @@ class LigneFactureController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'Code_produit'=>'required',
-                'designation' => 'required',
+                'produit_id' => 'required',
+
                 'prix_vente' => 'required',
                 'quantite' => 'required',
                 'id_facture' =>'required',

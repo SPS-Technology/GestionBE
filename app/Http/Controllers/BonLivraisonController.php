@@ -18,7 +18,7 @@ class BonLivraisonController extends Controller
     public function index()
     {
         try {
-            $livraison = Bon_Livraison::with('client','commande')->get();
+            $livraison = Bon_Livraison::with('client','commande.ligneCommandes')->get();
             $count = Bon_Livraison::count();
             return response()->json(['message' => 'Liste des Bon Livraison récupérée avec succès', 'livraison' =>  $livraison, 'count' => $count], 200);
         } catch (\Exception $e) {

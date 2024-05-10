@@ -13,6 +13,7 @@ use App\Http\Controllers\LigneDevisController;
 use App\Http\Controllers\LigneencaissementController;
 use App\Http\Controllers\LigneentrercompteController;
 use App\Http\Controllers\LigneFactureController;
+use App\Http\Controllers\LigneLivraisonController;
 use App\Http\Controllers\ReclamationController;
 use App\Models\Role;
 use App\Models\SiteClient;
@@ -159,8 +160,20 @@ Route::apiResource('/encaissements', EncaissementController::class,);
 Route::apiResource('/comptes', ComptesController::class,);
 Route::apiResource('/ligneencaissement', LigneencaissementController::class,);
 Route::apiResource('/lignefactures', LigneFactureController::class);
-Route::apiResource('/livraisons', BonLivraisonController::class);
+// Route pour obtenir les lignedevis associés à un devis spécifique
+Route::get('factures/{facturesId}/lignefactures', [FactureController::class, 'lignefactures']);
+Route::post('factures/{facturesId}/lignefactures', [FactureController::class, 'lignefactures']);
+Route::put('factures/{facturesId}/lignefactures', [FactureController::class, 'lignefactures']);
+Route::delete('factures/{facturesId}/lignefactures', [FactureController::class, 'lignefactures']);
 
+
+Route::apiResource('/livraisons', BonLivraisonController::class);
+Route::apiResource('/lignelivraisons', LigneLivraisonController::class);
+// Route pour obtenir les lignedevis associés à un devis spécifique
+Route::get('livraisons/{livraisonsId}/lignelivraisons', [BonLivraisonController::class, 'lignelivraisons']);
+Route::post('livraisons/{livraisonsId}/lignelivraisons', [BonLivraisonController::class, 'lignelivraisons']);
+Route::put('livraisons/{livraisonsId}/lignelivraisons', [BonLivraisonController::class, 'lignelivraisons']);
+Route::delete('livraisons/{livraisonsId}/lignelivraisons', [BonLivraisonController::class, 'lignelivraisons']);
 
 //Commandes
 Route::get('commandes', [CommandeController::class, 'index']);

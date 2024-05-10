@@ -5,13 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class LigneFacture extends Model
+class LigneLivraison extends Model
 {
     use HasFactory;
-
     protected $guarded=[];
-    public function facture()
+    public function Bon_Livraison()
     {
-        return $this->belongsTo(facture::class, 'id_facture', 'id');
+        return $this->belongsTo(Bon_Livraison::class, 'id_bon__livraisons', 'id');
     }
 }

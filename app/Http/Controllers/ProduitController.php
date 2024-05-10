@@ -37,7 +37,7 @@ class ProduitController extends Controller
             try {
                 $validator = Validator::make($request->all(), [
                     'Code_produit' => 'required|unique:produits,Code_produit',
-                    'designation' => 'required',
+                    'designation' => 'required|unique:produits,designation',
                     'calibre_id' => 'required',
                     'type_quantite' => 'required',
                     'categorie_id' => 'required',
@@ -81,7 +81,7 @@ class ProduitController extends Controller
                 // Validation des données du formulaire
                 $validator = Validator::make($request->all(), [
                     'Code_produit' => 'required|unique:produits,Code_produit,'.$id,
-                    'designation' => 'required',
+                    'designation' => 'required|unique:produits,designation',
                     'calibre_id' => 'required',
                     'type_quantite' => 'required',
                     'categorie_id' => 'required',
