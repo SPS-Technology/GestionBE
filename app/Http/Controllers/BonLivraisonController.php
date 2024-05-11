@@ -110,7 +110,7 @@ class BonLivraisonController extends Controller
             // Créez la livraison en utilisant les données de la requête
             $livraison = Bon_Livraison::create($requestData);
 
-            return response()->json(['message' => 'Livraison ajoutée avec succès', 'bon livraison' => $livraison], 200);
+            return response()->json(['message' => 'Livraison ajoutée avec succès', 'livraison' => $livraison], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
