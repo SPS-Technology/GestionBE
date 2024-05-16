@@ -178,16 +178,23 @@ class ClientController extends Controller
             try {
                 $client = Client::findOrFail($id);
                 $client->delete();
-
-                return response()->json(['message' => 'Client supprimée avec succès'], 200);
+    
+                return response()->json(['message' => 'Client supprimé avec succès'], 200);
             } catch (\Exception $e) {
                 return response()->json(['error' => $e->getMessage()], 500);
-            } catch (QueryException $e) {
-                // Si une exception est déclenchée, cela signifie que le client a des commandes associées
-                return response()->json(['error' => 'Impossible de supprimer ce client car il a des commandes associées.'], 400);
+            } catch (\Illuminate\Database\QueryException $e) {
+                // Vérifier si l'erreur est liée à une contrainte d'intégrité
+                if ($e->errorInfo[1] === 1451) {
+                    // Renvoyer le message d'erreur spécifique
+                    return response()->json(['error' => 'Impossible de supprimer ce client car il est associées a d\'autres platformes.'], 400);
+                } else {
+                    // Renvoyer l'erreur par défaut
+                    return response()->json(['error' => $e->getMessage()], 500);
+                }
             }
         } else {
-            abort(403, 'Vous n\'avez pas l\'autorisation de supprimer un clients.');
+            abort(403, 'Vous n\'avez pas l\'autorisation de supprimer un client.');
         }
     }
+    
 }

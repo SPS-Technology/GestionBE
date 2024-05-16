@@ -22,11 +22,10 @@ class Commande extends Model
     {
         return $this->hasMany(StatusCommande::class, 'commande_id', 'id');
     }
-    public function lignePreparationCommandes()
+    public function preparations()
     {
-        return $this->hasMany(LignePreparationCommande::class, 'commande_id', 'id');
+        return $this->hasMany(PreparationCommande::class);
     }
-
     public function chargementCommandes()
     {
         return $this->hasMany(ChargementCommande::class);
@@ -47,8 +46,9 @@ class Commande extends Model
         // Define a deleting event to delete related records
         static::deleting(function ($commande) {
             $commande->ligneCommandes()->delete();
-            $commande->statusCommandes()->delete();
-            $commande->lignePreparationCommandes()->delete();
+            $commande->statusCommandes()->delete(); 
+            $commande->preparations()->delete();
+            $commande->chargementCommandes()->delete();
         });
     }
 }

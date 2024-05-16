@@ -13,15 +13,14 @@ return new class extends Migration
     {
         Schema::create('ligne_preparation_commandes', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('commande_id');
-            $table->foreign('commande_id')->references('id')->on('commandes')->onDelete('restrict');
+            $table->unsignedBigInteger('preparation_id');
+            $table->foreign('preparation_id')->references('id')->on('preparation_commandes')->onDelete('cascade');
             $table->unsignedBigInteger('produit_id');
             $table->foreign('produit_id')->references('id')->on('produits')->onDelete('restrict');
             $table->unsignedBigInteger('quantite');
             $table->unsignedBigInteger('prix_unitaire');
             $table->string('lot');
             $table->timestamps();
-            
         });
     }
 

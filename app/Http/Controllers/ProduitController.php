@@ -66,7 +66,8 @@ class ProduitController extends Controller
                 $produit->etat_produit = $request->input('etat_produit');
                 $produit->marque = $request->input('marque');
                 $produit->categorie_id = $request->input('categorie_id');
-                $produit->user_id = Auth::id(); // Set the user_id attribute
+                $produit->prix_vente = $request->input('prix_vente');
+                $produit->user_id = Auth::id(); 
 
                 if ($request->hasFile('logoP')) {
                     $photoPath = $request->file('logoP')->store('public/logop');
@@ -190,15 +191,23 @@ class ProduitController extends Controller
         if (Gate::allows('delete_product')) {
             try {
                 $produit = Produit::findOrFail($id);
-                $produit->save();
                 $produit->delete();
-
+    
                 return response()->json(['message' => 'Produit supprimé avec succès'], 200);
-            } catch (\Exception $e) {
-                return response()->json(['error' => $e->getMessage()], 500);
+            } catch (\Illuminate\Database\QueryException $e) {
+                // Vérifier si l'erreur est liée à une contrainte d'intégrité
+                if ($e->errorInfo[1] === 1451) {
+                    // Renvoyer le message d'erreur spécifique
+                    return response()->json(['error' => 'Impossible de supprimer un produit car il est utilisé dans d\'autres plateformes.'], 400);
+                } else {
+                    // Renvoyer l'erreur par défaut
+                    return response()->json(['error' => $e->getMessage()], 500);
+                }
             }
         } else {
             abort(403, 'Vous n\'avez pas l\'autorisation de supprimer ce produit.');
         }
     }
+    
+    
 }

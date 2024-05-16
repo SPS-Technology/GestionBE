@@ -17,6 +17,7 @@ use App\Http\Controllers\LivreurController;
 use App\Http\Controllers\ObjectifController;
 use App\Http\Controllers\PermisController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\PreparationCommandeController;
 use App\Http\Controllers\PreparationLigneCommandeController;
 use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\RegionController;
@@ -74,12 +75,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/users/{id}',  [AuthController::class, 'update']);
     Route::delete('/users/{id}',   [AuthController::class, 'destroy']);
     Route::get('/users', [AuthController::class, 'index']);
-    Route::apiResource('/ligneCommandes', LigneCommandeController::class);
-    Route::apiResource('/statusCommande', StatusCommandeController::class);
-    Route::apiResource('/ligneCommandes', LigneCommandeController::class);
-    Route::apiResource('/statusCommande', StatusCommandeController::class);
-    Route::apiResource('/lignePreparationCommandes', PreparationLigneCommandeController::class);
-
+   
 
 
     //logout
@@ -170,14 +166,23 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('clients/{client}', [ClientController::class, 'show']);
     Route::put('clients/{client}', [ClientController::class, 'update']);
     Route::delete('clients/{client}', [ClientController::class, 'destroy']);
+      //Commandes
+      Route::get('commandes', [CommandeController::class, 'index']);
+      Route::post('commandes', [CommandeController::class, 'store']);
+      Route::get('commandes/{commande}', [CommandeController::class, 'show']);
+      Route::put('commandes/{commande}', [CommandeController::class, 'update']);
+      Route::delete('commandes/{commande}', [CommandeController::class, 'destroy']);
+      Route::get('/clients/{clientId}/commandes', [CommandeController::class, 'getOrdersByClientId']);
 
-    //Commandes
-    Route::get('commandes', [CommandeController::class, 'index']);
-    Route::post('commandes', [CommandeController::class, 'store']);
-    Route::get('commandes/{commande}', [CommandeController::class, 'show']);
-    Route::put('commandes/{commande}', [CommandeController::class, 'update']);
-    Route::delete('commandes/{commande}', [CommandeController::class, 'destroy']);
-    Route::apiResource('/chargementCommandes', ChargementCommandeController::class);
-    Route::get('chargementCommandes/{commandeId}/commandes', [ChargementCommandeController::class, 'getByCommandeId']);
-});
-Route::apiResource('/livraisons', BonLivraisonController::class);
+      Route::apiResource('/chargementCommandes', ChargementCommandeController::class);
+      Route::get('chargementCommandes/{commandeId}/commandes', [ChargementCommandeController::class, 'getByCommandeId']);
+  
+      Route::apiResource('/ligneCommandes', LigneCommandeController::class);
+      Route::apiResource('/statusCommande', StatusCommandeController::class);
+      Route::apiResource('/statusCommande', StatusCommandeController::class);
+      Route::apiResource('/lignePreparationCommandes', PreparationLigneCommandeController::class);
+      Route::apiResource('/PreparationCommandes', PreparationCommandeController::class);
+      Route::get('PreparationCommandes/{preparationCommande}/lignePreparationCommandes', [PreparationCommandeController::class, 'getLignesPreparationByPreparation']);
+      Route::apiResource('/livraisons', BonLivraisonController::class);
+}); 
+  

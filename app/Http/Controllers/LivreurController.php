@@ -107,13 +107,18 @@ class LivreurController extends Controller
             try {
                 $livreur = Livreur::findOrFail($id);
                 $livreur->delete();
-
+    
                 return response()->json(['message' => 'Livreur supprimé avec succès'], 200);
-            } catch (\Exception $e) {
-                return response()->json(['error' => $e->getMessage()], 500);
+            } catch (\Illuminate\Database\QueryException $e) {
+                if ($e->errorInfo[1] === 1451) {
+                    return response()->json(['error' => 'Impossible de supprimer le livreur car il est associé à des autres platforme.'], 400);
+                } else {
+                    return response()->json(['error' => $e->getMessage()], 500);
+                }
             }
         } else {
             abort(403, 'Vous n\'avez pas l\'autorisation de supprimer un livreur.');
         }
     }
+    
 }

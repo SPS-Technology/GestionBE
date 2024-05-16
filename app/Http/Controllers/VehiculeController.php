@@ -101,17 +101,22 @@ class VehiculeController extends Controller
     public function destroy($id)
     {
         if (Gate::allows('delete_vehicules')) {
-
             try {
                 $vehicule = Vehicule::findOrFail($id);
                 $vehicule->delete();
-
+    
                 return response()->json(['message' => 'Vehicule supprimé avec succès'], 200);
-            } catch (\Exception $e) {
-                return response()->json(['error' => $e->getMessage()], 500);
+            } catch (\Illuminate\Database\QueryException $e) {
+                if ($e->errorInfo[1] === 1451) {
+                    return response()->json(['error' => 'Impossible de supprimer le véhicule car il est associé à des autres platforme.'], 400);
+                } else {
+                    // Renvoyer l'erreur par défaut
+                    return response()->json(['error' => $e->getMessage()], 500);
+                }
             }
         } else {
-            abort(403, 'Vous n\'avez pas l\'autorisation de supprimer un vehicule.');
+            abort(403, 'Vous n\'avez pas l\'autorisation de supprimer un véhicule.');
         }
     }
+    
 }

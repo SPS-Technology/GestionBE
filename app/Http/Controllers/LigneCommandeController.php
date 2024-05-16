@@ -84,7 +84,7 @@ class LigneCommandeController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
         } else {
-            $ligneCommande = ligneCommande::create($request->all());
+            $ligneCommande->update($request->all());
             return response()->json(['message' => 'ligneCommande modifié avec succès', 'ligneCommande' => $ligneCommande], 200);
         }
     }
@@ -100,7 +100,6 @@ class LigneCommandeController extends Controller
 
             return response()->json(['message' => 'Le ligneCommande a été supprimé avec succès.'], 200);
         } catch (QueryException $e) {
-            // Si une exception est déclenchée, cela signifie que le ligneCommande a des commandes associées
             return response()->json(['error' => 'Impossible de supprimer ce ligneCommande car il a des commandes associées.'], 400);
         }
     }

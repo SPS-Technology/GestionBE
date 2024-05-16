@@ -6,12 +6,12 @@ use App\Models\LignePreparationCommande;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class PreparationLigneCommandeController extends Controller
+    class PreparationLigneCommandeController extends Controller
 {
     public function index()
     {
         try {
-            $lignePreparationCommandes = LignePreparationCommande::all();
+            $lignePreparationCommandes = LignePreparationCommande::with('preparation')->get();
             return response()->json(['lignePreparationCommandes' => $lignePreparationCommandes], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
@@ -22,7 +22,7 @@ class PreparationLigneCommandeController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'commande_id' => 'required',
+                'preparation_id' => 'required',
                 'produit_id' => 'required',
                 'quantite' => 'required',
                 'prix_unitaire' => 'required',
@@ -52,7 +52,7 @@ class PreparationLigneCommandeController extends Controller
 
     public function show($commandeId)
     {
-        $lignePreparationCommandes = LignePreparationCommande::where('commande_id', $commandeId)->get();
+        $lignePreparationCommandes = LignePreparationCommande::where('preparation_id', $commandeId)->get();
         return response()->json(['lignePreparationCommandes' => $lignePreparationCommandes]);
     }
 
@@ -60,7 +60,7 @@ class PreparationLigneCommandeController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'commande_id' => 'required',
+                'preparation_id' => 'required',
                 'produit_id' => 'required',
                 'quantite' => 'required',
                 'prix_unitaire' => 'required',
