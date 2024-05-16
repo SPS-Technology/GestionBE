@@ -114,8 +114,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 
-//Factures
-    Route::apiResource('/factures', FactureController::class);
+
 
 
 
@@ -159,12 +158,15 @@ Route::delete('/reclamations/{id}', [ReclamationController::class, 'destroy']);
 Route::apiResource('/encaissements', EncaissementController::class,);
 Route::apiResource('/comptes', ComptesController::class,);
 Route::apiResource('/ligneencaissement', LigneencaissementController::class,);
-Route::apiResource('/lignefactures', LigneFactureController::class);
+
+//Factures
+Route::apiResource('/factures', FactureController::class);
+Route::apiResource('/ligneFacture', LigneFactureController::class);
 // Route pour obtenir les lignedevis associés à un devis spécifique
-Route::get('factures/{facturesId}/lignefactures', [FactureController::class, 'lignefactures']);
-Route::post('factures/{facturesId}/lignefactures', [FactureController::class, 'lignefactures']);
-Route::put('factures/{facturesId}/lignefactures', [FactureController::class, 'lignefactures']);
-Route::delete('factures/{facturesId}/lignefactures', [FactureController::class, 'lignefactures']);
+Route::get('factures/{facturesId}/ligneFacture', [FactureController::class, 'lignefacture']);
+Route::post('factures/{facturesId}/ligneFacture', [FactureController::class, 'lignefacture']);
+Route::put('factures/{facturesId}/ligneFacture', [FactureController::class, 'lignefacture']);
+Route::delete('factures/{facturesId}/ligneFacture', [FactureController::class, 'lignefacture']);
 
 
 Route::apiResource('/livraisons', BonLivraisonController::class);

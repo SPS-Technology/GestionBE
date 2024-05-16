@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Facture;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use App\Models\LigneFacture;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -75,9 +76,25 @@ class FactureController extends Controller
     public function show($clientId)
     {
         $factures = Facture::where('client_id', $clientId)->get();
-        $facture = Facture::with('client', 'devis','lignedevis','ligneFacture')->findOrFail($clientId);
+        $facture = Facture::with('client', 'devis','lignedevis','ligneFacture','lignefacture')->findOrFail($clientId);
         return response()->json(['facture' => $facture]);
     }
+
+    public function lignefacture($factureId)
+    {
+        try {
+            // Récupérer la facture spécifiée
+            $facture = Facture::findOrFail($factureId);
+
+            // Récupérer les lignes de facture associées à la facture spécifiée
+            $lignefactures = $facture->ligneFacture;
+
+            return response()->json(['message' => 'Lignes de facture récupérées avec succès', 'lignefacture' => $lignefactures], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Une erreur s\'est produite lors de la récupération des lignes de facture'], 500);
+        }
+    }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -105,7 +122,7 @@ class FactureController extends Controller
                 'total_ttc'=>'nullable',
                 'client_id' => 'required',
                 'user_id' => 'required',
-                'id_devis' => 'required',
+                'id_devis' => 'nullable',
             ]);
 
             if ($validator->fails()) {
