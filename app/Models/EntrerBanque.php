@@ -25,6 +25,9 @@ class EntrerBanque extends Model
     public function ligneEntrerCompte() {
         return $this->hasMany(Ligneentrercompte::class, 'entrer_comptes_id', 'id');
     }
+    public function ligneEncaissement() {
+        return $this->hasMany(ligneEncaissement::class, 'entrer_comptes_id', 'id');
+    }
     protected static function boot()
     {
         parent::boot();
@@ -32,6 +35,7 @@ class EntrerBanque extends Model
         // Define a deleting event to delete related records
         static::deleting(function ($banque) {
             $banque->ligneEntrerCompte()->delete();
+            $banque->ligneEncaissement()->delete();
 
         });
     }

@@ -144,8 +144,8 @@ class FactureController extends Controller
     {
         try {
             // $this->authorize('delete', Devis::class);
-            $devis = Facture::findOrFail($id);
-            $devis->delete();
+            $facture = Facture::findOrFail($id);
+            $facture->delete();
 
             return response()->json(['message' => 'Facture supprimée avec succès'], 200);
         } catch (AuthorizationException $e) {

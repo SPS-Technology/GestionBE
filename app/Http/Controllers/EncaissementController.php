@@ -11,7 +11,8 @@ class EncaissementController extends Controller
     public function index()
     {
         try {
-            $encaissements = Encaissement::all();
+            $encaissements = Encaissement::with('ligneEncaissement')->get();
+
             $count = Encaissement::count();
 
             return response()->json([
