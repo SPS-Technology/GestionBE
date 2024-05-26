@@ -14,10 +14,7 @@ class Facture extends Model
     {
         return $this->belongsTo(Devis::class, 'id_devis');
     }
-    public function lignedevis()
-    {
-        return $this->hasMany(LigneDevis::class, 'id_devis', 'id');
-    }
+
     public function client()
     {
         return $this->belongsTo(Client::class, 'client_id');
@@ -30,5 +27,15 @@ class Facture extends Model
         return $this->hasMany(Ligneentrercompte::class, 'id_facture', 'id');
     }
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Define a deleting event to delete related records
+        static::deleting(function ($facture) {
+            $facture->ligneFacture()->delete();
+            $facture->ligneEntrerCompte()->delete();
+        });
+    }
 
 }

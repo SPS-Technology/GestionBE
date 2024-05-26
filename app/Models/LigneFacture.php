@@ -12,6 +12,6 @@ class LigneFacture extends Model
     protected $guarded=[];
     public function facture()
     {
-        return $this->belongsTo(facture::class, 'id_facture', 'id');
+        return $this->belongsTo(Facture::class);
     }
 }

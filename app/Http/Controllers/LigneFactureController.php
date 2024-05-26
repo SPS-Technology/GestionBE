@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\LigneDevis;
 use App\Models\LigneFacture;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
@@ -70,7 +71,7 @@ class LigneFactureController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, LigneFacture $id)
+    public function update(Request $request, $id)
     {
         $ligneFacture = LigneFacture::findOrFail($id);
         $validator = Validator::make(
@@ -91,6 +92,8 @@ class LigneFactureController extends Controller
             return response()->json(['message' => 'ligneFacture modifié avec succès', 'ligneFacture' => $ligneFacture], 200);
         }
     }
+
+
 
     /**
      * Remove the specified resource from storage.
