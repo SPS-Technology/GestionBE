@@ -17,4 +17,8 @@ class Bon_Livraison extends Model
     {
         return $this->belongsTo(Commande::class, 'commande_id');
     }
+    public function lignelivraison()
+    {
+        return $this->hasMany(LigneLivraisons::class, 'id_bon__livraisons', 'id');
+    }
 }

@@ -172,10 +172,10 @@ Route::delete('factures/{facturesId}/ligneFacture', [FactureController::class, '
 Route::apiResource('/livraisons', BonLivraisonController::class);
 Route::apiResource('/lignelivraisons', LigneLivraisonController::class);
 // Route pour obtenir les lignedevis associés à un devis spécifique
-Route::get('livraisons/{livraisonsId}/lignelivraisons', [BonLivraisonController::class, 'lignelivraisons']);
-Route::post('livraisons/{livraisonsId}/lignelivraisons', [BonLivraisonController::class, 'lignelivraisons']);
-Route::put('livraisons/{livraisonsId}/lignelivraisons', [BonLivraisonController::class, 'lignelivraisons']);
-Route::delete('livraisons/{livraisonsId}/lignelivraisons', [BonLivraisonController::class, 'lignelivraisons']);
+Route::get('livraisons/{livraisonsId}/lignelivraisons', [BonLivraisonController::class, 'lignelivraison']);
+Route::post('livraisons/{livraisonsId}/lignelivraisons', [BonLivraisonController::class, 'lignelivraison']);
+Route::put('livraisons/{livraisonsId}/lignelivraisons', [BonLivraisonController::class, 'lignelivraison']);
+Route::delete('livraisons/{livraisonsId}/lignelivraisons', [BonLivraisonController::class, 'lignelivraison']);
 
 //Commandes
 Route::get('commandes', [CommandeController::class, 'index']);

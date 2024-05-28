@@ -125,6 +125,21 @@ class BonLivraisonController extends Controller
         return response()->json(['livraison' => $livraison]);
     }
 
+    public function lignelivraison($livraisonId)
+    {
+        try {
+            // Récupérer la facture spécifiée
+            $livraison = Bon_Livraison::findOrFail($livraisonId);
+
+            // Récupérer les lignes de facture associées à la facture spécifiée
+            $lignelivraison = $livraison->ligneLivraisons;
+
+            return response()->json(['message' => 'Lignes de facture récupérées avec succès', 'lignelivraison' => $lignelivraison], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Une erreur s\'est produite lors de la récupération des lignes de livraison'], 500);
+        }
+    }
+
     /**
      * Show the form for editing the specified resource.
      */
