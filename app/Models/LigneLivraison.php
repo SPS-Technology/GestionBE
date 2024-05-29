@@ -11,6 +11,6 @@ class LigneLivraison extends Model
     protected $guarded=[];
     public function Bon_Livraison()
     {
-        return $this->belongsTo(Bon_Livraison::class);
+        return $this->belongsTo(Bon_Livraison::class,'id_bon__livraisons', 'id');
     }
 }

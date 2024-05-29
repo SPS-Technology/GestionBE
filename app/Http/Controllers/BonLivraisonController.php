@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Bon_Livraison;
 use App\Models\Commande;
+use App\Models\LigneLivraison;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -18,7 +19,7 @@ class BonLivraisonController extends Controller
     public function index()
     {
         try {
-            $livraison = Bon_Livraison::with('client','commande.ligneCommandes')->get();
+            $livraison = Bon_Livraison::with('client','lignelivraison')->get();
             $count = Bon_Livraison::count();
             return response()->json(['message' => 'Liste des Bon Livraison récupérée avec succès', 'livraison' =>  $livraison, 'count' => $count], 200);
         } catch (\Exception $e) {
@@ -121,7 +122,7 @@ class BonLivraisonController extends Controller
      */
     public function show($id)
     {
-        $livraison = Bon_Livraison::with('client')->findOrFail($id);
+        $livraison = Bon_Livraison::with('client','ligneLivraisons')->findOrFail($id);
         return response()->json(['livraison' => $livraison]);
     }
 
@@ -132,9 +133,9 @@ class BonLivraisonController extends Controller
             $livraison = Bon_Livraison::findOrFail($livraisonId);
 
             // Récupérer les lignes de facture associées à la facture spécifiée
-            $lignelivraison = $livraison->ligneLivraisons;
+            $ligneLivraisons = $livraison->ligneLivraisons;
 
-            return response()->json(['message' => 'Lignes de facture récupérées avec succès', 'lignelivraison' => $lignelivraison], 200);
+            return response()->json(['message' => 'Lignes de facture récupérées avec succès', 'lignelivraison' => $ligneLivraisons], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Une erreur s\'est produite lors de la récupération des lignes de livraison'], 500);
         }
