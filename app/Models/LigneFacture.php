@@ -8,10 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class LigneFacture extends Model
 {
     use HasFactory;
+    protected $guarded = [];
 
-    protected $guarded=[];
     public function facture()
     {
-        return $this->belongsTo(Facture::class);
+        return $this->belongsTo(Facture::class, 'id_facture', 'id');
     }
+
+
 }

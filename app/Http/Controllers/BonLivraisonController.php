@@ -188,20 +188,21 @@ class BonLivraisonController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Bon_Livraison $id)
+    public function destroy($id)
     {
         try {
             // $this->authorize('delete', Bon_Livraison::class);
             $livraison = Bon_Livraison::findOrFail($id);
             $livraison->delete();
 
-            return response()->json(['message' => 'livraison supprimée avec succès'], 200);
+            return response()->json(['message' => 'Livraison supprimée avec succès'], 200);
         } catch (AuthorizationException $e) {
             return response()->json(['error' => 'Vous n\'avez pas l\'autorisation de supprimer cette livraison.'], 403);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         } catch (QueryException $e) {
-            return response()->json(['error' => 'Impossible de supprimer ce livraison car il a des ligne livraison associées.'], 400);
+            return response()->json(['error' => 'Impossible de supprimer cette livraison car elle a des lignes de livraison associées.'], 400);
         }
     }
+
 }
