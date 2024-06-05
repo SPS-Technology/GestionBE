@@ -42,7 +42,7 @@ class EntrerBanqueController extends Controller
                 return response()->json(['error' => $validator->errors()], 400);
             }
             $requestData = $request->all();
-            $requestData['Status'] = 'En Cours';
+//            $requestData['Status'] = 'En Cours';
             $banque = EntrerBanque::create($requestData);
            // $banque = EntrerBanque::create($request->all());
 
@@ -61,6 +61,9 @@ class EntrerBanqueController extends Controller
                 'mode_de_paiement' => 'required|string',
                 'datee' => 'required|date',
                 'remarque' => 'nullable|string',
+                'Status' => 'nullable',
+
+
             ]);
 
             if ($validator->fails()) {
