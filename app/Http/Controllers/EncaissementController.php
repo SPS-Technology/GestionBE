@@ -33,7 +33,7 @@ class EncaissementController extends Controller
                 'date_encaissement' => 'required|date',
                 'montant_total' => 'required',
                 'comptes_id' => 'required|exists:comptes,id',
-                'type_encaissement' => 'required',
+                'type_encaissement' => 'nullable',
             ]);
 
             if ($validator->fails()) {
