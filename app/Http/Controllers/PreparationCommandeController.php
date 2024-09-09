@@ -14,38 +14,48 @@ class PreparationCommandeController extends Controller
         return response()->json($preparations, 200);
     }
 
-    //     public function show($id)
-    // {
-    //     $preparation = PreparationCommande::with('commande', 'lignesPreparation')->findOrFail($id);
-    //     return response()->json($preparation, 200);
-    // }
+  
     public function show($id)
     {
-        // Récupérer toutes les préparations associées à la commande spécifiée par son ID
-        $preparations = PreparationCommande::where('commande_id', $id)
-            ->with('lignesPreparation')
-            ->get();
-
-        return response()->json($preparations, 200);
+        try {
+            // Récupérer la préparation spécifiée par son ID avec les lignes de préparation
+            $preparation = PreparationCommande::with('lignesPreparation')->findOrFail($id);
+    
+            // Récupérer la commande associée à cette préparation
+            $commande = $preparation->commande()->firstOrFail();
+    
+            // Construire la réponse avec les données de la préparation et de la commande
+            $response = [
+                'preparation' => $preparation,
+                'commande' => $commande
+            ];
+    
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Données non trouvées ou une erreur est survenue'], 404);
+        }
     }
-
+    
 
     public function getLignesPreparationByPreparation($preparation_id)
     {
-        // Récupérer les lignes de préparation associées à la préparation spécifiée
-        $preparation = PreparationCommande::with('lignesPreparation')->findOrFail($preparation_id);
-        $lignesPreparation = $preparation->lignesPreparation;
-
+        // Récupérer la préparation associée à la préparation spécifiée
+        $preparation = PreparationCommande::with('lignesPreparation')
+            ->where('commande_id', $preparation_id)
+            ->get(); // Utiliser first() pour obtenir un seul résultat
+    
+    
         // Retourner les lignes de préparation au format JSON
-        return response()->json($lignesPreparation, 200);
+        return response()->json($preparation, 200);
     }
+    
 
 
 
     public function store(Request $request)
     {
         // Définir le statut initial comme "En Attente"
-        $request->merge(['status' => 'En Attente']);
+        // $request->merge(['status_preparation' => 'En Attente']);
 
         $request->validate([
             'commande_id' => 'required|exists:commandes,id',
@@ -66,7 +76,7 @@ class PreparationCommandeController extends Controller
         // Créer une nouvelle instance de préparation de commande
         $preparation = new PreparationCommande();
         $preparation->commande_id = $request->input('commande_id');
-        $preparation->status = $request->input('status');
+        $preparation->status_preparation = $request->input('status_preparation');
         $preparation->datePreparationCommande = $request->input('datePreparationCommande');
         $preparation->CodePreparation = $newCode;
         $preparation->save();
@@ -80,12 +90,12 @@ class PreparationCommandeController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'status' => 'required',
+            'status_preparation' => 'required',
             'datePreparationCommande' => 'required|date',
         ]);
 
         $preparation = PreparationCommande::findOrFail($id);
-        $preparation->status = $request->input('status');
+        $preparation->status_preparation = $request->input('status_preparation');
         $preparation->datePreparationCommande = $request->input('datePreparationCommande');
         $preparation->save();
 

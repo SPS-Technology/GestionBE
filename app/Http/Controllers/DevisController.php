@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Client;
 use App\Models\Devis;
 use App\Models\LigneDevis;
+use App\Models\Produit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\QueryException;
@@ -41,13 +43,14 @@ class DevisController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'reference' => 'required',
-                'date' => 'required',
-                'validation_offer' => 'required',
-                'modePaiement' => 'required',
-                'status' => 'required',
-                'client_id' => 'required',
-                'user_id' => 'required',
+                'reference' => 'nullable',
+                'date' => 'nullable',
+                'validation_offer' => 'nullable',
+                'modePaiement' => 'nullable',
+                'status' => 'nullable',
+                'client_id' => 'nullable',
+                'user_id' => 'nullable',
+                'type'=>'nullable'
             ]);
 
             if ($validator->fails()) {
@@ -84,11 +87,30 @@ class DevisController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Devis $devis)
+    public function getAllData()
     {
-        //
+        try {
+            // Récupérer les clients
+            $clients = Client::with('user', 'zone', 'siteclients.zone', 'siteclients.region', 'region')->get();
+    
+            // Récupérer les devis
+            $devis = Devis::with('lignedevis', 'client')->get();
+    
+            // Récupérer les produits
+            $produits = Produit::with('categorie', 'calibre', 'user')->get();
+    
+            // Retourner les données en une seule réponse JSON
+            return response()->json([
+                'clients' => ['data' => $clients],
+                'devises' => ['data' => $devis],
+                'produits' => ['data' => $produits]
+            ], 200);
+    
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
-
+    
     /**
      * Update the specified resource in storage.
      */

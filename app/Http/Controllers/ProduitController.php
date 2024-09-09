@@ -32,6 +32,8 @@ class ProduitController extends Controller
         }
     }
 
+
+
     public function store(Request $request)
     {
         if (Gate::allows('create_product')) {

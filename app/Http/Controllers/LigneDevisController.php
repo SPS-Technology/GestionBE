@@ -33,9 +33,8 @@ class LigneDevisController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'Code_produit' => 'required',
-                'designation' => 'required',
-                'prix_vente' => 'required',
+                'produit_id' => 'required',
+                'prix_vente' => 'nullable',
                 'quantite' => 'required',
                 'id_devis' => 'required',
             ]);
@@ -54,12 +53,14 @@ class LigneDevisController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show($id_devis)
     {
-        $lignedevis = LigneDevis::findOrFail($id);
+        // Trouver la ligne de devis avec l'id_devis spécifié
+        $lignedevis = LigneDevis::where('id_devis', $id_devis)->get();
+    
         return response()->json(['lignedevis' => $lignedevis]);
-        
     }
+    
 
     /**
      * Show the form for editing the specified resource.
@@ -78,11 +79,10 @@ class LigneDevisController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'Code_produit'=>'required',
-                'designation' => 'required',
-                'prix_vente' => 'required',
-                'quantite' => 'required',
-                'id_devis' =>'required',
+                'Code_produit'=>'nullable',
+                'prix_vente' => 'nullable',
+                'quantite' => 'nullable',
+                'id_devis' =>'nullable',
             ]
         );
         if ($validator->fails()) {

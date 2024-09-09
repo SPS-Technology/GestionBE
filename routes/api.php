@@ -1,37 +1,68 @@
 <?php
 
+use App\Http\Controllers\AgentController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AutorisationController;
+use App\Http\Controllers\Bon_EntreController;
+use App\Http\Controllers\Bon_SourtieController;
 use App\Http\Controllers\BonLivraisonController;
 use App\Http\Controllers\CalibreController;
+use App\Http\Controllers\CasseController;
 use App\Http\Controllers\CategorieController;
 use App\Http\Controllers\ChargementCommandeController;
+use App\Http\Controllers\ChiffreAffaireController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CommandeController;
+use App\Http\Controllers\ComptesController;
 use App\Http\Controllers\DevisController;
+use App\Http\Controllers\EncaissementController;
+use App\Http\Controllers\EntrerBanqueController;
+use App\Http\Controllers\EtatRecouvrementController;
 use App\Http\Controllers\FactureController;
 use App\Http\Controllers\FournisseurController;
+use App\Http\Controllers\ligne_Bon_EntreController;
+use App\Http\Controllers\Ligne_Bon_SourtieController;
 use App\Http\Controllers\LigneCommandeController;
 use App\Http\Controllers\LigneDevisController;
+use App\Http\Controllers\LigneencaissementController;
+use App\Http\Controllers\LigneentrercompteController;
 use App\Http\Controllers\LigneFactureController;
+use App\Http\Controllers\LigneLivraisonController;
 use App\Http\Controllers\LivreurController;
 use App\Http\Controllers\ObjectifController;
+use App\Http\Controllers\OeuffinisemifiniController;
 use App\Http\Controllers\PermisController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PreparationCommandeController;
 use App\Http\Controllers\PreparationLigneCommandeController;
 use App\Http\Controllers\ProduitController;
+use App\Http\Controllers\ReclamationController;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SiteClientController;
 use App\Http\Controllers\StatusCommandeController;
 use App\Http\Controllers\StockController;
+use App\Http\Controllers\StockMagasinController;
+use App\Http\Controllers\StockProductionController;
 use App\Http\Controllers\VehiculeController;
 use App\Http\Controllers\VehiculeLivreurController;
+use App\Http\Controllers\VisiteController;
 use App\Http\Controllers\ZoneController;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+
+//yassin 
+use App\Http\Controllers\OffreController;
+use App\Http\Controllers\OffreDetailController;
+
+use App\Http\Controllers\GroupeClientController; //new 
+
+use App\Http\Controllers\ClientGroupeClientController;  //new
+
+
+use App\Http\Controllers\OffreGroupeController;  //new
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -48,6 +79,8 @@ use Illuminate\Support\Facades\Route;
 // });
 Route::post("/login", [AuthController::class, 'login']);
 
+    //logout
+     Route::post("/logout", [AuthController::class, 'logout']);
 
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -78,8 +111,6 @@ Route::middleware('auth:sanctum')->group(function () {
    
 
 
-    //logout
-    Route::post("/logout", [AuthController::class, 'logout']);
     Route::apiResource('/roles', RoleController::class);
     Route::apiResource('/categories', CategorieController::class);
 
@@ -166,6 +197,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('clients/{client}', [ClientController::class, 'show']);
     Route::put('clients/{client}', [ClientController::class, 'update']);
     Route::delete('clients/{client}', [ClientController::class, 'destroy']);
+    Route::get('DachbordeData', [ClientController::class, 'getAllDataDachborde']);
+
       //Commandes
       Route::get('commandes', [CommandeController::class, 'index']);
       Route::post('commandes', [CommandeController::class, 'store']);
@@ -184,5 +217,131 @@ Route::middleware('auth:sanctum')->group(function () {
       Route::apiResource('/PreparationCommandes', PreparationCommandeController::class);
       Route::get('PreparationCommandes/{preparationCommande}/lignePreparationCommandes', [PreparationCommandeController::class, 'getLignesPreparationByPreparation']);
       Route::apiResource('/livraisons', BonLivraisonController::class);
+
+      //autorisation onsa
+      Route::apiResource('/autorisation', AutorisationController::class);
+      Route::apiResource('/vis/store', VisiteController::class);
+      Route::apiResource('/oeuffinisemifini', OeuffinisemifiniController::class);
+      Route::apiResource('/oeufcasses', CasseController::class);
+//les api de amine 
+Route::get('/chiffre-affaire', [ChiffreAffaireController::class, 'index']);
+Route::post('/chiffre-affaire', [ChiffreAffaireController::class, 'store']);
+Route::get('/chiffre-affaire/{id}', [ChiffreAffaireController::class, 'show']);
+Route::put('/chiffre-affaire/{id}', [ChiffreAffaireController::class, 'update']);
+Route::delete('/chiffre-affaire/{id}', [ChiffreAffaireController::class, 'destroy']);
+Route::get('/chiffre-affaire', [ChiffreAffaireController::class, 'getAllDataChefreDaffer']);
+
+
+Route::apiResource('/devises', DevisController::class);
+Route::apiResource('/ligneDevis', LigneDevisController::class);
+Route::get('/getAllDataDevis', [DevisController::class, 'getAllData']);
+
+// Route pour obtenir les lignedevis associés à un devis spécifique
+Route::get('devises/{devisId}/ligneDevis', [DevisController::class, 'lignedevis']);
+Route::post('devises/{devisId}/ligneDevis', [DevisController::class, 'lignedevis']);
+Route::put('devises/{devisId}/ligneDevis', [DevisController::class, 'lignedevis']);
+Route::delete('devises/{devisId}/ligneDevis', [DevisController::class, 'lignedevis']);
+
+
+//Ligneentrercompte
+Route::apiResource('/ligneentrercompte',LigneentrercompteController::class);
+//Route for EntrerBanque
+Route::get('/banques', [EntrerBanqueController::class, 'index']);
+Route::get('/AllDataBonque', [EntrerBanqueController::class, 'getAllDataBonque']);
+
+Route::post('/banques', [EntrerBanqueController::class, 'store']);
+Route::get('/banques/{id}', [EntrerBanqueController::class, 'show']);
+Route::put('/banques/{id}', [EntrerBanqueController::class, 'update']);
+Route::delete('/banques/{id}', [EntrerBanqueController::class, 'destroy']);
+Route::apiResource('/etat-recouvrements', EtatRecouvrementController::class,);
+
+Route::get('/reclamations', [ReclamationController::class, 'index']);
+Route::post('/reclamations', [ReclamationController::class, 'store']);
+Route::get('/reclamations/{id}', [ReclamationController::class, 'show']);
+Route::put('/reclamations/{id}', [ReclamationController::class, 'update']);
+Route::delete('/reclamations/{id}', [ReclamationController::class, 'destroy']);
+
+Route::apiResource('/encaissements', EncaissementController::class,);
+
+
+Route::apiResource('/ligneencaissement', LigneencaissementController::class,);
+
+//compte
+Route::apiResource('/comptes', ComptesController::class,);
+//Factures
+Route::apiResource('/factures', FactureController::class);
+Route::get('/getAllDataFacture', [FactureController::class, 'getAllData']);
+
+Route::apiResource('/ligneFacture', LigneFactureController::class);
+// Route pour obtenir les lignedevis associés à un devis spécifique
+Route::get('factures/{facturesId}/ligneFacture', [FactureController::class, 'lignefacture']);
+Route::post('factures/{facturesId}/ligneFacture', [FactureController::class, 'lignefacture']);
+Route::put('factures/{facturesId}/ligneFacture', [FactureController::class, 'lignefacture']);
+Route::delete('factures/{facturesId}/ligneFacture', [FactureController::class, 'lignefacture']);
+
+//bon livresan
+Route::apiResource('/livraisons', BonLivraisonController::class);
+Route::apiResource('/lignelivraisons', LigneLivraisonController::class);
+// Route pour obtenir les lignedevis associés à un devis spécifique
+Route::get('livraisons/{livraisonsId}/lignelivraisons', [BonLivraisonController::class, 'lignelivraison']);
+Route::post('livraisons/{livraisonsId}/lignelivraisons', [BonLivraisonController::class, 'lignelivraison']);
+Route::put('livraisons/{livraisonsId}/lignelivraisons', [BonLivraisonController::class, 'lignelivraison']);
+Route::delete('livraisons/{livraisonsId}/lignelivraisons', [BonLivraisonController::class, 'lignelivraison']);
+Route::get('/getAllDataBonLIvraisan', [BonLivraisonController::class, 'getAllDataBonLIvraisan']);
+
+//api agent
+Route::apiResource('/agents',AgentController::class);
+
+//stock magasin
+Route::apiResource('stock_magasin', StockMagasinController::class);
+//stock Production
+Route::apiResource('stock_production', StockProductionController::class);
+
+//bon Entre
+Route::apiResource('/bonEntre', Bon_EntreController::class);
+Route::apiResource('/ligneBonEntre', ligne_Bon_EntreController::class);
+Route::get('/getAllDataBonEntre', [Bon_EntreController::class, 'getAllDataBonEntre']);
+
+//Bon Sortie
+Route::apiResource('/BonSortie', Bon_SourtieController::class);
+Route::apiResource('/LigneBonSortie', Ligne_Bon_SourtieController::class);
+Route::get('/getAllDataBonSortie', [Bon_SourtieController::class, 'getAllDataBonSortie']);
+
+
+
+
+//yassin 
+//offers goup  client 
+
+Route::get('/groupes', [GroupeClientController::class, 'index']);
+Route::post('/groupes', [GroupeClientController::class, 'store']);
+Route::get('/groupes/{Id_groupe}', [GroupeClientController::class, 'show']);
+Route::put('/groupes/{Id_groupe}', [GroupeClientController::class, 'update']);
+Route::delete('/groupes/{Id_groupe}', [GroupeClientController::class, 'destroy']);
+
+Route::get('/client-groupe-relations', [GroupeClientController::class, 'getRelations']);
+Route::get('/clients-groupe', [ClientGroupeClientController::class, 'index']);
+Route::post('/clients-groupe', [ClientGroupeClientController::class, 'store']);
+Route::get('/clients-groupe/{id}', [ClientGroupeClientController::class, 'show']);
+Route::put('/clients-groupe/{id}', [ClientGroupeClientController::class, 'update']);
+Route::delete('/clients-groupe/{id}', [ClientGroupeClientController::class, 'destroy']);
+Route::delete('/clients-groupe/{id}', [ClientGroupeClientController::class, 'removeClientFromGroup']);
+
+
+Route::get('/offres-groupe', [OffreGroupeController::class, 'index']);
+Route::post('/offres-groupe', [OffreGroupeController::class, 'store']);
+Route::get('/offres-groupe/{id}', [OffreGroupeController::class, 'show']);
+Route::put('/offres-groupe/{id}', [OffreGroupeController::class, 'update']);
+Route::delete('/offres-groupe/{id}', [OffreGroupeController::class, 'destroy']);
+Route::delete('/offres-groupe/{id}', [OffreGroupeController::class, 'removeOffreFromGroup']);
+Route::put('offres/{id}/update-groupes', [OffreController::class, 'updateGroupes']);
+Route::put('/offres/{id}/update-groupes', [OffreController::class, 'updateGroupes']);
+Route::apiResource('/offres', OffreController::class);
+// Resource routes for OffreDetailController
+Route::apiResource('/offre_details', OffreDetailController::class);
+// Route to get OffreDetails associated with a specific Offre
+Route::get('offres/{offreId}/offre_details', [OffreController::class, 'offreDetails']);
+
+
 }); 
   

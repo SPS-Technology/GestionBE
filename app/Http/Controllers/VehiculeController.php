@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Autorisation;
 use App\Models\Vehicule;
+use App\Models\Visite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Gate;
@@ -24,41 +26,75 @@ class VehiculeController extends Controller
         }
     }
 
+    // public function store(Request $request)
+    // {
+    //     if (Gate::allows('create_vehicules')) {
+
+    //         try {
+    //             $messages = [
+    //                 'marque.required' => 'Le champ marque est requis.',
+    //                 'matricule.required' => 'Le champ matricule est requis.',
+    //                 'model.required' => 'Le champ model est requis.',
+    //                 'matricule.unique' => 'cette matricule est déja enregistrer.',
+    //                 'capacite.required' => 'Le champ capacite est requis.',
+
+
+    //             ];
+    //             $validator = Validator::make($request->all(), [
+    //                 'marque' => 'required',
+    //                 'matricule' => 'required|unique:vehicules',
+    //                 'model' => 'required',
+    //                 'capacite' => 'required',
+    //             ], $messages);
+
+    //             if ($validator->fails()) {
+    //                 return response()->json(['error' => $validator->errors()], 400);
+    //             }
+
+    //             $vehicule = Vehicule::create($request->all());
+    //             return response()->json(['message' => 'Vehicule ajouté avec succès', 'vehicule' => $vehicule], 200);
+    //         } catch (\Exception $e) {
+    //             return response()->json(['error' => $e->getMessage()], 500);
+    //         }
+    //     } else {
+    //         abort(403, 'Vous n\'avez pas l\'autorisation d\'ajouter Vehicule');
+    //     }
+    // }
     public function store(Request $request)
     {
-        if (Gate::allows('create_vehicules')) {
-
-            try {
-                $messages = [
-                    'marque.required' => 'Le champ marque est requis.',
-                    'matricule.required' => 'Le champ matricule est requis.',
-                    'model.required' => 'Le champ model est requis.',
-                    'matricule.unique' => 'cette matricule est déja enregistrer.',
-                    'capacite.required' => 'Le champ capacite est requis.',
+        // Valider les données entrantes si nécessaire
+        $messages = [
+            'marque.required' => 'Le champ marque est requis.',
+            'matricule.required' => 'Le champ matricule est requis.',
+            'model.required' => 'Le champ model est requis.',
+            'matricule.unique' => 'cette matricule est déja enregistrer.',
+            'capacite.required' => 'Le champ capacite est requis.',
 
 
-                ];
-                $validator = Validator::make($request->all(), [
-                    'marque' => 'required',
-                    'matricule' => 'required|unique:vehicules',
-                    'model' => 'required',
-                    'capacite' => 'required',
-                ], $messages);
-
-                if ($validator->fails()) {
-                    return response()->json(['error' => $validator->errors()], 400);
-                }
-
-                $vehicule = Vehicule::create($request->all());
-                return response()->json(['message' => 'Vehicule ajouté avec succès', 'vehicule' => $vehicule], 200);
-            } catch (\Exception $e) {
-                return response()->json(['error' => $e->getMessage()], 500);
-            }
-        } else {
-            abort(403, 'Vous n\'avez pas l\'autorisation d\'ajouter Vehicule');
+        ];
+        $validator = Validator::make($request->all(), [
+            'marque' => 'required',
+            'matricule' => 'required|unique:vehicules',
+            'model' => 'required',
+            'capacite' => 'required',
+        ], $messages);
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
         }
-    }
+        // Créer un véhicule
+        $vehicule = Vehicule::create([
+            'marque' => $request->marque,
+            'matricule' => $request->matricule,
+            'model' => $request->model,
+            'capacite' => $request->capacite,
+        ]);
 
+        // Créer une autorisation si les données sont fournies
+
+
+        // Retourner une réponse appropriée
+        return response()->json(['vehicule' => $vehicule], 200);
+    }
     public function show($id)
     {
         try {
@@ -88,7 +124,7 @@ class VehiculeController extends Controller
                 $vehicule = Vehicule::findOrFail($id);
                 $vehicule->update($request->all());
 
-                return response()->json(['message' => 'Vehicule modifié avec succès', 'vehicule' => $vehicule], 200);
+                return response()->json(['vehicule' => $vehicule], 200);
             } catch (\Exception $e) {
                 return response()->json(['error' => $e->getMessage()], 500);
             }

@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Client;
 use App\Models\Facture;
+use App\Models\LigneFacture;
+use App\Models\Produit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\QueryException;
@@ -17,7 +20,7 @@ class FactureController extends Controller
     public function index()
     {
         try {
-            $facture = Facture::with('devis.lignedevis','clients')->get();
+            $facture = Facture::with('ligneFacture','Client')->get();
             $count = Facture::count();
             return response()->json(['message' => 'Liste des facture récupérée avec succès', 'facture' =>  $facture, 'count' => $count], 200);
         } catch (\Exception $e) {
@@ -25,13 +28,34 @@ class FactureController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function getAllData()
     {
-        //
+        try {
+            // Récupérer les factures avec leurs relations
+            $factures = Facture::with('ligneFacture', 'client')->get();
+    
+            // Récupérer les clients
+            $clients = Client::with('user', 'zone', 'siteclients.zone', 'siteclients.region', 'region')->get();
+    
+            // Récupérer les lignes de facture
+            $ligneFactures = LigneFacture::all();
+    
+            // Récupérer les produits
+            $produits = Produit::with('categorie', 'calibre', 'user')->get();
+    
+            // Retourner toutes les données dans une seule réponse JSON
+            return response()->json([
+                'factures' => ['data' => $factures],
+                'clients' => ['data' => $clients],
+                'ligneFactures' => $ligneFactures,
+                'produits' => ['data' => $produits],
+            ], 200);
+    
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
+    
 
     /**
      * Store a newly created resource in storage.
@@ -40,29 +64,26 @@ class FactureController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'reference' => 'nullable',
+                'reference' => 'required',
                 'date' => 'nullable',
                 'ref_BL' => 'nullable',
                 'ref_BC' => 'nullable',
                 'modePaiement' => 'nullable',
                 'client_id' => 'required',
-                'user_id' => 'required',
+                'user_id' => 'nullable',
                 'id_devis' => 'nullable',
+                'type'=>'required'
+
             ]);
 
             if ($validator->fails()) {
                 return response()->json(['error' => $validator->errors()], 400);
             }
-            $reference = 'FAC' . now()->timestamp;
-            $date = Carbon::now()->format('Y-m-d H:i:s');
 
-            $requestData = $request->all();
-            $requestData['reference'] = $reference;
-            $requestData['date'] = $date;
 
-            $facture = Facture::create($requestData);
+            $facture = Facture::create($request->all());
             
-            return response()->json(['message' => 'Facture ajoutée avec succès', 'facture' => $facture], 200);
+            return response()->json(['facture' => $facture], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
@@ -95,14 +116,14 @@ class FactureController extends Controller
             $facture = Facture::findOrFail($id);
 
             $validator = Validator::make($request->all(), [
-                'reference' => 'required',
+                'reference' => 'nullable',
                 'date' => 'nullable',
                 'ref_BL' => 'nullable',
                 'ref_BC' => 'nullable',
                 'modePaiement' => 'nullable',
-                'client_id' => 'required',
-                'user_id' => 'required',
-                'id_devis' => 'required',
+                'client_id' => 'nullable    ',
+                'user_id' => 'nullable',
+                'id_devis' => 'nullable',
             ]);
 
             if ($validator->fails()) {

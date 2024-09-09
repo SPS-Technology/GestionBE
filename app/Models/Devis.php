@@ -24,4 +24,5 @@ class Devis extends Model
     {
         return $this->belongsTo(Facture::class, 'id_facture');
     }
+
 }

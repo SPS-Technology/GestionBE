@@ -6,6 +6,7 @@ use App\Models\LigneFacture;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
 class LigneFactureController extends Controller
 {
@@ -33,12 +34,11 @@ class LigneFactureController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'Code_produit' => 'required',
-                'designation' => 'required',
-                'prix_vente' => 'required',
-                'quantite' => 'required',
-                'id_facture' => 'required',
-            ]);
+                'produit_id' => 'nullable',
+                'prix_vente' => 'nullable',
+                'quantite' => 'nullable',
+                'id_facture' => 'nullable',
+            ]); 
 
             if ($validator->fails()) {
                 return response()->json(['error' => $validator->errors()], 400);
@@ -71,27 +71,34 @@ class LigneFactureController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, LigneFacture $id)
+
+    public function update(Request $request, $id)
     {
-        $ligneFacture = LigneFacture::findOrFail($id);
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'Code_produit'=>'required',
-                'designation' => 'required',
-                'prix_vente' => 'required',
-                'quantite' => 'required',
-                'id_facture' =>'required',
-            ]
-        );
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 400);
-        } else {
-            // Update the existing record
-            $ligneFacture->update($request->all());
-            return response()->json(['message' => 'ligneFacture modifié avec succès', 'ligneFacture' => $ligneFacture], 200);
+        try {
+            $ligneFacture = LigneFacture::findOrFail($id);
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    'Code_produit'=>'nullable',
+                    'prix_vente' => 'nullable',
+                    'quantite' => 'nullable',
+                    'id_facture' =>'nullable',
+                ]
+            );
+    
+            if ($validator->fails()) {
+                return response()->json(['error' => $validator->errors()], 400);
+            } else {
+                Log::info('Updating ligneFacture: ', $request->all());
+                $ligneFacture->update($request->all());
+                return response()->json(['message' => 'ligneFacture modifié avec succès', 'ligneFacture' => $ligneFacture], 200);
+            }
+        } catch (\Exception $e) {
+            Log::error('Error updating ligneFacture: ' . $e->getMessage());
+            return response()->json(['error' => 'Internal Server Error'], 500);
         }
     }
+    
 
     /**
      * Remove the specified resource from storage.

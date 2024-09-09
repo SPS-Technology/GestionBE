@@ -5,16 +5,26 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Bon_Livraison extends Model
+class bon_livraison extends Model
 {
     use HasFactory;
-    protected $guarded=[];
-    public function client(){
+
+    protected $fillable = [
+        'reference',
+        'date',
+        'validation_offer',
+        'modePaiement',
+        'status',
+        'type',
+        'client_id',
+        'user_id',
+    ];
+    public function client()
+    {
         return $this->belongsTo(Client::class, 'client_id');
     }
-
-    public function commande()
+    public function lignelivraison()
     {
-        return $this->belongsTo(Commande::class, 'commande_id');
+        return $this->hasMany(Lignelivraison::class, 'id_bon_Livraison', 'id');
     }
 }

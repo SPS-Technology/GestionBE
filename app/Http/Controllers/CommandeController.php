@@ -96,7 +96,7 @@ class CommandeController extends Controller
             $dateSaisis = Carbon::now()->format('Y-m-d H:i:s');
 
             $requestData = $request->all();
-            $requestData['status'] = 'En cours';
+            $requestData['status'] = 'en_attente';
             $requestData['reference'] = $reference;
             $requstData['dateSaisis'] = $dateSaisis;
 

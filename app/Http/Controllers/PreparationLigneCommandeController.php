@@ -59,26 +59,17 @@ use Illuminate\Support\Facades\Validator;
     public function update(Request $request, $id)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                'preparation_id' => 'required',
-                'produit_id' => 'required',
-                'quantite' => 'required',
-                'prix_unitaire' => 'required',
-                'lot' => 'required',
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json(['error' => $validator->errors()], 400);
-            }
-
+          
+    
             $lignePreparationCommande = LignePreparationCommande::findOrFail($id);
-            $lignePreparationCommande->update($request->all());
-
+            $lignePreparationCommande->update($request->only('quantite', 'lot'));
+    
             return response()->json(['message' => 'LignePreparationCommande modifié avec succès', 'lignePreparationCommande' => $lignePreparationCommande], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+    
 
     public function destroy($id)
     {

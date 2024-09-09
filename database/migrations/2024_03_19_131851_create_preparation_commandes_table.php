@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('CodePreparation');
             $table->unsignedBigInteger('commande_id');
             $table->foreign('commande_id')->references('id')->on('commandes')->onDelete('restrict');
-            $table->string('status');
+            $table->string('status_preparation');
             $table->timestamp('datePreparationCommande')->nullable();
             $table->timestamps();
         });

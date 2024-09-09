@@ -4,7 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Bon_Livraison;
 use App\Models\Client;
+use App\Models\Commande;
+use App\Models\Fournisseur;
+use App\Models\Livreur;
+use App\Models\Objectif;
+use App\Models\Produit;
 use App\Models\SiteClient;
+use App\Models\Vehicule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Database\QueryException;
@@ -38,6 +44,33 @@ class ClientController extends Controller
     /**
      * Show the form for creating a new resource.
      */
+    public function getAllDataDachborde()
+{
+    try {
+        // Fetch data from multiple models
+        $clients = Client::count();
+        $produits = Produit::count();
+        $fournisseurs = Fournisseur::count();
+        $commandes = Commande::count();
+        $livreurs = Livreur::count();
+        $vehicules = Vehicule::count();
+        $objectifs = Objectif::count();
+
+        // Return the consolidated data as a JSON response
+        return response()->json([
+            'clients' => $clients,
+            'produits' => $produits,
+            'fournisseurs' => $fournisseurs,
+            'commandes' => $commandes,
+            'livreurs' => $livreurs,
+            'vehicules' => $vehicules,
+            'objectifs' => $objectifs,
+        ], 200);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+}
+
 
     public function siteclients($clientId)
     {
