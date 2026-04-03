@@ -33,5 +33,9 @@ class Client extends Model
     {
         return $this->hasMany(Commande::class);
     }
+    public function groupes()
+    {
+        return $this->belongsToMany(GroupeClient::class, 'client_groupe_client', 'CodeClient', 'Id_groupe');
+    }
 
 }

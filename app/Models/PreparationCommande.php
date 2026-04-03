@@ -9,7 +9,6 @@ class PreparationCommande extends Model
 {
     use HasFactory;
     protected $guarded=[]; 
-
     public function commande()
     {
         return $this->belongsTo(Commande::class);

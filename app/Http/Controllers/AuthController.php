@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Gate;
@@ -161,12 +163,19 @@ class AuthController extends Controller
     }
     
 
+    
     public function update(Request $request, $id)
     {
-        
+        Log::info('Requête reçue pour modification d\'utilisateur : ', $request->all());
         if (Gate::allows('edit_user')) {
+            Log::info('--- [UPDATE USER] Début de la mise à jour ---', [
+                'user_id' => $id,
+                'payload' => $request->all(),
+            ]);
+    
             $user = User::findOrFail($id);
-
+            Log::info('[UPDATE USER] Utilisateur trouvé', ['user' => $user]);
+    
             $validator = Validator::make($request->all(), [
                 'name' => 'string|max:255',
                 'email' => 'string|email|max:255',
@@ -178,27 +187,39 @@ class AuthController extends Controller
             ], [
                 'password.min' => 'Le mot de passe doit contenir au moins 8 caractères.',
             ]);
-
+    
             if ($validator->fails()) {
+                Log::warning('[UPDATE USER] Validation échouée', [
+                    'errors' => $validator->errors(),
+                ]);
+    
                 return response()->json([
                     'status' => 0,
                     'message' => 'Erreur de validation',
                     'errors' => $validator->errors(),
                 ], 422);
             }
-
+    
+            Log::info('[UPDATE USER] Validation réussie');
+    
             $user->name = $request->input('name', $user->name);
             $user->email = $request->input('email', $user->email);
-
+    
             if ($request->has('password')) {
-                $user->password = ($request->input('password'));
+                Log::info('[UPDATE USER] Mise à jour du mot de passe');
+                $user->password = $request->input('password');
             }
-
+    
             if ($request->hasFile('photo')) {
                 try {
+                    Log::info('[UPDATE USER] Upload de la photo détecté');
                     $photoPath = $request->file('photo')->store('public/photos');
                     $user->photo = Storage::url($photoPath);
+                    Log::info('[UPDATE USER] Photo stockée', ['photo_path' => $photoPath]);
                 } catch (\Exception $e) {
+                    Log::error('[UPDATE USER] Erreur lors du stockage de la photo', [
+                        'error' => $e->getMessage(),
+                    ]);
                     return response()->json([
                         'status' => 0,
                         'message' => 'Erreur lors du stockage de la photo.',
@@ -206,28 +227,47 @@ class AuthController extends Controller
                     ], 500);
                 }
             }
-            
+    
             $user->save();
-
+            Log::info('[UPDATE USER] Utilisateur sauvegardé avec succès');
+    
             if ($request->has('role')) {
+                Log::info('[UPDATE USER] Synchronisation du rôle', ['role' => $request->role]);
                 $role = Role::firstOrCreate(['name' => $request->role]);
                 $user->roles()->sync([$role->id]);
             }
-
+    
             if ($request->has('permissions')) {
+                Log::info('[UPDATE USER] Permissions reçues', [
+                    'permissions' => $request->permissions,
+                ]);
+    
                 $permissions = Permission::whereIn('name', $request->permissions)->get();
-                $role->permissions()->sync($permissions);
+                Log::info('[UPDATE USER] Permissions trouvées', ['permissions' => $permissions->pluck('name')]);
+    
+                if (isset($role)) {
+                    $role->permissions()->sync($permissions);
+                    Log::info('[UPDATE USER] Permissions synchronisées avec le rôle');
+                } else {
+                    Log::warning('[UPDATE USER] Aucun rôle trouvé pour associer les permissions');
+                }
             }
-
+    
+            Log::info('--- [UPDATE USER] Fin de la mise à jour ---');
+    
             return response()->json([
                 'status' => 1,
                 'message' => 'Utilisateur mis à jour avec succès',
                 'user' => $user,
             ]);
         } else {
+            Log::warning('[UPDATE USER] Accès refusé pour la mise à jour', ['user_id' => $id]);
             abort(403, 'Vous n\'avez pas l\'autorisation de modifier un utilisateur.');
         }
     }
+    
+
+
 
     public function destroy($id)
     {

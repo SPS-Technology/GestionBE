@@ -9,9 +9,15 @@ class LigneFacture extends Model
 {
     use HasFactory;
 
-    protected $guarded=[];
+    // Specify the attributes that are mass assignable
+    protected $fillable = ['produit_id', 'prix_vente', 'quantite', 'id_facture'];
+    
+    // Alternatively, use guarded to specify attributes that are not mass assignable
+    // protected $guarded = [];
+
     public function facture()
     {
-        return $this->belongsTo(Devis::class, 'id_facture', 'id');
+        return $this->belongsTo(Facture::class, 'id_facture', 'id');
     }
 }
+
